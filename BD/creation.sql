@@ -11,31 +11,27 @@ CREATE TABLE TYPE_DOCUMENT(
     nomType VARCHAR(10) NOT NULL
 );
 
-CREATE TABLE HISTORIQUE_DOCUMENT(
+CREATE TABLE ARCHIVE(
+    idArchive int,
+    dateRemplacement DATE NOT NULL,
+    ancienPath VARCHAR NOT NULL,
     idDoc int NOT NULL,
-    dateHist DATE NOT NULL,
-    PRIMARY KEY(idDoc, dateHist),
+    PRIMARY KEY(idArchive),
     FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc)
 );
 
-CREATE TABLE CATEGORIE(
-    idCat int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nomCat VARCHAR(10) NOT NULL,
-    couleurCat VARCHAR(10) NOT NULL
+CREATE TABLE "TAG" (
+	"idTag"	int NOT NULL,
+	"nomTag"	VARCHAR(10) NOT NULL,
+	"niveauProtection"	int NOT NULL,
+	"couleurTag"	TEXT NOT NULL,
+	PRIMARY KEY("idTag","niveauProtection"),
+	FOREIGN KEY("niveauProtection") REFERENCES "CATEGORIE"("idCat")
 );
 
-CREATE TABLE SOUS_CATEGORIE(
-    idSousCat int NOT NULL,
-    nomSousCat VARCHAR(10) NOT NULL,
-    idCat int NOT NULL,
-    proteger boolean NOT NULL,
-    PRIMARY KEY(idSousCat, idCat),
-    FOREIGN KEY (idCat) REFERENCES CATEGORIE(idCat)
-);
-
-CREATE TABLE SOUS_CATEGORIE_DOCUMENT(
+CREATE TABLE DOCUMENT_TAG(
     idDoc int NOT NULL,
-    idSousCat int NOT NULL,
+    idTag int NOT NULL,
     PRIMARY KEY(idDoc, idSousCat),
     FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc),
     FOREIGN KEY (idSousCat) REFERENCES SOUS_CATEGORIE(idSousCat)
