@@ -1,0 +1,75 @@
+CREATE TABLE DOCUMENT (
+    idDoc int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomDoc VARCHAR(10) NOT NULL,
+    fichierDoc VARCHAR(10) NOT NULL,
+    idType int NOT NULL,
+    FOREIGN KEY (idType) REFERENCES TYPE_DOCUMENT(idType)
+);
+
+CREATE TABLE TYPE_DOCUMENT(
+    idType int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomType VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE HISTORIQUE_DOCUMENT(
+    idDoc int NOT NULL,
+    dateHist DATE NOT NULL,
+    PRIMARY KEY(idDoc, dateHist),
+    FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc)
+);
+
+CREATE TABLE CATEGORIE(
+    idCat int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomCat VARCHAR(10) NOT NULL,
+    couleurCat VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE SOUS_CATEGORIE(
+    idSousCat int NOT NULL,
+    nomSousCat VARCHAR(10) NOT NULL,
+    idCat int NOT NULL,
+    proteger boolean NOT NULL,
+    PRIMARY KEY(idSousCat, idCat),
+    FOREIGN KEY (idCat) REFERENCES CATEGORIE(idCat)
+);
+
+CREATE TABLE SOUS_CATEGORIE_DOCUMENT(
+    idDoc int NOT NULL,
+    idSousCat int NOT NULL,
+    PRIMARY KEY(idDoc, idSousCat),
+    FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc),
+    FOREIGN KEY (idSousCat) REFERENCES SOUS_CATEGORIE(idSousCat)
+);
+
+CREATE TABLE GRADE (
+    idGrade int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomGrade VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE ROLE(
+    idRole int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomRole VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE CASERNE(
+    idCas int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomCaserne VARCHAR(10) NOT NULL,
+    adresseCaserne VARCHAR(10) NOT NULL,
+    dirigeantCaserne VARCHAR(10) NOT NULL,
+    FOREIGN KEY (dirigeantCaserne) REFERENCES UTILISATEUR(identifiant)
+);
+
+CREATE TABLE UTILISATEUR(
+    idUtilisateur int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nomUtilisateur VARCHAR(10) NOT NULL,
+    prenomUtilisateur VARCHAR(10) NOT NULL,
+    identifiant VARCHAR(10) NOT NULL,
+    mdp VARCHAR(10) NOT NULL,
+    idGrade int NOT NULL,
+    idRole int NOT NULL,
+    idCas int NOT NULL,
+    FOREIGN KEY (idGrade) REFERENCES GRADE(idGrade),
+    FOREIGN KEY (idRole) REFERENCES ROLE(idRole),
+    FOREIGN KEY (idCas) REFERENCES CASERNE(idCas)
+);
+
