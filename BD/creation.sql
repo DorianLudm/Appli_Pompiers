@@ -20,21 +20,21 @@ CREATE TABLE ARCHIVE(
     FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc)
 );
 
-CREATE TABLE "TAG" (
-	"idTag"	int NOT NULL,
-	"nomTag"	VARCHAR(10) NOT NULL,
-	"niveauProtection"	int NOT NULL,
-	"couleurTag"	TEXT NOT NULL,
-	PRIMARY KEY("idTag","niveauProtection"),
-	FOREIGN KEY("niveauProtection") REFERENCES "CATEGORIE"("idCat")
+CREATE TABLE TAG (
+	idTag int NOT NULL,
+	nomTag	VARCHAR(10) NOT NULL,
+	niveauProtection int NOT NULL,
+	couleurTag TEXT NOT NULL,
+	PRIMARY KEY(idTag,niveauProtection),
+	FOREIGN KEY(niveauProtection) REFERENCES CATEGORIE(idCat)
 );
 
 CREATE TABLE DOCUMENT_TAG(
     idDoc int NOT NULL,
     idTag int NOT NULL,
-    PRIMARY KEY(idDoc, idSousCat),
+    PRIMARY KEY(idDoc, idTag),
     FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc),
-    FOREIGN KEY (idSousCat) REFERENCES SOUS_CATEGORIE(idSousCat)
+    FOREIGN KEY (idTag) REFERENCES SOUS_CATEGORIE(idTag)
 );
 
 CREATE TABLE GRADE (
@@ -50,9 +50,15 @@ CREATE TABLE ROLE(
 CREATE TABLE CASERNE(
     idCas int PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nomCaserne VARCHAR(10) NOT NULL,
-    adresseCaserne VARCHAR(10) NOT NULL,
-    dirigeantCaserne VARCHAR(10) NOT NULL,
-    FOREIGN KEY (dirigeantCaserne) REFERENCES UTILISATEUR(identifiant)
+    adresseCaserne VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE DIRIGER_CASERNE(
+    idUtilisateur int NOT NULL,
+    idCas int NOT NULL,
+    PRIMARY KEY(idUtilisateur, idCas),
+    FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur),
+    FOREIGN KEY (idCas) REFERENCES CASERNE(idCas)
 );
 
 CREATE TABLE UTILISATEUR(
