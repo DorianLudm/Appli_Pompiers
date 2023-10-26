@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block styles %}
+        {{ bootstrap.load_css()}}
+    {% endblock %}
+    {% block page_specific_css %}{% endblock %}
+    <title>Fire File</title>
+</head>
+<body>
+    <header>
+        <img src="static/img/logoPompier.png" alt="logo pompier">
+        <h1>Fire file</h1>
+        <h2>Se documenter en toute simplicité</h2>
+    </header>
+    <main>
+        {% block main %}
+        {% endblock %}
+    </main>
+</body>
+</html>
