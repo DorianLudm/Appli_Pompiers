@@ -6,7 +6,8 @@
     {% block styles %}
         {{ bootstrap.load_css()}}
     {% endblock %}
-    <title>Document</title>
+    {% block page_specific_css %}{% endblock %}
+    <title>Fire File</title>
 </head>
 <body>
     <header>
