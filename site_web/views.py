@@ -8,7 +8,8 @@ def home():
         tag = dict()
         tag["nom"] = "tag"+str(i)
         print(tag)
-        tags.append(tag) result = []
+        tags.append(tag) 
+    result = []
     for i in range(4):
         resultat = dict()
         resultat["nom"] = "resultat"+str(i)
