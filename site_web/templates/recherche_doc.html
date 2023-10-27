@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <link href="/static/recherche_doc.css" rel="stylesheet">
+
+    </head>
+    <body>
+        <main>
+            <div id="filtre">
+                <form action="" method="get" class="form-example">
+                    <div class="research_bar">
+                      <input type="text" name="name" id="name"/>
+                    </div>
+                    <div class="loop_research">
+                        <input type="image" src="/static/img/loupe.png" alt="Submit" width="48" height="48"/>
+                    </div>
+                </form>
+                <select name="tags" id="tags-select">
+                    {% for x in tags %}
+                        <p>{{x.nom}}</p>
+                        <option value="">{{x.nom}}</option>
+                    {% endfor %}
+                </select>
+                <div class="active_tag">
+                    {% for x in active_tags %}
+                        <input type="Submit" value="{{x.nom}}"/>
+                    {% endfor %}
+                </div>
+
+                <div class="bouton_reset">
+                    <input type="Submit" value="Reset" />
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
