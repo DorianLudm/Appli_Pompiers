@@ -33,6 +33,21 @@
                     <input type="Submit" value="Reset" />
                 </div>
             </div>
+            <div> 
+                <h2>Resultat :</h2>
+                <ul class="resultat">
+                    {% for x in result %}
+                        <li class="resultat_item">
+                                <h3>{{x.nom}}</h3>
+                                <div class="resultat_item_info">
+                                    {% for element in x.element %}
+                                        <input type="Submit" value="{{x.nom}}"/>
+                                    {% endfor %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </main>
     </body>
 </html>
