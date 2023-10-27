@@ -1,0 +1,72 @@
+main>#filtre{
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: #F24343;
+}
+div>div,div>form{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    flex-basis: 30%;
+}
+img{
+    width: 20%;
+    height: 20%;
+}
+div>form{
+    flex-grow: 2;
+}
+.research_bar{
+    flex-grow: 1;
+}
+.research_bar>input{
+    flex-grow: 1;
+    width: 89%;
+    margin-left: 7%;
+    margin-right: 7%;
+}
+.active_tag{
+    background-color: #AAAAAA;
+    flex-grow: 2;
+    justify-content: left;
+}
+.active_tag>input{
+    background-color: #888888;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+.bouton_reset{
+    flex-grow: 0;
+    justify-content: right;
+    flex-basis: auto;
+}
+input{
+    border: none;
+    margin: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+#tags-select{
+    width: 8%;
+    height: 60%;
+    margin: 30px;
+
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
