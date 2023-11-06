@@ -164,3 +164,7 @@ main{
 li.ImgCompte{
     margin-right: 1.5vw;
 }
+
+.in_ligne div{
+    margin-left: 15vw;
+}

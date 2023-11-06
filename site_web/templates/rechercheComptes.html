@@ -2,7 +2,6 @@
 {% block page_specific_css %}
 <link href="/static/css/recherche_comptes.css" rel="stylesheet">
 {% endblock %}
-{% block title %}{{ title }}{% endblock %}
 {% block main %}
 <div id="filtre">
     <form action="" method="get" class="filtre_barre">
@@ -49,8 +48,8 @@
             <li class="nomCompte">MASSUARD Charles</li>
             <li class="gradeCompte">Recrue</li>
             <li class="caserneCompte">Caserne de Paris</li>
-            <button class="ImageModif"><img src="/static/img/modificationIco.png" alt="ModifierCompte"></li>
-            <button class="ImageModif"><img src="/static/img/poubelleIco.png" alt="SupprimerCompte"></li>
+            <input type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/>
+            <input type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
           </ul>
         </li>
     </ul>
