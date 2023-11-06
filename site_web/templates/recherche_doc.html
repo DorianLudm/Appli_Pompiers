@@ -15,12 +15,12 @@
     <div class="tags">
         <select name="tags" id="tags-select">
             {% for x in tags %}
-                <option value="">{{x.nom}}</option>
+                <option value="">{{x.nomTag}}</option>
             {% endfor %}
         </select>
         <div class="active_tag">
             {% for x in active_tags %}
-                <input type="Submit" value="{{x.nom}}"/>
+                <input type="Submit" value="{{x.nomTag}}"/>
             {% endfor %}
         </div>
     </div>
@@ -33,10 +33,10 @@
     <ul class="resultat">
         {% for x in result %}
             <li class="resultat_item">
-                    <h3>{{x.nom}}</h3>
+                    <h3>{{x.nomType}}</h3>
                     <div class="resultat_item_info">
                         {% for element in x.element %}
-                            <input type="Submit" value="{{x.nom}}"/>
+                            <input type="Submit" value="{{element.nomDoc}}"/>
                         {% endfor %}
                 </div>
             </li>
