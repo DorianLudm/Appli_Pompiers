@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_comptes.css" rel="stylesheet">
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="" method="get" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" name="name" id="name"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+    </form>
+    <div class="grades">
+        <select name="grades" id="grades-select">
+            {% for x in grades %}
+                <option value="">{{x.nomGrade}}</option>
+            {% endfor %}
+        </select>
+        <div class="active_grades">
+            {% for x in active_grades %}
+                <input type="Submit" value="{{x.nomTag}}"/>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="casernes">
+      <select name="casernes" id="casernes-select">
+          {% for x in casernes %}
+              <option value="">{{x.nomCaserne}}</option>
+          {% endfor %}
+      </select>
+      <div class="active_tag">
+          {% for x in active_casernes %}
+              <input type="Submit" value="{{x.nomTag}}"/>
+          {% endfor %}
+      </div>
+  </div>
+    <div class="bouton_reset">
+        <input type="Submit" value="Reset" />
+    </div>
+</div>
+<div> 
+    <ul class="resultat">
+        <li class="compte">
+          <ul class="in_ligne">
+            <li class="ImgCompte"><img src="/static/img/compteIco.png" alt="icone compte"></li>
+            <li class="nomCompte">MASSUARD Charles</li>
+            <li class="gradeCompte">Recrue</li>
+            <li class="caserneCompte">Caserne de Paris</li>
+            <button class="ImageModif"><img src="/static/img/modificationIco.png" alt="ModifierCompte"></li>
+            <button class="ImageModif"><img src="/static/img/poubelleIco.png" alt="SupprimerCompte"></li>
+          </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
