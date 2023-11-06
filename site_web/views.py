@@ -21,3 +21,8 @@ def home():
             resultat["element"].append(element)
         result.append(resultat)
     return render_template("recherche_doc.html",tags = tags, active_tags = tags, result = result)
+    return render_template('base.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
