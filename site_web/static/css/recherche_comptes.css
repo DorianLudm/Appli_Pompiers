@@ -36,45 +36,13 @@ div>div,div>form{
     margin-left: 7%;
     margin-right: 7%;
 }
-.active_grades{
-    background-color: #AAAAAA;
-    flex-grow: 2;
-    justify-content: left;
-    display: flex;
-    flex-wrap: wrap;
-}
-.active_grades>input{
-    background-color: #888888;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-}
 
-.active_casernes{
-    background-color: #AAAAAA;
-    flex-grow: 2;
-    justify-content: left;
-    display: flex;
-    flex-wrap: wrap;
-}
-.active_casernes>input{
-    background-color: #888888;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.bouton_reset{
+.bouton_add_account, .bouton_appliquer{
     flex-grow: 0;
     justify-content: right;
     flex-basis: auto;
 }
+
 .grades{
     flex-grow: 1;
     justify-content: left;

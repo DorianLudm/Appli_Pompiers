@@ -4,51 +4,43 @@
 {% endblock %}
 {% block main %}
 <div id="filtre">
-    <form action="" method="get" class="filtre_barre">
+    <form method="POST" action=" {{ url_for('appliquer_filtres') }}" class="filtre_barre">
         <div class="research_bar">
           <input type="text" name="name" id="name"/>
         </div>
         <div class="loop_research">
             <input type="image" src="/static/img/loupe.png" alt="Submit"/>
         </div>
+        <div class="grades">
+            <select name="grades" id="grades-select">
+                <option value="{{selectGrade}}" hidden="hidden">{{ selectGrade }} </option>
+                {% for x in grades %}
+                    <option value="{{x.nomGrade}}">{{x.nomGrade}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="casernes">
+            <select name="casernes" id="casernes-select">
+                <option value="{{selectCaserne}}" hidden="hidden">{{ selectCaserne }}</option>
+                {% for x in casernes %}
+                    <option value="{{x.nomCaserne}}">{{x.nomCaserne}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="bouton_add_account">
+            <button type="submit" class="bouton_filtre">Appliquer les filtres</button>
+            <button type="submit" class="bouton_filtre">Réinitialiser les filtres</button>
+            <input type="Submit" value="Ajouter un compte"/>
+        </div>
     </form>
-    <div class="grades">
-        <select name="grades" id="grades-select">
-            <option value="" hidden="hidden">Choisir un grade</option>
-            {% for x in grades %}
-                <option value="">{{x.nomGrade}}</option>
-            {% endfor %}
-        </select>
-        <div class="active_grades">
-            {% for x in active_grades %}
-                <input type="Submit" value="{{x.nomTag}}"/>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="casernes">
-        <select name="casernes" id="casernes-select">
-            <option value="" hidden="hidden">Choisir une caserne</option>
-            {% for x in casernes %}
-                <option value="">{{x.nomCaserne}}</option>
-            {% endfor %}
-        </select>
-        <div class="active_tag">
-            {% for x in active_casernes %}
-                <input type="Submit" value="{{x.nomTag}}"/>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="bouton_add_account">
-        <input type="Submit" value="Ajouter un compte" />
-    </div>
 </div>
 <div> 
     <ul class="resultat">
         <li class="compte">
             <ul class="in_ligne">
-                {% set gradeUser = [] %}
-                {% set caserneUser = [] %}
                 {% for user in users %}
+                    {% set gradeUser = [] %}
+                    {% set caserneUser = [] %}
                     {% for grade in grades %}
                         {% if grade.idGrade == user.idGrade %}
                             {% set _ = gradeUser.append(grade.nomGrade) %}
@@ -59,12 +51,16 @@
                             {% set _ = caserneUser.append(caserne.nomCaserne) %}
                         {% endif %}
                     {% endfor %}
-                    <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
-                    <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</a></li>
-                    <li class="gradeCompte">{{ gradeUser[0] }}</li>
-                    <li class="caserneCompte">{{ caserneUser[0] }}</li>
-                    <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                    <a href=supprimerCompte><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                    {% if selectGrade == gradeUser[0] or selectGrade == "" %}
+                        {% if selectCaserne == caserneUser[0] or selectCaserne == "" %}
+                            <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
+                            <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</a></li>
+                            <li class="gradeCompte">{{ gradeUser[0] }}</li>
+                            <li class="caserneCompte">{{ caserneUser[0] }}</li>
+                            <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+                            <a href=supprimerCompte><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                        {% endif %} 
+                    {% endif %}
                 {% endfor %}
             </ul>
         </li>
