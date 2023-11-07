@@ -5,15 +5,15 @@
 {% block main %}
     <div>
         <p>Nom</p>
-        <input type="text" name="coucou tout le monde" required>
+        <input type="text" name="nom" placeholder="Entrez le nom de l'utilisateur" required>
         <p>Prénom</p>
-        <input type="text" name="coucou tout le monde" required>
+        <input type="text" name="prenom" placeholder="Entrez le prénom de l'utilisateur" required>
     </div>
     <div>
         <p>Nom d'utilisateur</p>
-        <input type="text" name="coucou tout le monde" required>
+        <input type="text" name="pseudo" placeholder="Entrez le pseudo de l'utilisateur" required>
         <p>Mot de passe</p>
-        <input type="password" name="coucou tout le monde" placeholder="Nom" required>
+        <input type="password" name="password" placeholder="Entrez le mot de passe" required>
     </div>
     <div>
         <p>Grade</p>
@@ -32,8 +32,8 @@
         </select>
     </div>
     <div>
-        <p>Chef de caserne ?</p>
         <fieldset>
+            <legend>Chef de caserne:</legend>
             <div>
               <input type="radio" id="huey" name="drone" value="huey" checked />
               <label for="oui">Oui</label>
