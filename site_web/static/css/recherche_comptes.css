@@ -117,8 +117,6 @@ input{
 }
 body{
     margin: 0px;
-}
-main{
     background-color: #BBBBBB;
 }
 .resultat{
@@ -138,7 +136,6 @@ main{
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    flex-basis: 30%;
     margin: 10px;
     background-color: #F24343;
     list-style-type: none;
@@ -147,7 +144,7 @@ main{
 .in_ligne li{
     flex-grow: 1;
     flex-basis: auto;
-    margin-right: 5vw;
+    margin-right: 6vw;
     background-color: #F24343;
     list-style-type: none;
 }
@@ -156,15 +153,21 @@ main{
     margin-left: 18vw;
 }
 
-.ImgCompte img{
+.ImgCompte {
     width: 3vw;
     height: 3vw;
+    margin-right: 1.3vw;
 }
 
 li.ImgCompte{
     margin-right: 1.5vw;
 }
 
-.in_ligne div{
-    margin-left: 15vw;
+.in_ligne a{
+    text-decoration: none;
+    color: white;
+}
+
+.in_ligne a:hover {
+    text-decoration: underline;
 }
