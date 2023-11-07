@@ -1,4 +1,6 @@
 from .app import db
+from .app import login_manager
+
 
 class Utilisateur(db.Model):
     idUtilisateur = db.Column(db.Integer, primary_key =True)
@@ -9,4 +11,7 @@ class Utilisateur(db.Model):
     idGrade = db.Column(db.Integer)
     idRole = db.Column(db.Integer)
     idCas = db.Column(db.Integer)
-    
+
+@login_manager.user_loader
+def load_user(username):
+    return User.query.get(username)
