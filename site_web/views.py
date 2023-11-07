@@ -18,7 +18,6 @@ def home():
 # -                                   -
 # -------------------------------------
 
-
 class LoginForm( FlaskForm ):
     identifiant = StringField('Identifiant ')
     mdp = PasswordField('Password')
@@ -33,7 +32,6 @@ class LoginForm( FlaskForm ):
             return util
         else:
             return None
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -61,8 +59,6 @@ def logout():
 # -------------------------------------
 # -          FIN LOGIN                -
 # -------------------------------------
-
-
 
 @app.route('/rechercheDocuments')
 def recherche_document():
