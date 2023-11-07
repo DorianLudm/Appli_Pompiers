@@ -14,7 +14,7 @@ class Utilisateur(db.Model, UserMixin):
     idCas = db.Column(db.Integer)
 
     def get_id(self):
-        return str(self.identifiant)
+        return str(self.idUtilisateur)
 
 
 @login_manager.user_loader
