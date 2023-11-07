@@ -2,7 +2,7 @@ from .app import app
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from .models import Utilisateur, get_identifiant_utilisateur
+from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_caserne
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
