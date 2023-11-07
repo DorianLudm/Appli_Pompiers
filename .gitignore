@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+BD/DB_Pompiers
 
 # C extensions
 *.so
