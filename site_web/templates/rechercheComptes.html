@@ -14,6 +14,7 @@
     </form>
     <div class="grades">
         <select name="grades" id="grades-select">
+            <option value="" hidden="hidden">Choisir un grade</option>
             {% for x in grades %}
                 <option value="">{{x.nomGrade}}</option>
             {% endfor %}
@@ -25,17 +26,18 @@
         </div>
     </div>
     <div class="casernes">
-      <select name="casernes" id="casernes-select">
-          {% for x in casernes %}
-              <option value="">{{x.nomCaserne}}</option>
-          {% endfor %}
-      </select>
-      <div class="active_tag">
-          {% for x in active_casernes %}
-              <input type="Submit" value="{{x.nomTag}}"/>
-          {% endfor %}
-      </div>
-  </div>
+        <select name="casernes" id="casernes-select">
+            <option value="" hidden="hidden">Choisir une caserne</option>
+            {% for x in casernes %}
+                <option value="">{{x.nomCaserne}}</option>
+            {% endfor %}
+        </select>
+        <div class="active_tag">
+            {% for x in active_casernes %}
+                <input type="Submit" value="{{x.nomTag}}"/>
+            {% endfor %}
+        </div>
+    </div>
     <div class="bouton_reset">
         <input type="Submit" value="Reset" />
     </div>
