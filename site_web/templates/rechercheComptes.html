@@ -38,8 +38,8 @@
             {% endfor %}
         </div>
     </div>
-    <div class="bouton_reset">
-        <input type="Submit" value="Reset" />
+    <div class="bouton_add_account">
+        <input type="Submit" value="Ajouter un compte" />
     </div>
 </div>
 <div> 
@@ -50,10 +50,20 @@
             <li class="nomCompte"><a href=pageNom>MASSUARD Charles</a></li>
             <li class="gradeCompte">Recrue</li>
             <li class="caserneCompte">Caserne de Paris</li>
-            <input type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/>
-            <input type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
+            <input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/>
+            <input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
           </ul>
         </li>
+        <li class="compte">
+            <ul class="in_ligne">
+              <a href="pageNom"><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
+              <li class="nomCompte"><a href=pageNom>DEMARET Sullivan</a></li>
+              <li class="gradeCompte">Equipier</li>
+              <li class="caserneCompte">Caserne du Taboulistan</li>
+              <input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/>
+              <input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
+            </ul>
+          </li>
     </ul>
 </div>
 {% endblock %}

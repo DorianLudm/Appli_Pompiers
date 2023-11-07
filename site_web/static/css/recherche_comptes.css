@@ -124,17 +124,21 @@ body{
     flex-wrap: wrap;
     padding: 10px;
     margin: 30px;
-    column-gap: 10px;
     list-style-type: none;
     color: white;
     font-size: 25px;
 }
 
+.compte{
+    flex-grow: 1;
+    flex-basis: 100%;
+}
+
 .in_ligne{
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     flex-direction: row;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     margin: 10px;
     background-color: #F24343;
@@ -142,15 +146,13 @@ body{
 }
 
 .in_ligne li{
-    flex-grow: 1;
-    flex-basis: auto;
-    margin-right: 6vw;
     background-color: #F24343;
     list-style-type: none;
 }
 
 .caserneCompte{
-    margin-left: 18vw;
+    margin-left: 2vw;
+    flex-basis: 100%;
 }
 
 .ImgCompte {
@@ -170,4 +172,12 @@ li.ImgCompte{
 
 .in_ligne a:hover {
     text-decoration: underline;
+}
+
+.nomCompte{
+    flex-basis: 35%;
+}
+
+.gradeCompte{
+    flex-basis: 15%;
 }
