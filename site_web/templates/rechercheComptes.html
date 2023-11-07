@@ -45,25 +45,29 @@
 <div> 
     <ul class="resultat">
         <li class="compte">
-          <ul class="in_ligne">
-            <a href="pageNom"><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
-            <li class="nomCompte"><a href=pageNom>MASSUARD Charles</a></li>
-            <li class="gradeCompte">Recrue</li>
-            <li class="caserneCompte">Caserne de Paris</li>
-            <input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/>
-            <input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
-          </ul>
-        </li>
-        <li class="compte">
             <ul class="in_ligne">
-              <a href="pageNom"><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
-              <li class="nomCompte"><a href=pageNom>DEMARET Sullivan</a></li>
-              <li class="gradeCompte">Equipier</li>
-              <li class="caserneCompte">Caserne du Taboulistan</li>
-              <input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/>
-              <input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
+                {% set gradeUser = [] %}
+                {% set caserneUser = [] %}
+                {% for user in users %}
+                    {% for grade in grades %}
+                        {% if grade.idGrade == user.idGrade %}
+                            {% set _ = gradeUser.append(grade.nomGrade) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for caserne in casernes %}
+                        {% if caserne.idCas == user.idCas %}
+                            {% set _ = caserneUser.append(caserne.nomCaserne) %}
+                        {% endif %}
+                    {% endfor %}
+                    <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
+                    <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisaeur }} {{ user.prenomUtilisateur }}</a></li>
+                    <li class="gradeCompte">{{ gradeUser[0] }}</li>
+                    <li class="caserneCompte">{{ caserneUser[0] }}</li>
+                    <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+                    <a href=supprimerCompte><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                {% endfor %}
             </ul>
-          </li>
+        </li>
     </ul>
 </div>
 {% endblock %}
