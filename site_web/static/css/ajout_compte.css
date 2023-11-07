@@ -1,0 +1,24 @@
+body{
+    margin: 0px;
+}
+
+main{
+    background-color: #F24343;
+}
+
+input{
+    border: black thin solid;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+    margin-right: 15px;
+    margin-left: 15px;
+    padding: 10px;
+    font-size: 2vw;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10px;
+    width: 50vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}

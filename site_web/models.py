@@ -12,10 +12,24 @@ class Utilisateur(db.Model, UserMixin):
     idGrade = db.Column(db.Integer)
     idRole = db.Column(db.Integer)
     idCas = db.Column(db.Integer)
-
+    
     def get_id(self):
         return str(self.idUtilisateur)
 
+class Grade(db.Model):
+    idGrade = db.Column(db.Integer, primary_key =True)
+    nomGrade = db.Column(db.String(10))
+
+def get_grades():
+    return Grade.query.all()
+
+class Caserne(db.Model):
+    idCas = db.Column(db.Integer, primary_key =True)
+    nomCaserne = db.Column(db.String(100))
+    adresseCaserne = db.Column(db.String(100))
+
+def get_caserne():
+    return Caserne.query.all()
 
 @login_manager.user_loader
 def load_user(username):

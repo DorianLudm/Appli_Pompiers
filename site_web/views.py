@@ -9,15 +9,9 @@ from flask_login import login_user, logout_user, login_required
 @app.route('/')
 @login_required
 def home():
-    return render_template('base.html')
+    return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne())
 
-# -------------------------------------
-# -                                   -
-# -                                   -
-# -              LOGIN                -
-# -                                   -
-# -                                   -
-# -------------------------------------
+# LOGIN
 
 class LoginForm( FlaskForm ):
     identifiant = StringField('Identifiant ')
@@ -56,12 +50,8 @@ def login():
 @app.route("/logout/")
 def logout():
     logout_user()
-    return redirect(url_for('login'))
-
-# -------------------------------------
-# -          FIN LOGIN                -
-# -------------------------------------
-
+    return redirect(url_for('login'))  
+  
 @app.route('/rechercheDocuments')
 def recherche_document():
     return render_template('rechercheDocuments.html')
