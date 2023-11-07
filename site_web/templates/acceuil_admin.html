@@ -1,21 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Document</title>
-        <link href="./static/acceuil_admin.css" rel="stylesheet">
-    </head>
-    <body>
-        <main>
-            <div class="boutons">
-                <input type="Submit" value="Gérer les comptes"/>
-            </div>
-            <div class="boutons">
-                <input type="Submit" value="Gérer les documents" />
-            </div>
-            <div class="boutons">
-                <input type="Submit" value="Gérer les catégories" />
-            </div>
-        </main>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block page_specific_css %}
+    <link rel="stylesheet" href="../static/css/acceuil_admin.css"/>
+{% endblock %} 
+{% block main %}
+<div class="boutons">
+    <input type="Submit" value="Gérer les comptes"/>
+    <input type="Submit" value="Gérer les documents"/>
+    <input type="Submit" value="Gérer les catégories"/>
+</div>
+{% endblock %}

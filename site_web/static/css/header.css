@@ -1,0 +1,26 @@
+header {
+    background-color: #2D2626;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color : white;
+    justify-content: space-between ;
+}
+
+header section {
+    text-align: center;
+}
+
+header img {
+	width: auto;
+	height: 14em;
+}
+
+h1 {
+    font-size: xxx-large;
+    font-family : "Copperplate";
+}
+
+h2 {
+    font-family : "Arial";
+}
