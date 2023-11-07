@@ -8,12 +8,12 @@ main{
 
 input{
     border: black thin solid;
-    margin-top: 3vw;
-    margin-bottom: 3vw;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
     margin-right: 15px;
     margin-left: 15px;
     padding: 10px;
-    font-size: 4vw;
+    font-size: 2vw;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
