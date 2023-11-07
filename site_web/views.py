@@ -2,7 +2,7 @@ from .app import app
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from .models import Utilisateur
+from .models import Utilisateur, get_identifiant_utilisateur
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
@@ -22,7 +22,8 @@ class LoginForm( FlaskForm ):
     identifiant = StringField('Identifiant ')
     mdp = PasswordField('Password')
     def get_authentification_utilisateur(self):
-        util = Utilisateur.query.get(self.identifiant.data)
+        util = get_identifiant_utilisateur(self.identifiant.data)
+        print(util)
         if util is None:
             return None
         m = sha256()
