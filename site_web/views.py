@@ -51,7 +51,9 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))  
-  
+
+# ADMINISTRATION
+
 @app.route('/rechercheDocuments')
 def recherche_document():
     return render_template('rechercheDocuments.html')
