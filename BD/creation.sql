@@ -62,7 +62,7 @@ CREATE TABLE DIRIGER_CASERNE(
 );
 
 CREATE TABLE UTILISATEUR(
-    idUtilisateur int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    idUtilisateur int PRIMARY KEY NOT NULL,
     nomUtilisateur VARCHAR(10) NOT NULL,
     prenomUtilisateur VARCHAR(10) NOT NULL,
     identifiant VARCHAR(10) NOT NULL,
