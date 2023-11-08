@@ -1,22 +1,50 @@
 from .app import app, mkpath
-from flask import render_template
-from .models import get_tags, get_types
+from flask import render_template, url_for , redirect, request
+from .models import get_tags, get_types, get_document_id, get_document_types
+from flask_wtf import FlaskForm
+from wtforms import StringField
 import webbrowser
+
+active_tags = []
+filtre_texte = ""
 
 @app.route('/')
 def home():
+    global active_tags
     result = []
     for i in get_types():
         resultat = dict()
         resultat["nomType"] = i.nomType
         resultat["element"] = []
-        for j in range(4):
-            element = dict()
-            element["nomDoc"] = "element"+str(j)
-            resultat["element"].append(element)
+        
+        for document in get_document_types(i.idType):
+            resultat["element"].append(document)
+            # element = dict()
+            # element['idDoc'] = j
+            # element["nomDoc"] = "element"+str(j)
+            # element["fichierDoc"] = '11 - VSTAF/Acide Chlorydrique.pdf'
+            # resultat["element"].append(element)
         result.append(resultat)
-    webbrowser.open(mkpath('../'))
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = get_tags(), result = result)
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result)
+ 
+@app.route('/ajouter_filtre/', methods =("POST",))
+def ajouter_filtre():
+    #global active_tags
+    #active_tags.append(tag)
+    if request.method=='POST':
+        tag=request.form['tags']
+        name =request.form['name']
+        if tag != "Choisir un tag":
+            print(tag)
+        if name != "":
+            print(name)
+    return redirect(url_for('home'))
+
+@app.route('/ouverture_doc/<id>', methods =("POST",))
+def ouverture_doc(id):
+    doc = get_document_id(id).fichierDoc
+    webbrowser.open(mkpath('./static/document/' + doc)) 
+    return redirect(url_for('home'))
 
 @app.route('/login')
 def login():

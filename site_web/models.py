@@ -27,7 +27,14 @@ class Tag(db.Model):
     couleurTag = db.Column(db.String(100))
     
 def get_tags():
-    return Tag.query.all()
+    return Tag.query.order_by(Tag.nomTag).all()
 
 def get_types():
     return TypeDocument.query.all()
+
+def get_document_types(idTypeDoc):
+    return Document.query.filter(Document.idType == idTypeDoc).all()
+
+def get_document_id(idDoc):
+    print(idDoc)
+    return Document.query.get(idDoc)

@@ -96,7 +96,7 @@ main{
     margin: 30px;
     column-gap: 10px;
 }
-.resultat_item, .resultat_item_info{
+.resultat_item, .resultat_item_info>form>input{
     background-color: #AAAAAA;
     display: flex;
     flex-wrap: wrap;
@@ -106,7 +106,10 @@ main{
     margin: 10px;
     flex-grow: 1;
 }
-.resultat_item_info>input{
+.resultat_item_info>form>input{
+    background-color: #CCCCCC;   
+}
+.resultat_item_info>form{
     background-color: #888888;
     padding: 5px;
 }  
