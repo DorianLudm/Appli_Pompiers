@@ -1,8 +1,11 @@
+body{
+    overflow: hidden; /*Désactive la possibilité de scroll*/
+}
+
 main {
     background-color: #F24343;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    /* display: flex;
+    flex-direction: column; */
     justify-content: space-around;
     height: 100vh;
     padding: 1vw;
@@ -43,6 +46,7 @@ fieldset input{
     display: flex;
     justify-content: center;
     width: 100%;
+    margin-top: 3vh;
 }
 
 input, select {
