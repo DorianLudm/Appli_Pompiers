@@ -87,6 +87,7 @@ input{
 }
 body{
     margin: 0px;
+    background-color: #BBBBBB;
 }
 main{
     background-color: #BBBBBB;
@@ -117,7 +118,7 @@ main{
     padding: 5px;
 }  
 .loop_research{
-    height: 8vh;
+    height: 5vh;
     width: auto;
     margin-right: 2%;
 }
