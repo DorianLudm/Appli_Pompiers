@@ -25,7 +25,7 @@ class Role(db.Model):
     nomRole = db.Column(db.String(100))
 
 def get_utilisateurs():
-    return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur)).all()
+    return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
 
 def get_grades():
     return Grade.query.all()
