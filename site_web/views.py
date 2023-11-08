@@ -7,9 +7,11 @@ from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
-@login_required
+#@login_required
 def home():
-    return render_template('accueil_admin.html')
+    return render_template('accueil_admin.html', grades = get_grades(), casernes = get_caserne())
+
+# LOGIN
 
 class LoginForm( FlaskForm ):
     identifiant = StringField('Identifiant')
@@ -49,13 +51,14 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))  
-  
+
+# ADMINISTRATION
+
 @app.route('/rechercheDocuments')
 @login_required
 def recherche_document():
     return render_template('rechercheDocuments.html')
 
-@app.route('/administrateur/gerer_compte/ajout')
-@login_required
-def affiche_ajout_compte():
-    return render_template('ajout_compte.html', grades=get_grades(), casernes=get_caserne())
+@app.route('/administrateur/ajoutCompte')
+def ajout_compte():
+    return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne())
