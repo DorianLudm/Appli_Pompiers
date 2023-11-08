@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/header.css"/>
+    <link rel="stylesheet" href="/../static/css/header.css"/>
     {% block styles %}
         {{ bootstrap.load_css()}}
     {% endblock %}
@@ -13,14 +13,10 @@
 </head>
 <body>
     <header>
-        <img src="../static/img/logoPompier.png" alt="logo pompier">
-
-        <section>
-            <h1>FireFile</h1>
-            <h2>Se documenter en toute simplicité</h2>
-        </section>
-
-        <img src="../static/img/login-picture.png">
+        <img src="/../static/img/logoPompier.png" alt="logo pompier">
+        {% block header %}
+            
+        {% endblock %}
     </header>
     <main>
         {% block main %}

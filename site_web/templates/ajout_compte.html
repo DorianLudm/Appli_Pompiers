@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+    <link rel="stylesheet" href="/../static/css/ajout_compte.css"/>
+{% endblock %} 
+{% block main %}
+    <div class="line">
+        <div>
+            <p>Nom</p>
+            <input type="text" name="nom" placeholder="Entrez le nom de l'utilisateur" required>
+        </div>
+        <div>
+            <p>Prénom</p>
+            <input type="text" name="prenom" placeholder="Entrez le prénom de l'utilisateur" required>
+        </div>
+    </div>
+    <div class="line">
+        <div>
+            <p>Nom d'utilisateur</p>
+            <input type="text" name="pseudo" placeholder="Entrez le pseudo de l'utilisateur" required>
+        </div>
+        <div>
+            <p>Mot de passe</p>
+            <input type="password" name="password" placeholder="Entrez le mot de passe" required>
+        </div>
+    </div>
+    <div class="line">
+        <div>
+            <p>Grade</p>
+            <select name="grades" id="grades-select">
+                <option selected="selected" hidden="hidden">Choisir un grade</option>
+                {% for x in grades %} 
+                    <option value="">{{x.nomGrade}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <p>Caserne</p>
+            <select name="casernes" id="casernes-select">
+                <option selected="selected" hidden="hidden">Choisir une caserne</option>
+                {% for x in casernes %} 
+                    <option value="">{{x.nomCaserne}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="line fieldset-container">
+        <fieldset>
+            <legend>Chef de caserne:</legend>
+            <div>
+              <input type="radio" id="true" name="oui" value="true" checked />
+              <label for="oui">Oui</label>
+            </div>
+          
+            <div>
+              <input type="radio" id="true" name="oui" value="true" />
+              <label for="non">Non</label>
+            </div>
+          </fieldset>          
+    </div>
+    <div class="line button-container">
+        <input type="submit" value="Ajouter le compte" id="valider" class="bouton">
+        <input type="submit" value="Retour" id="retour" class="bouton">
+    </div>
+{% endblock %}
