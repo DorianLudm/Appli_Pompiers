@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block page_specific_css %}
     <link rel="stylesheet" href="/../static/css/ajout_compte.css"/>
-{% endblock %} 
+{% endblock %}
+{% block header %}
+    <h1>Ajout d'un compte</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
 {% block main %}
     <div class="line">
         <div>

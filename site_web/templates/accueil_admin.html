@@ -4,13 +4,7 @@
 {% endblock %}
 {% block header %}
     <h1>Accueil administrateur</h1>
-    <section>
-        <p>{{ util.nom}}</p>
-        <p>{{ util.prenom}}</p>
-        <p>{{ util.grade}}</p>
-        <p>{{ util.role}}</p>
-        <a href="{{ url_for ('logout') }}">Déconnexion</a>
-    </section>
+    {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
 <div class="boutons">

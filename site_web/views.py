@@ -7,7 +7,7 @@ from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
-#@login_required
+@login_required
 def home():
     return render_template('accueil_admin.html', grades = get_grades(), casernes = get_caserne(), util = informations_utlisateurs())
 
@@ -61,4 +61,4 @@ def recherche_document():
 
 @app.route('/administrateur/ajoutCompte')
 def ajout_compte():
-    return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne())
+    return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne(), util = informations_utlisateurs())
