@@ -22,7 +22,7 @@ input, select {
     width: 100%;
 }
 
-p {
+.line p {
     padding: 1vw;
     padding-left: 0px;
     font-size: 2vw;

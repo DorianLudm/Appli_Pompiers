@@ -1,6 +1,6 @@
-from .app import db, login_manager
+from .app import db, login_manager, 
+from flask_login import UserMixin, current_user
 from sqlalchemy import func
-from flask_login import UserMixin
 
 
 class Utilisateur(db.Model, UserMixin):
@@ -36,8 +36,24 @@ def get_utilisateurs():
 def get_grades():
     return Grade.query.all()
 
+
+class Caserne(db.Model):
+    idCas = db.Column(db.Integer, primary_key =True)
+    nomCaserne = db.Column(db.String(100))
+    adresseCaserne = db.Column(db.String(100))
+
+class Role(db.Model):
+    idRole = db.Column(db.Integer, primary_key =True)
+    nomRole = db.Column(db.String(100))
+
+def get_nom_role(idRole):
+    return Role.query.filter_by(idRole=current_user.idRole).first().nomRole
+
 def get_casernes():
     return Caserne.query.all()
+
+def get_nom_grade(idGrade):
+    return Grade.query.filter_by(idGrade=current_user.idGrade).first().nomGrade
 
 @login_manager.user_loader
 def load_user(username):
@@ -52,3 +68,11 @@ def max_id_utilisateur():
 
 def get_identifiant_utilisateur(user):
     return Utilisateur.query.filter_by(identifiant=user).first()
+
+def informations_utlisateurs():
+    util = dict()
+    util['nom'] = current_user.nomUtilisateur
+    util['prenom'] = current_user.prenomUtilisateur
+    util['grade'] = get_nom_grade(current_user.idGrade)
+    util['role'] = get_nom_role(current_user.idRole)
+    return util
