@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="/../static/css/ajout_compte.css"/>
 {% endblock %} 
 {% block main %}
+<form>
     <div class="line">
         <div>
             <p>Nom</p>
@@ -47,18 +48,19 @@
         <fieldset>
             <legend>Chef de caserne:</legend>
             <div>
-              <input type="radio" id="true" name="oui" value="true" checked />
-              <label for="oui">Oui</label>
+            <input type="radio" id="true" name="oui" value="true" checked />
+            <label for="oui">Oui</label>
             </div>
-          
+        
             <div>
-              <input type="radio" id="true" name="oui" value="true" />
-              <label for="non">Non</label>
+            <input type="radio" id="true" name="oui" value="true" />
+            <label for="non">Non</label>
             </div>
-          </fieldset>          
+        </fieldset>          
     </div>
     <div class="line button-container">
         <input type="submit" value="Ajouter le compte" id="valider" class="bouton">
         <input type="submit" value="Retour" id="retour" class="bouton">
     </div>
+</form>
 {% endblock %}
