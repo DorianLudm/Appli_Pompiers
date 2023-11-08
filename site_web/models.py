@@ -26,15 +26,31 @@ class Tag(db.Model):
     niveauProtection = db.Column(db.Integer)
     couleurTag = db.Column(db.String(100))
     
+class DocumentTag(db.Model):
+    idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
+    idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
+    
 def get_tags():
     return Tag.query.order_by(Tag.nomTag).all()
+
+def get_tag_nom(nomTag):
+    return Tag.query.filter(Tag.nomTag == nomTag).first().idTag
 
 def get_types():
     return TypeDocument.query.all()
 
-def get_document_types(idTypeDoc):
-    return Document.query.filter(Document.idType == idTypeDoc).all()
-
+def get_document_types(idTypeDoc, active_tags):
+    document = Document.query.filter(Document.idType == idTypeDoc).all()
+    resultat = []
+    if active_tags != []:
+        for doc in document:
+            est_present = True
+            for tag in active_tags:
+                if not DocumentTag.query.filter(DocumentTag.idTag == get_tag_nom(tag)).filter(DocumentTag.idDoc == doc.idDoc).all():
+                    est_present = False
+            if est_present:
+                resultat.append(doc)
+        return resultat 
+    return document
 def get_document_id(idDoc):
-    print(idDoc)
     return Document.query.get(idDoc)

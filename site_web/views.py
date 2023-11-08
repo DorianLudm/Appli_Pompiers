@@ -1,6 +1,6 @@
 from .app import app, mkpath
 from flask import render_template, url_for , redirect, request
-from .models import get_tags, get_types, get_document_id, get_document_types
+from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom
 from flask_wtf import FlaskForm
 from wtforms import StringField
 import webbrowser
@@ -17,25 +17,18 @@ def home():
         resultat["nomType"] = i.nomType
         resultat["element"] = []
         
-        for document in get_document_types(i.idType):
+        for document in get_document_types(i.idType, active_tags):
             resultat["element"].append(document)
-            # element = dict()
-            # element['idDoc'] = j
-            # element["nomDoc"] = "element"+str(j)
-            # element["fichierDoc"] = '11 - VSTAF/Acide Chlorydrique.pdf'
-            # resultat["element"].append(element)
         result.append(resultat)
     return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result)
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 def ajouter_filtre():
-    #global active_tags
-    #active_tags.append(tag)
     if request.method=='POST':
         tag=request.form['tags']
         name =request.form['name']
         if tag != "Choisir un tag":
-            print(tag)
+            active_tags.append(tag)
         if name != "":
             print(name)
     return redirect(url_for('home'))
