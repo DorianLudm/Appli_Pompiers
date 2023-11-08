@@ -6,7 +6,7 @@ from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_ca
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
-@app.route('/')
+@app.route('/administrateur')
 @login_required
 def home():
     return render_template('accueil_admin.html', grades = get_grades(), casernes = get_caserne(), util = informations_utlisateurs())
@@ -60,5 +60,6 @@ def recherche_document():
     return render_template('rechercheDocuments.html')
 
 @app.route('/administrateur/ajoutCompte')
+@login_required
 def ajout_compte():
     return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne(), util = informations_utlisateurs())
