@@ -54,10 +54,7 @@ def ouverture_doc(id):
     webbrowser.open(mkpath('./static/document/' + doc)) 
     return redirect(url_for('home'))
   
-@app.route('/administrateur')
-@login_required
-def home_admin():
-  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+
 
 # LOGIN
 
@@ -102,6 +99,11 @@ def logout():
 
 # ADMINISTRATION
 
+@app.route('/administrateur')
+@login_required
+def home_admin():
+  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+
 @app.route('/rechercheComptes')
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
     print(searchNom+"1")
@@ -117,7 +119,7 @@ def recherche_document():
 @app.route('/administrateur/ajouteDocument')
 @login_required
 def ajoute_document():
-    return render_template('ajouter_document.html')
+    return render_template('ajouter_document.html', util = informations_utlisateurs())
 
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
 def appliquer_filtres():
