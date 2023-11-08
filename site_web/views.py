@@ -11,8 +11,8 @@ def login():
     return render_template('login.html')
 
 @app.route('/rechercheComptes')
-def recherche_comptes(selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
-    return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), selectGrade=selectGrade, selectCaserne=selectCaserne)
+def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
+    return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom)
 
 @app.route('/rechercheDocuments')
 def recherche_document():
@@ -24,5 +24,7 @@ def appliquer_filtres():
         if "appliquer" in request.form:
             selectGrade = request.form.get('grades')
             selectCaserne = request.form.get('casernes')
-            return recherche_comptes(selectGrade, selectCaserne)
+            return recherche_comptes("", selectGrade, selectCaserne)
+        search_bar_value = request.form.get('search_bar')
+        return recherche_comptes(search_bar_value)
     return recherche_comptes()
