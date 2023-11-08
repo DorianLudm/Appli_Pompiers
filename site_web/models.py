@@ -1,5 +1,5 @@
-from .app import db
-from .app import login_manager
+from .app import db, login_manager
+from sqlalchemy import func
 from flask_login import UserMixin
 
 
@@ -9,26 +9,34 @@ class Utilisateur(db.Model, UserMixin):
     prenomUtilisateur = db.Column(db.String(100))
     identifiant = db.Column(db.String(100))
     mdp = db.Column(db.String(100))
-    idGrade = db.Column(db.Integer)
-    idRole = db.Column(db.Integer)
-    idCas = db.Column(db.Integer)
+    idGrade = db.Column(db.Integer, db.ForeignKey('Grade.idGrade'))
+    idRole = db.Column(db.Integer, db.ForeignKey('Role.idRole'))
+    idCas = db.Column(db.Integer, db.ForeignKey('Caserne.idCas'))
     
     def get_id(self):
-        return str(self.idUtilisateur)
-
-class Grade(db.Model):
-    idGrade = db.Column(db.Integer, primary_key =True)
-    nomGrade = db.Column(db.String(10))
-
-def get_grades():
-    return Grade.query.all()
-
+      return str(self.idUtilisateur)
+    
 class Caserne(db.Model):
     idCas = db.Column(db.Integer, primary_key =True)
     nomCaserne = db.Column(db.String(100))
     adresseCaserne = db.Column(db.String(100))
 
-def get_caserne():
+class Grade(db.Model):
+    idGrade = db.Column(db.Integer, primary_key =True)
+    nomGrade = db.Column(db.String(100))
+
+class Role(db.Model):
+    idRole = db.Column(db.Integer, primary_key =True)
+    nomRole = db.Column(db.String(100))
+
+def get_utilisateurs():
+    return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
+ 
+
+def get_grades():
+    return Grade.query.all()
+
+def get_casernes():
     return Caserne.query.all()
 
 @login_manager.user_loader

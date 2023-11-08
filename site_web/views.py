@@ -2,7 +2,7 @@ from .app import app
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_caserne
+from .models import Utilisateur,get_utilisateurs, get_identifiant_utilisateur, get_grades, get_casernes
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
@@ -54,11 +54,32 @@ def logout():
 
 # ADMINISTRATION
 
+@app.route('/rechercheComptes')
+def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
+    print(searchNom+"1")
+    return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom)
+
 @app.route('/rechercheDocuments')
 @login_required
 def recherche_document():
     return render_template('rechercheDocuments.html')
 
+@app.route('/appliquer_filtres', methods=['GET', 'POST'])
+def appliquer_filtres():
+    if request.method == 'POST':
+        if "reset" in request.form:
+            return recherche_comptes()
+        selectGrade = request.form.get('grades')
+        selectCaserne = request.form.get('casernes')
+        search_bar_value = request.form.get('search_bar')
+        if selectGrade == "Tous les grades":
+            selectGrade = "Choisir un grade"
+        if selectCaserne == "Toutes les casernes":
+            selectCaserne = "Choisir une caserne"
+        return recherche_comptes(search_bar_value, selectGrade, selectCaserne)
+    return recherche_comptes()
+
 @app.route('/administrateur/ajoutCompte')
 def ajout_compte():
     return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne())
+  
