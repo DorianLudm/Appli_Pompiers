@@ -1,4 +1,5 @@
 from .app import db
+from sqlalchemy import func
 
 class Utilisateur(db.Model):
     idUtilisateur = db.Column(db.Integer, primary_key =True)
@@ -24,7 +25,7 @@ class Role(db.Model):
     nomRole = db.Column(db.String(100))
 
 def get_utilisateurs():
-    return Utilisateur.query.all()
+    return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur)).all()
 
 def get_grades():
     return Grade.query.all()
