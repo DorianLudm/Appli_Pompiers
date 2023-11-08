@@ -1,7 +1,8 @@
 from .app import app
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, IntegerField
+from wtforms.validators import DataRequired
 from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
@@ -83,5 +84,25 @@ def appliquer_filtres():
 
 @app.route('/administrateur/ajoutCompte')
 @login_required
-def ajout_compte():
     return render_template('ajout_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+
+@app.route("/administrateur/gerer_compte/save")
+def save_compte():
+    try:
+        return 1
+    except:
+        erreur_compte()
+
+class CompteForm(FlaskForm):
+    nomUser = StringField('Nom', validators = [DataRequired()])
+    prenomUser = StringField('Prenom', validators = [DataRequired()])
+    pseudo = StringField("Nom d'utilisateur", validators = [DataRequired()])
+    mdp = PasswordField('Mot de passe', validators = [DataRequired()])
+    grade_id = IntegerField('ID Grade', validators = [DataRequired()])
+    caserne_id = IntegerField('ID Caserne', validators = [DataRequired()])
+    chef = bool('Est chef de caserne', validators = [DataRequired()])
+
+@app.route("/administrateur/gerer_compte/erreur")
+def erreur_compte():
+    # Faire un pop-up d'erreur (?)
+    print("erreur")
