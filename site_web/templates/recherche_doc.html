@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_doc.css" rel="stylesheet">
+{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" name="barre_recherche" placeholder="Rechercher un document !" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="tags">
+            <select name="tags" id="tags-select">
+                <option selected="selected" hidden="hidden">Choisir un tag</option>
+                {% for x in tags %} 
+                    <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
+                {% endfor %}
+            </select>
+            <div class="active_tag">
+                {% for x in active_tags %}
+                    <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+                {% endfor %}
+            </div>
+        </div>
+    <div class="bouton_reset">  
+        <input name="reset" type="Submit" value="Reset" /> 
+    </div>
+    </form>
+</div> 
+<div> 
+    <h2>Resultat :</h2>
+    <ul class="resultat">
+        {% for x in result %}
+            <li class="resultat_item">
+                    <h3>{{x.nomType}}</h3>
+                    <div class="resultat_item_info"> 
+                        {% for element in x.element %}
+                            <form method="POST" action ="{{ url_for ('ouverture_doc', id = element.idDoc) }}">
+                                <input type="Submit" value="{{element.nomDoc}}"/>
+                            </form>
+                        {% endfor %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
