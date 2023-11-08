@@ -6,6 +6,7 @@ from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_ca
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
+
 @app.route('/administrateur')
 @login_required
 def home():
@@ -29,7 +30,7 @@ class LoginForm( FlaskForm ):
         else:
             return None
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     f = LoginForm()
     if f.validate_on_submit():
