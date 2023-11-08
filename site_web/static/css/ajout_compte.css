@@ -64,6 +64,7 @@ input.bouton {
     width: auto;
     padding: 1vw 2vw;
     margin-right: 25vw;
+    border-radius: 10px;
 }
 
 input.bouton:last-child {
