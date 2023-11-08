@@ -114,6 +114,11 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
 def recherche_document():
     return render_template('rechercheDocuments.html')
 
+@app.route('/administrateur/ajouteDocument')
+@login_required
+def ajoute_document():
+    return render_template('ajouter_document.html')
+
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
 def appliquer_filtres():
     if request.method == 'POST':
@@ -129,10 +134,10 @@ def appliquer_filtres():
         return recherche_comptes(search_bar_value, selectGrade, selectCaserne)
     return recherche_comptes()
 
-@app.route('/administrateur/ajoutCompte')
+@app.route('/administrateur/ajouteCompte')
 @login_required
-def ajout_compte():
-    return render_template('ajout_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+def ajoute_compte():
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 @app.route("/administrateur/gerer_compte/save")
 def save_compte():
