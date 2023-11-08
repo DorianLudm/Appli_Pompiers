@@ -8,4 +8,25 @@ INSERT INTO GRADE VALUES
 INSERT INTO CASERNE VALUES 
 (1, 'Caserne 1', '1 rue de la caserne');
 INSERT INTO UTILISATEUR VALUES  
-(1, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1)
+(1, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(2, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(3, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(4, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(5, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(6, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(7, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(8, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(9, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(10, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(11, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(12, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(13, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(14, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(15, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(16, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(17, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(18, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(19, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(20, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(21, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1),
+(22, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,1);

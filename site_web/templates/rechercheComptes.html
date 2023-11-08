@@ -37,34 +37,34 @@
 <div> 
     <ul class="resultat">
         <li class="compte">
-            <ul class="in_ligne">
-                {% for user in users %}
-                    {% if searchNom == "" or searchNom.lower() in user.nomUtilisateur.lower() or searchNom.lower() in user.prenomUtilisateur.lower() %}
-                        {% set gradeUser = [] %}
-                        {% set caserneUser = [] %}
-                        {% for grade in grades %}
-                            {% if grade.idGrade == user.idGrade %}
-                                {% set _ = gradeUser.append(grade.nomGrade) %}
-                            {% endif %}
-                        {% endfor %}
-                        {% for caserne in casernes %}
-                            {% if caserne.idCas == user.idCas %}
-                                {% set _ = caserneUser.append(caserne.nomCaserne) %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if selectGrade == gradeUser[0] or selectGrade == "Choisir un grade" %}
-                            {% if selectCaserne == caserneUser[0] or selectCaserne == "Choisir une caserne" %}
+            {% for user in users %}
+                {% if searchNom == "" or searchNom.lower() in user.nomUtilisateur.lower() or searchNom.lower() in user.prenomUtilisateur.lower() %}
+                    {% set gradeUser = [] %}
+                    {% set caserneUser = [] %}
+                    {% for grade in grades %}
+                        {% if grade.idGrade == user.idGrade %}
+                            {% set _ = gradeUser.append(grade.nomGrade) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for caserne in casernes %}
+                        {% if caserne.idCas == user.idCas %}
+                            {% set _ = caserneUser.append(caserne.nomCaserne) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if selectGrade == gradeUser[0] or selectGrade == "Choisir un grade" %}
+                        {% if selectCaserne == caserneUser[0] or selectCaserne == "Choisir une caserne" %}
+                            <ul class="in_ligne">
                                 <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
                                 <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</a></li>
                                 <li class="gradeCompte">{{ gradeUser[0] }}</li>
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
                                 <a href=supprimerCompte><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
-                            {% endif %} 
-                        {% endif %}
+                            </ul>
+                        {% endif %} 
                     {% endif %}
-                {% endfor %}
-            </ul>
+                {% endif %}
+            {% endfor %}
         </li>
     </ul>
 </div>
