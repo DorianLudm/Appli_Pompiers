@@ -143,9 +143,9 @@ li.ImgCompte{
 }
 
 .nomCompte{
-    flex-basis: 35%;
+    flex-basis: 130%;
 }
 
 .gradeCompte{
-    flex-basis: 15%;
+    flex-basis: 50%;
 }

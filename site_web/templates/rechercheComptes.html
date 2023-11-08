@@ -14,6 +14,9 @@
         <div class="grades">
             <select name="grades" id="grades-select">
                 <option value="{{selectGrade}}" hidden="hidden">{{ selectGrade }} </option>
+                {% if selectGrade != "Choisir un grade" %}
+                    <option value="Tous les grades">Tous les grades</option>
+                {% endif %}
                 {% for x in grades %}
                     <option value="{{x.nomGrade}}">{{x.nomGrade}}</option>
                 {% endfor %}
@@ -22,6 +25,9 @@
         <div class="casernes">
             <select name="casernes" id="casernes-select">
                 <option value="{{selectCaserne}}" hidden="hidden">{{ selectCaserne }}</option>
+                {% if selectCaserne != "Choisir une caserne" %}
+                    <option value="Toutes les casernes">Toutes les casernes</option>
+                {% endif %}
                 {% for x in casernes %}
                     <option value="{{x.nomCaserne}}">{{x.nomCaserne}}</option>
                 {% endfor %}
@@ -55,7 +61,7 @@
                         {% if selectCaserne == caserneUser[0] or selectCaserne == "Choisir une caserne" %}
                             <ul class="in_ligne">
                                 <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
-                                <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</a></li>
+                                <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur.upper() }} {{ user.prenomUtilisateur }}</a></li>
                                 <li class="gradeCompte">{{ gradeUser[0] }}</li>
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>

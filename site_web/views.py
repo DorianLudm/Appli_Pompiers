@@ -26,6 +26,10 @@ def appliquer_filtres():
             selectGrade = request.form.get('grades')
             selectCaserne = request.form.get('casernes')
             search_bar_value = request.form.get('search_bar')
+            if selectGrade == "Tous les grades":
+                selectGrade = "Choisir un grade"
+            if selectCaserne == "Toutes les casernes":
+                selectCaserne = "Choisir une caserne"
             return recherche_comptes(search_bar_value, selectGrade, selectCaserne)
         if "reset" in request.form:
             return recherche_comptes()
