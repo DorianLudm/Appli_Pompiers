@@ -37,6 +37,54 @@ class Utilisateur(db.Model, UserMixin):
     
     def get_id(self):
       return str(self.idUtilisateur)
+    
+class TypeDocument(db.Model):
+    idType = db.Column(db.Integer, primary_key =True)
+    nomType = db.Column(db.String(100))
+    
+class Document(db.Model):
+    idDoc = db.Column(db.Integer, primary_key =True)
+    nomDoc = db.Column(db.String(100))
+    fichierDoc = db.Column(db.String(100))
+    idType = db.Column(db.Integer, db.ForeignKey('typedocument.idType'))
+    
+class Tag(db.Model):
+    idTag = db.Column(db.Integer, primary_key =True)
+    nomTag = db.Column(db.String(100))
+    niveauProtection = db.Column(db.Integer)
+    couleurTag = db.Column(db.String(100))
+    
+class DocumentTag(db.Model):
+    idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
+    idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
+    
+def get_tags():
+    return Tag.query.order_by(Tag.nomTag).all()
+
+def get_tag(nomTag):
+    return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first().nomTag
+
+def get_tag_nom(nomTag):
+    return Tag.query.filter(Tag.nomTag == nomTag).first().idTag
+
+def get_types():
+    return TypeDocument.query.all()
+
+def get_document_types(idTypeDoc, active_tags,filtre_texte):
+    document = Document.query.filter(Document.idType == idTypeDoc).filter(Document.nomDoc.like('%' + filtre_texte + '%')).all()
+    resultat = []
+    if active_tags != []:
+        for doc in document:
+            est_present = True
+            for tag in active_tags:
+                if not DocumentTag.query.filter(DocumentTag.idTag == get_tag_nom(tag)).filter(DocumentTag.idDoc == doc.idDoc).all():
+                    est_present = False
+            if est_present:
+                resultat.append(doc)
+        return resultat 
+    return document
+def get_document_id(idDoc):
+    return Document.query.get(idDoc)
 
 def get_utilisateurs():
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
@@ -77,16 +125,3 @@ def informations_utlisateurs():
     util['grade'] = get_nom_grade(current_user.idGrade)
     util['role'] = get_nom_role(current_user.idRole)
     return util
-
-def create_utilisateur(nomUtilisateur, prenomUtilisateur, identifiant, mdp, idGrade, idRole, idCas):
-    new_utilisateur = Utilisateur(
-        nomUtilisateur=nomUtilisateur,
-        prenomUtilisateur=prenomUtilisateur,
-        identifiant=identifiant,
-        mdp=mdp,
-        idGrade=idGrade,
-        idRole=idRole,
-        idCas=idCas
-    )
-    db.session.add(new_utilisateur)
-    db.session.commit()

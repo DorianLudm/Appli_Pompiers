@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/recherche_doc.css" rel="stylesheet">
+{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="" method="get" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" name="name" id="name"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+    </form>
+    <div class="tags">
+        <select name="tags" id="tags-select">
+            {% for x in tags %}
+                <option value="">{{x.nomTag}}</option>
+            {% endfor %}
+        </select>
+        <div class="active_tag">
+            {% for x in active_tags %}
+                <input type="Submit" value="{{x.nomTag}}"/>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="bouton_reset">
+        <input type="Submit" value="Reset" />
+    </div>
+</div>
+<div> 
+    <h2>Resultat :</h2>
+    <ul class="resultat">
+        {% for x in result %}
+            <li class="resultat_item">
+                    <h3>{{x.nomType}}</h3>
+                    <div class="resultat_item_info">
+                        {% for element in x.element %}
+                            <input type="Submit" value="{{element.nomDoc}}"/>
+                        {% endfor %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
