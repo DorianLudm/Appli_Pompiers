@@ -11,7 +11,7 @@ def login():
     return render_template('login.html')
 
 @app.route('/rechercheComptes')
-def recherche_comptes(selectGrade="", selectCaserne=""):
+def recherche_comptes(selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), selectGrade=selectGrade, selectCaserne=selectCaserne)
 
 @app.route('/rechercheDocuments')
@@ -21,16 +21,8 @@ def recherche_document():
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
 def appliquer_filtres():
     if request.method == 'POST':
-        selectGrade = request.form.get('grades')
-        selectCaserne = request.form.get('casernes')
-        if selectGrade == "Choisir un grade":
-            selectGrade = ""
-        if selectCaserne == "Choisir une caserne":
-            selectCaserne = ""   
-        return recherche_comptes(selectGrade, selectCaserne)
-    return recherche_comptes()   
-
-@app.route('/reset_filtres', methods=['GET', 'POST'])
-def reset_filtres():
-    if request.method == 'POST':
-        return recherche_comptes()
+        if "appliquer" in request.form:
+            selectGrade = request.form.get('grades')
+            selectCaserne = request.form.get('casernes')
+            return recherche_comptes(selectGrade, selectCaserne)
+    return recherche_comptes()

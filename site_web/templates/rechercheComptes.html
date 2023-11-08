@@ -28,8 +28,8 @@
             </select>
         </div>
         <div class="bouton_add_account">
-            <button type="submit" class="bouton_filtre">Appliquer les filtres</button>
-            <button type="submit" class="bouton_filtre">Réinitialiser les filtres</button>
+            <button type="submit" name="appliquer" class="bouton_filtre">Appliquer les filtres</button>
+            <button type="submit" name="reset" class="bouton_filtre">Réinitialiser les filtres</button>
             <input type="Submit" value="Ajouter un compte"/>
         </div>
     </form>
@@ -51,8 +51,8 @@
                             {% set _ = caserneUser.append(caserne.nomCaserne) %}
                         {% endif %}
                     {% endfor %}
-                    {% if selectGrade == gradeUser[0] or selectGrade == "" %}
-                        {% if selectCaserne == caserneUser[0] or selectCaserne == "" %}
+                    {% if selectGrade == gradeUser[0] or selectGrade == "Choisir un grade" %}
+                        {% if selectCaserne == caserneUser[0] or selectCaserne == "Choisir une caserne" %}
                             <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
                             <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</a></li>
                             <li class="gradeCompte">{{ gradeUser[0] }}</li>
