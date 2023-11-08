@@ -2,6 +2,10 @@
 {% block page_specific_css %}
 <link href="/static/css/recherche_comptes.css" rel="stylesheet">
 {% endblock %}
+{% block header %}
+    <h1>Recherche de comptes</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
 {% block main %}
 <div id="filtre">
     <form method="POST" action=" {{ url_for('appliquer_filtres') }}" class="filtre_barre">
@@ -36,7 +40,7 @@
         <div class="bouton_add_account">
             <input type="submit" name="appliquer" class="bouton_filtre" value="Appliquer les filtres"/>
             <input type="submit" name="reset" class="bouton_filtre" value="Réinitialiser les filtres"/>
-            <input type="Submit" value="Ajouter un compte"/>
+            <a href="{{ url_for ('ajout_compte')}}"><input type="button" value="Ajouter un compte"/></a>
         </div>
     </form>
 </div>
