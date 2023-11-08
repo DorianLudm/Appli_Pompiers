@@ -1,6 +1,6 @@
-from .app import db
-from .app import login_manager
-from flask_login import UserMixin
+from .app import db, login_manager
+from flask_login import UserMixin, current_user
+from sqlalchemy import func
 
 
 class Utilisateur(db.Model, UserMixin):
@@ -9,27 +9,41 @@ class Utilisateur(db.Model, UserMixin):
     prenomUtilisateur = db.Column(db.String(100))
     identifiant = db.Column(db.String(100))
     mdp = db.Column(db.String(100))
-    idGrade = db.Column(db.Integer)
-    idRole = db.Column(db.Integer)
-    idCas = db.Column(db.Integer)
+    idGrade = db.Column(db.Integer, db.ForeignKey('Grade.idGrade'))
+    idRole = db.Column(db.Integer, db.ForeignKey('Role.idRole'))
+    idCas = db.Column(db.Integer, db.ForeignKey('Caserne.idCas'))
     
     def get_id(self):
-        return str(self.idUtilisateur)
-
-class Grade(db.Model):
-    idGrade = db.Column(db.Integer, primary_key =True)
-    nomGrade = db.Column(db.String(10))
-
-def get_grades():
-    return Grade.query.all()
-
+      return str(self.idUtilisateur)
+    
 class Caserne(db.Model):
     idCas = db.Column(db.Integer, primary_key =True)
     nomCaserne = db.Column(db.String(100))
     adresseCaserne = db.Column(db.String(100))
 
-def get_caserne():
+class Grade(db.Model):
+    idGrade = db.Column(db.Integer, primary_key =True)
+    nomGrade = db.Column(db.String(100))
+
+def get_utilisateurs():
+    return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
+ 
+
+def get_grades():
+    return Grade.query.all()
+
+class Role(db.Model):
+    idRole = db.Column(db.Integer, primary_key =True)
+    nomRole = db.Column(db.String(100))
+
+def get_nom_role(idRole):
+    return Role.query.filter_by(idRole=current_user.idRole).first().nomRole
+
+def get_casernes():
     return Caserne.query.all()
+
+def get_nom_grade(idGrade):
+    return Grade.query.filter_by(idGrade=current_user.idGrade).first().nomGrade
 
 @login_manager.user_loader
 def load_user(username):
@@ -44,3 +58,11 @@ def max_id_utilisateur():
 
 def get_identifiant_utilisateur(user):
     return Utilisateur.query.filter_by(identifiant=user).first()
+
+def informations_utlisateurs():
+    util = dict()
+    util['nom'] = current_user.nomUtilisateur
+    util['prenom'] = current_user.prenomUtilisateur
+    util['grade'] = get_nom_grade(current_user.idGrade)
+    util['role'] = get_nom_role(current_user.idRole)
+    return util
