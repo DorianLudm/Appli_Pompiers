@@ -56,7 +56,7 @@ def ouverture_doc(id):
   
 @app.route('/administrateur')
 @login_required
-def home():
+def home_admin():
   return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 # LOGIN
@@ -84,7 +84,7 @@ def login():
         util = f.get_authentification_utilisateur()
         if util:
             login_user(util)
-            return redirect(url_for("home"))
+            return redirect(url_for("home_admin"))
         else:
             print("probleme")
             return render_template(
