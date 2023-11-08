@@ -84,6 +84,7 @@ def appliquer_filtres():
 
 @app.route('/administrateur/ajoutCompte')
 @login_required
+def ajout_compte():
     return render_template('ajout_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 @app.route("/administrateur/gerer_compte/save")
@@ -100,7 +101,7 @@ class CompteForm(FlaskForm):
     mdp = PasswordField('Mot de passe', validators = [DataRequired()])
     grade_id = IntegerField('ID Grade', validators = [DataRequired()])
     caserne_id = IntegerField('ID Caserne', validators = [DataRequired()])
-    chef = bool('Est chef de caserne', validators = [DataRequired()])
+    # chef = bool('Est chef de caserne', validators = [DataRequired()])
 
 @app.route("/administrateur/gerer_compte/erreur")
 def erreur_compte():
