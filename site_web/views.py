@@ -2,7 +2,7 @@ from .app import app
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from .models import Utilisateur, get_identifiant_utilisateur
+from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_caserne
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
@@ -11,10 +11,8 @@ from flask_login import login_user, logout_user, login_required
 def home():
     return render_template('ajout_compte.html', grades = get_grades(), casernes = get_caserne())
 
-# LOGIN
-
 class LoginForm( FlaskForm ):
-    identifiant = StringField('Identifiant ')
+    identifiant = StringField('Identifiant')
     mdp = PasswordField('Password')
     def get_authentification_utilisateur(self):
         util = get_identifiant_utilisateur(self.identifiant.data)
