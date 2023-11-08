@@ -33,14 +33,17 @@ class DocumentTag(db.Model):
 def get_tags():
     return Tag.query.order_by(Tag.nomTag).all()
 
+def get_tag(nomTag):
+    return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first().nomTag
+
 def get_tag_nom(nomTag):
     return Tag.query.filter(Tag.nomTag == nomTag).first().idTag
 
 def get_types():
     return TypeDocument.query.all()
 
-def get_document_types(idTypeDoc, active_tags):
-    document = Document.query.filter(Document.idType == idTypeDoc).all()
+def get_document_types(idTypeDoc, active_tags,filtre_texte):
+    document = Document.query.filter(Document.idType == idTypeDoc).filter(Document.nomDoc.like('%' + filtre_texte + '%')).all()
     resultat = []
     if active_tags != []:
         for doc in document:

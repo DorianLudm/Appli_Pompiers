@@ -52,6 +52,9 @@ div>div,div>form,.tags{
     text-decoration: none;
     cursor: pointer;
 }
+.active_tag>input:hover{
+    opacity: 0.6;
+}
 .bouton_reset{
     flex-grow: 0;
     justify-content: right;
