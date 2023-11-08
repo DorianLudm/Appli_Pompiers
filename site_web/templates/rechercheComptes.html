@@ -6,7 +6,7 @@
 <div id="filtre">
     <form method="POST" action=" {{ url_for('appliquer_filtres') }}" class="filtre_barre">
         <div class="research_bar">
-          <input type="text" name="search_bar" id="name"/>
+          <input type="text" name="search_bar" id="name" value="{{searchNom}}" placeholder="Recherche par noms de comptes"/>
         </div>
         <div class="loop_research">
             <input type="image" src="/static/img/loupe.png" alt="Submit"/>
