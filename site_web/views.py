@@ -2,14 +2,14 @@ from .app import app
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_caserne
+from .models import Utilisateur, get_identifiant_utilisateur, get_grades, get_caserne, informations_utlisateurs
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
 #@login_required
 def home():
-    return render_template('accueil_admin.html', grades = get_grades(), casernes = get_caserne())
+    return render_template('accueil_admin.html', grades = get_grades(), casernes = get_caserne(), util = informations_utlisateurs())
 
 # LOGIN
 
@@ -47,7 +47,7 @@ def login():
         "login.html",
         form=f)
 
-@app.route("/logout/")
+@app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('login'))  

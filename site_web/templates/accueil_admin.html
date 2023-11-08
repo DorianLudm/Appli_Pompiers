@@ -2,6 +2,16 @@
 {% block page_specific_css %}
     <link rel="stylesheet" href="../static/css/accueil_admin.css"/>
 {% endblock %}
+{% block header %}
+    <h1>Accueil administrateur</h1>
+    <section>
+        <p>{{ util.nom}}</p>
+        <p>{{ util.prenom}}</p>
+        <p>{{ util.grade}}</p>
+        <p>{{ util.role}}</p>
+        <a href="{{ url_for ('logout') }}">Déconnexion</a>
+    </section>
+{% endblock %}
 {% block main %}
 <div class="boutons">
     <a href="{{ url_for ('ajout_compte') }}"><input type="button" value="Gérer les comptes"/></a>
