@@ -1,24 +1,72 @@
-main{
+main {
     background-color: #F24343;
-}
-
-div{
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 100vh;
     padding: 1vw;
 }
 
-p{
-    padding: 1vw;
+.line {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
-input{
+.line > div {
+    width: 45%;
+}
+
+input, select {
+    width: 100%;
+}
+
+p {
+    padding: 1vw;
+    padding-left: 0px;
+    font-size: 2vw;
+}
+
+fieldset div {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px; /* adjust these values as needed */
+    cursor: pointer;
+}
+
+fieldset input{
+    height: 1.5vw;
+}
+
+.fieldset-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+input, select {
     border: black thin solid;
     border-radius: 10px;
-    /* margin: 2vw;
-    padding: 10px; */
-    font-size: 2vw;
+    font-size: 1vw;
     font-weight: bold;
     text-decoration: none;
-    cursor: pointer; 
+    cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+input.bouton {
+    width: auto;
+    padding: 1vw 2vw;
+    margin-right: 25vw;
+    border-radius: 10px;
+}
+
+input.bouton:last-child {
+    margin-right: 0;
 }
