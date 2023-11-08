@@ -3,27 +3,40 @@ from flask_login import UserMixin, current_user
 from sqlalchemy import func
 
 
+class Caserne(db.Model):
+    idCas = db.Column(db.Integer, primary_key =True)
+    nomCaserne = db.Column(db.String(100))
+    adresseCaserne = db.Column(db.String(100))
+
+    def get_id(self):
+      return str(self.idCas)
+
+class Grade(db.Model):
+    idGrade = db.Column(db.Integer, primary_key =True)
+    nomGrade = db.Column(db.String(100))
+
+    def get_id(self):
+        return str(self.idGrade)
+
+class Role(db.Model):
+    idRole = db.Column(db.Integer, primary_key =True)
+    nomRole = db.Column(db.String(100))
+
+    def get_id(self):
+      return str(self.idRole)
+
 class Utilisateur(db.Model, UserMixin):
     idUtilisateur = db.Column(db.Integer, primary_key =True)
     nomUtilisateur = db.Column(db.String(100))
     prenomUtilisateur = db.Column(db.String(100))
     identifiant = db.Column(db.String(100))
     mdp = db.Column(db.String(100))
-    idGrade = db.Column(db.Integer, db.ForeignKey('Grade.idGrade'))
-    idRole = db.Column(db.Integer, db.ForeignKey('Role.idRole'))
-    idCas = db.Column(db.Integer, db.ForeignKey('Caserne.idCas'))
+    idGrade = db.Column(db.Integer, db.ForeignKey('grade.idGrade'))
+    idRole = db.Column(db.Integer, db.ForeignKey('role.idRole'))
+    idCas = db.Column(db.Integer, db.ForeignKey('caserne.idCas'))
     
     def get_id(self):
       return str(self.idUtilisateur)
-    
-class Caserne(db.Model):
-    idCas = db.Column(db.Integer, primary_key =True)
-    nomCaserne = db.Column(db.String(100))
-    adresseCaserne = db.Column(db.String(100))
-
-class Grade(db.Model):
-    idGrade = db.Column(db.Integer, primary_key =True)
-    nomGrade = db.Column(db.String(100))
 
 def get_utilisateurs():
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
@@ -32,9 +45,7 @@ def get_utilisateurs():
 def get_grades():
     return Grade.query.all()
 
-class Role(db.Model):
-    idRole = db.Column(db.Integer, primary_key =True)
-    nomRole = db.Column(db.String(100))
+
 
 def get_nom_role(idRole):
     return Role.query.filter_by(idRole=current_user.idRole).first().nomRole
@@ -66,3 +77,16 @@ def informations_utlisateurs():
     util['grade'] = get_nom_grade(current_user.idGrade)
     util['role'] = get_nom_role(current_user.idRole)
     return util
+
+def create_utilisateur(nomUtilisateur, prenomUtilisateur, identifiant, mdp, idGrade, idRole, idCas):
+    new_utilisateur = Utilisateur(
+        nomUtilisateur=nomUtilisateur,
+        prenomUtilisateur=prenomUtilisateur,
+        identifiant=identifiant,
+        mdp=mdp,
+        idGrade=idGrade,
+        idRole=idRole,
+        idCas=idCas
+    )
+    db.session.add(new_utilisateur)
+    db.session.commit()

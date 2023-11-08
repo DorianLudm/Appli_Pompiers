@@ -10,6 +10,10 @@ INSERT INTO CASERNE VALUES
 (2, 'Caserne 2', '2 rue de la caserne'),
 (3, 'Caserne 3', '3 rue de la caserne'),
 (4, 'Caserne 4', '4 rue de la caserne');
+
+INSERT INTO ROLE VALUES  
+(-1, 'Administrateur'),(2 ,'Sapeur-pompier');
+
 INSERT INTO UTILISATEUR VALUES  
 (1, 'LUDMANN', 'Dorianne', 'dorianne','XxDarkSasukexX',1,-1,2),
 (2, 'MASSUARD', 'Charles', 'charles','XxDarkSasukexX',5,-1,2),
