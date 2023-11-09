@@ -25,7 +25,7 @@ def home():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs())
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 def ajouter_filtre():
@@ -93,7 +93,8 @@ def login():
                 erreur = "Login ou mot de passe incorrect")
     return render_template(
         "login.html",
-        form=f)
+        form=f,
+        title='Page de connexion')
 
 @app.route("/logout")
 def logout():
