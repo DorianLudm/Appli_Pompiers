@@ -1,6 +1,6 @@
-from .app import app, mkpath
+from .app import app, mkpath, db
 from flask import render_template, url_for , redirect, request,  flash, session
-from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents
+from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
@@ -109,7 +109,6 @@ def home_admin():
 
 @app.route('/rechercheComptes')
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
-    print(searchNom+"1")
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
   
@@ -127,10 +126,6 @@ def recherche_doc_admin():
         result.append(resultat)
     return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
 
-@app.route('/rechercheDocuments')
-@login_required
-def recherche_document():
-    return render_template('rechercheDocuments.html')
 
 @app.route('/administrateur/ajouteDocument')
 @login_required
@@ -181,6 +176,14 @@ def ajouter_filtre_doc_admin():
 @login_required
 def ajoute_compte():
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+
+@app.route('/administrateur/supprimerCompte/<id>')
+@login_required
+def supprimer_compte(id):
+    util = get_utilisateur(id)
+    db.session.delete(util)
+    db.session.commit()
+    return appliquer_filtres()
 
 @app.route("/administrateur/gerer_compte/save")
 def save_compte():

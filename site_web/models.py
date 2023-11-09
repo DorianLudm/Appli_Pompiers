@@ -97,7 +97,8 @@ def get_utilisateurs():
 def get_grades():
     return Grade.query.all()
 
-
+def get_utilisateur(idUtilisateur):
+    return Utilisateur.query.get(idUtilisateur)
 
 def get_nom_role(idRole):
     return Role.query.filter_by(idRole=current_user.idRole).first().nomRole
