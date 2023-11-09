@@ -25,7 +25,7 @@ def home():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs())
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 def ajouter_filtre():
@@ -93,7 +93,8 @@ def login():
                 erreur = "Login ou mot de passe incorrect")
     return render_template(
         "login.html",
-        form=f)
+        form=f,
+        title='Page de connexion')
 
 @app.route("/logout")
 def logout():
@@ -105,7 +106,7 @@ def logout():
 @app.route('/administrateur')
 @login_required
 def home_admin():
-  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
 
 @app.route('/rechercheComptes')
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
@@ -130,7 +131,7 @@ def recherche_doc_admin():
 @app.route('/administrateur/ajouteDocument')
 @login_required
 def ajoute_document():
-    return render_template('ajouter_document.html', util = informations_utlisateurs())
+    return render_template('ajouter_document.html', util = informations_utlisateurs(), title='Ajouter un document')
 
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
 def appliquer_filtres():
@@ -175,7 +176,7 @@ def ajouter_filtre_doc_admin():
 @app.route('/administrateur/ajouteCompte')
 @login_required
 def ajoute_compte():
-    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte')
 
 @app.route('/administrateur/supprimerCompte/<id>')
 @login_required

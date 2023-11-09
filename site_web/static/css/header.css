@@ -33,7 +33,7 @@ header section {
 @media screen and (min-width: 1251px) {
     h1 {
         font-size: 2.5vw;
-        display: flex;
+        align-self: center;
     }
 }
 
