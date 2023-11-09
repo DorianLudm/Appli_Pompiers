@@ -69,7 +69,11 @@
                                 <li class="gradeCompte">{{ gradeUser[0] }}</li>
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                                <a href="{{ url_for('supprimer_compte', id= user.idUtilisateur) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                                {% if user.idUtilisateur != current_user.idUtilisateur : %}
+                                    <a href="{{ url_for('supprimer_compte', id= user.idUtilisateur) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                                {% else %}
+                                    <p class="compteActuel">Votre Compte</p>
+                                {% endif %}
                             </ul>
                         {% endif %} 
                     {% endif %}

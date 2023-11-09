@@ -151,3 +151,7 @@ li.ImgCompte{
 .gradeCompte{
     flex-basis: 50%;
 }
+
+.compteActuel{
+    font-size: 120%;
+}
