@@ -66,7 +66,7 @@ div>div,div>form,.tags{
     justify-content: left;
     flex-basis: auto;
 }
-#tags-select{
+#tags-select, #type-select{
     height: 40%;
     border: none;
     font-size: 20px;
@@ -95,6 +95,7 @@ body{
     flex-wrap: wrap;
     padding: 10px;
     margin: 30px;
+    margin-top: 0px;
     list-style-type: none;
     color: white;
     font-size: 25px;
@@ -150,4 +151,9 @@ li.ImgDoc{
 
 .bouton_reset{
     margin-right: 2%;
+}
+
+.retourHome{
+    margin-top: 1%;
+    margin-left: 1%;
 }

@@ -24,7 +24,7 @@
             </select>
         </div>
         <div class="types">
-            <select name="types">
+            <select name="types" id="type-select">
                 <option selected="selected" hidden="hidden">{{ selectType }}</option>
                 {% if selectType != "Choisir un type" %}
                     <option value="Tous les types">Tous les types</option>
@@ -43,7 +43,10 @@
         <input name="reset" type="Submit" value="Réinitialiser les filtres" /> 
     </div>
     </form>
-</div> 
+</div>
+<div>
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="< Retour à l'accueil"/></a>
+</div>
 <div> 
     <ul class="resultat">
         <li class="doc">

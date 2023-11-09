@@ -125,7 +125,7 @@ def recherche_doc_admin():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc_admin.html",tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
+    return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
 
 @app.route('/rechercheDocuments')
 @login_required
