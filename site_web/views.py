@@ -10,7 +10,7 @@ import webbrowser
 
 active_tags = []
 filtre_texte = ""
-
+selectType = "Choisir un type"
 
 @app.route('/pompier')
 @login_required
@@ -115,7 +115,7 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
   
 @app.route('/rechercheDocAdmin')
 def recherche_doc_admin():
-    global active_tags
+    global active_tags, selectType
     result = []
     for i in get_types():
         resultat = dict()
@@ -125,7 +125,7 @@ def recherche_doc_admin():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc_admin.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs())
+    return render_template("recherche_doc_admin.html",tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType)
 
 @app.route('/rechercheDocuments')
 @login_required
@@ -154,8 +154,11 @@ def appliquer_filtres():
 
 @app.route('/appliquer_filtres_doc', methods=['GET', 'POST'])
 def ajouter_filtre_doc_admin():
-    global active_tags, filtre_texte
+    global active_tags, filtre_texte, selectType
     if request.method=='POST':
+        selectType = request.form.get('types')
+        if selectType == "Tous les types":
+            selectType = "Choisir un type"
         tag=request.form['tags']
         if tag != "Choisir un tag":
             active_tags.append(tag)
@@ -167,6 +170,7 @@ def ajouter_filtre_doc_admin():
         if request.form.get('reset'):
             active_tags = []
             filtre_texte = ""
+            selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
         elif request.form.get('retirer_filtre'):
             active_tags.remove(request.form.get('retirer_filtre'))

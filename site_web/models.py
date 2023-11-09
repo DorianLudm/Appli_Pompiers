@@ -86,6 +86,7 @@ def get_document_types(idTypeDoc, active_tags,filtre_texte):
                 resultat.append(doc)
         return resultat 
     return document
+
 def get_document_id(idDoc):
     return Document.query.get(idDoc)
 

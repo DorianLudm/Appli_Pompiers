@@ -12,8 +12,9 @@ div>div,div>form,.tags{
     flex-basis: 30%;
 }
 .loop_research {
-    width: 10%;
-    height: 20%;
+    width: auto;
+    height: 6vh;
+    margin-right: 2%;
 }
 .loop_research>input{
     width: 100%;
@@ -60,7 +61,7 @@ div>div,div>form,.tags{
     justify-content: right;
     flex-basis: auto;
 }
-.tags{
+.tags, .types{
     flex-grow: 1;
     justify-content: left;
     flex-basis: auto;

@@ -22,6 +22,17 @@
                     <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
                 {% endfor %}
             </select>
+            <div class="types">
+                <select name="types">
+                    <option selected="selected" hidden="hidden">{{ selectType }}</option>
+                    {% if selectType != "Choisir un type" %}
+                        <option value="Tous les types">Tous les types</option>
+                    {% endif %}
+                    {% for x in types %} 
+                        <option value="{{x.nomType}}" type ="submit">{{x.nomType}}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="active_tag">
                 {% for x in active_tags %}
                     <input name="retirer_filtre" type="Submit" value="{{x}}"/>
@@ -29,7 +40,7 @@
             </div>
         </div>
     <div class="bouton_reset">
-        <input name="reset" type="Submit" value="Reset" /> 
+        <input name="reset" type="Submit" value="Réinitialiser les filtres" /> 
     </div>
     </form>
 </div> 
@@ -37,15 +48,17 @@
     <ul class="resultat">
         <li class="doc">
             {% for elem in result %}
-                {% for doc in elem.element %}
-                    <ul class="in_ligne">
-                        <a href=modifierDoc><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
-                        <li class="nomDoc"><a href=modifierCompte>{{ doc.nomDoc }}</a></li>
-                        <li class="typeDoc">{{ doc.idType }}</li>
-                        <a href=modifierDoc><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                        <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
-                    </ul>
-                {% endfor %}
+                {% if elem.nomType == selectType or selectType == "Choisir un type"%}
+                    {% for doc in elem.element %}
+                        <ul class="in_ligne">
+                            <a href=modifierDoc><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
+                            <li class="nomDoc"><a href=modifierCompte>{{ doc.nomDoc }}</a></li>
+                            <li class="typeDoc">{{ elem.nomType }}</li>
+                            <a href=modifierDoc><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+                            <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                        </ul>
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
         </li>
     </ul>
