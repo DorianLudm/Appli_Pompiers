@@ -20,12 +20,10 @@ def home():
         resultat = dict()
         resultat["nomType"] = i.nomType
         resultat["element"] = []
-        
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    print(active_tags)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util=informations_utlisateurs())
+    return render_template("recherche_doc.html",tags = get_tags(),title = "Recherche Document", active_tags = active_tags, result = result, util=informations_utlisateurs())
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 def ajouter_filtre():
