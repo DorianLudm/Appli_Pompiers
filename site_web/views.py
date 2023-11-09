@@ -125,7 +125,7 @@ def recherche_doc_admin():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc_admin.html",tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType)
+    return render_template("recherche_doc_admin.html",tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
 
 @app.route('/rechercheDocuments')
 @login_required
@@ -156,6 +156,7 @@ def appliquer_filtres():
 def ajouter_filtre_doc_admin():
     global active_tags, filtre_texte, selectType
     if request.method=='POST':
+        filtre_texte = request.form.get('barre_recherche')
         selectType = request.form.get('types')
         if selectType == "Tous les types":
             selectType = "Choisir un type"

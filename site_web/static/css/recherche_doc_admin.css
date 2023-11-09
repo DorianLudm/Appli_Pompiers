@@ -147,3 +147,7 @@ li.ImgDoc{
 .typeDoc{
     flex-basis: 50%;
 }
+
+.bouton_reset{
+    margin-right: 2%;
+}
