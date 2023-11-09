@@ -11,16 +11,40 @@ header section {
     text-align: center;
 }
 
-header img {
-	width: auto;
-	height: 14em;
+@media screen and (min-width: 1251px) {
+    header img {
+        height: 100%;
+        max-height: 10vw;
+        width: auto;
+    }
 }
 
-h1 {
-    font-size: xxx-large;
-    font-family : "Copperplate";
+@media screen and (max-width: 1250px) {
+    header img {
+        width: 100%;
+        max-width: 10vh;
+        height: auto;
+    }
+}
+
+@media screen and (min-width: 1251px) {
+    h1 {
+        font-size: 2.5vw;
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 1250px) {
+    h1 {
+        font-size: 2.5vh;
+        align-self: center;
+    }
 }
 
 h2 {
     font-family : "Arial";
+}
+
+section{
+    margin-right: 10px;
 }
