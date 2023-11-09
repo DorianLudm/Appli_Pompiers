@@ -50,7 +50,9 @@
 </div>
 
 <div class="boutons-bas">
-    <a href="{{ url_for ('home_admin')}}"><input type="button" value="Annuler" id="annuler"></a>
+    
+    <input type="submit" value="Annuler" id="annuler">
     <input type="submit" value="Enregistrer" id="ajouter-document">
+    <a href="{{ url_for ('home_admin')}}"><input type="button" value="Retour"></a>
 </div>
 {% endblock %}
