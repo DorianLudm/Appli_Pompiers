@@ -70,6 +70,9 @@ def get_tag_nom(nomTag):
 def get_types():
     return TypeDocument.query.all()
 
+def get_documents():
+    return Document.query.all()
+
 def get_document_types(idTypeDoc, active_tags,filtre_texte):
     document = Document.query.filter(Document.idType == idTypeDoc).filter(Document.nomDoc.like('%' + filtre_texte + '%')).all()
     resultat = []

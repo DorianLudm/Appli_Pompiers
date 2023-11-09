@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_doc_admin.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+    <h1>Recherche de documents</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" name="barre_recherche" placeholder="Rechercher un document !" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="tags">
+            <select name="tags" id="tags-select">
+                <option selected="selected" hidden="hidden">Choisir un tag</option>
+                {% for x in tags %} 
+                    <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
+                {% endfor %}
+            </select>
+            <div class="active_tag">
+                {% for x in active_tags %}
+                    <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+                {% endfor %}
+            </div>
+        </div>
+    <div class="bouton_reset">
+        <input name="reset" type="Submit" value="Reset" /> 
+    </div>
+    </form>
+</div> 
+<div> 
+    <ul class="resultat">
+        <li class="doc">
+            {% for elem in result %}
+                {% for doc in elem.element %}
+                    <ul class="in_ligne">
+                        <a href=modifierDoc><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
+                        <li class="nomDoc"><a href=modifierCompte>{{ doc.nomDoc }}</a></li>
+                        <li class="typeDoc">{{ doc.idType }}</li>
+                        <a href=modifierDoc><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+                        <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                    </ul>
+                {% endfor %}
+            {% endfor %}
+        </li>
+    </ul>
+</div>
+{% endblock %}
