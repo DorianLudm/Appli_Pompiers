@@ -69,7 +69,7 @@
                                 <li class="gradeCompte">{{ gradeUser[0] }}</li>
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                                <input onclick="afficherAlerte()" class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/>
+                                <a href="{{ url_for('supprimer_compte', id= user.idUtilisateur) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
                             </ul>
                         {% endif %} 
                     {% endif %}
@@ -77,21 +77,6 @@
             {% endfor %}
         </li>
     </ul>
-        <script>
-            // Fonction JavaScript pour afficher l'alerte
-            function afficherAlerte() {
-                // Affichez une boîte de dialogue d'alerte avec le message
-                // Utilisez la fonction confirm() pour afficher une boîte de confirmation
-            var confirmation = confirm("Voulez-vous vraiment effectuer cette action?");
-            // Vérifiez la réponse de l'utilisateur
-            if (confirmation) {
-                // redirige l utilisateur vers la page de suppression
-                window.location.href = "{{ url_for('supprimer_compte') }}";
-            } else {
-                // L'utilisateur a cliqué sur "Annuler"
-                alert("Action annulée!");
-            }
-        }
-        </script>
+
 </div>
 {% endblock %}
