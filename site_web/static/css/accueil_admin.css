@@ -12,24 +12,29 @@ main{
     height: 50%;
 }
 
-input{
-    border: black thin solid;
-    margin-top: 7vh;
-    margin-bottom: 7vh;
-    margin-right: 15px;
-    margin-left: 15px;
-    padding: 10px;
-    font-size: 2vw;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 10px;
-    width: 25vw;
-    margin-left: 50%;
-    transform: translateX(-50%);
+/* Responsive des boutons */
+@media screen and (min-width: 1251px) {
+    input{
+        border: black thin solid;
+        margin-top: 7vh;
+        margin-bottom: 7vh;
+        margin-right: 15px;
+        margin-left: 15px;
+        padding: 10px;
+        font-size: 3.5vw;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 10px;
+        width: 40vw;
+        min-height: 115px;
+        min-width: 800px;
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
-@media (max-width: 1000px) {
+@media screen and (max-width: 1250px) {
     input{
         border: black thin solid;
         margin-top: 7vh;
@@ -47,3 +52,4 @@ input{
         transform: translateX(-50%);
     }
 }
+/* Fin responsive des boutons */
