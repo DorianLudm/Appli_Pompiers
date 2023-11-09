@@ -2,6 +2,10 @@
 {% block page_specific_css %}
 <link href="/static/css/recherche_doc.css" rel="stylesheet">
 {% endblock %}
+{% block header %}
+    <h1>Rechercher un document</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
 {% block main %}
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
