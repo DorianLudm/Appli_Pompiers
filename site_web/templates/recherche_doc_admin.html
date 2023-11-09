@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_doc_admin.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+    <h1>Recherche de documents</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" value="{{ search }}" name="barre_recherche" placeholder="Rechercher un document !" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="tags">
+            <select name="tags" id="tags-select">
+                <option selected="selected" hidden="hidden">Choisir un tag</option>
+                {% for x in tags %} 
+                    <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="types">
+            <select name="types" id="type-select">
+                <option selected="selected" hidden="hidden">{{ selectType }}</option>
+                {% if selectType != "Choisir un type" %}
+                    <option value="Tous les types">Tous les types</option>
+                {% endif %}
+                {% for x in types %} 
+                    <option value="{{x.nomType}}" type ="submit">{{x.nomType}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="active_tag">
+            {% for x in active_tags %}
+                <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+            {% endfor %}
+        </div>
+    <div class="bouton_reset">
+        <input name="reset" type="Submit" value="Réinitialiser les filtres" /> 
+    </div>
+    </form>
+</div>
+<div>
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="< Retour à l'accueil"/></a>
+</div>
+<div> 
+    <ul class="resultat">
+        <li class="doc">
+            {% for elem in result %}
+                {% if elem.nomType == selectType or selectType == "Choisir un type"%}
+                    {% for doc in elem.element %}
+                        <ul class="in_ligne">
+                            <a href=modifierDoc><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
+                            <li class="nomDoc"><a href=modifierCompte>{{ doc.nomDoc }}</a></li>
+                            <li class="typeDoc">{{ elem.nomType }}</li>
+                            <a href=modifierDoc><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+                            <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </li>
+    </ul>
+</div>
+{% endblock %}

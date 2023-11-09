@@ -1,6 +1,6 @@
 from .app import app, mkpath, db
 from flask import render_template, url_for , redirect, request,  flash, session
-from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_utilisateur
+from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
@@ -10,7 +10,7 @@ import webbrowser
 
 active_tags = []
 filtre_texte = ""
-
+selectType = "Choisir un type"
 
 @app.route('/pompier')
 @login_required
@@ -112,6 +112,19 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
   
+@app.route('/rechercheDocAdmin')
+def recherche_doc_admin():
+    global active_tags, selectType
+    result = []
+    for i in get_types():
+        resultat = dict()
+        resultat["nomType"] = i.nomType
+        resultat["element"] = []
+        
+        for document in get_document_types(i.idType, active_tags,filtre_texte):
+            resultat["element"].append(document)
+        result.append(resultat)
+    return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
 
 
 @app.route('/administrateur/ajouteDocument')
@@ -133,6 +146,31 @@ def appliquer_filtres():
             selectCaserne = "Choisir une caserne"
         return recherche_comptes(search_bar_value, selectGrade, selectCaserne)
     return recherche_comptes()
+
+@app.route('/appliquer_filtres_doc', methods=['GET', 'POST'])
+def ajouter_filtre_doc_admin():
+    global active_tags, filtre_texte, selectType
+    if request.method=='POST':
+        filtre_texte = request.form.get('barre_recherche')
+        selectType = request.form.get('types')
+        if selectType == "Tous les types":
+            selectType = "Choisir un type"
+        tag=request.form['tags']
+        if tag != "Choisir un tag":
+            active_tags.append(tag)
+        if request.form.get('barre_recherche'):
+            if request.form.get('barre_recherche')[0] != ".":
+                filtre_texte = request.form.get('barre_recherche')   
+            else:
+                active_tags.append(get_tag(request.form.get('barre_recherche')[1:]))   
+        if request.form.get('reset'):
+            active_tags = []
+            filtre_texte = ""
+            selectType = "Choisir un type"
+            return redirect(url_for('recherche_doc_admin'))
+        elif request.form.get('retirer_filtre'):
+            active_tags.remove(request.form.get('retirer_filtre'))
+    return redirect(url_for('recherche_doc_admin'))
 
 @app.route('/administrateur/ajouteCompte')
 @login_required
