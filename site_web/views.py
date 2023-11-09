@@ -144,6 +144,11 @@ def appliquer_filtres():
 def ajoute_compte():
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
+@app.route('/administrateur/supprimerCompte')
+@login_required
+def supprimer_compte():
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+
 @app.route("/administrateur/gerer_compte/save")
 def save_compte():
     try:
