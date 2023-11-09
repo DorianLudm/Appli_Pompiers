@@ -62,7 +62,7 @@ def get_tags():
     return Tag.query.order_by(Tag.nomTag).all()
 
 def get_tag(nomTag):
-    return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first().nomTag
+    return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
 
 def get_tag_nom(nomTag):
     return Tag.query.filter(Tag.nomTag == nomTag).first().idTag
@@ -77,7 +77,7 @@ def get_document_types(idTypeDoc, active_tags,filtre_texte):
         for doc in document:
             est_present = True
             for tag in active_tags:
-                if not DocumentTag.query.filter(DocumentTag.idTag == get_tag_nom(tag)).filter(DocumentTag.idDoc == doc.idDoc).all():
+                if not DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(DocumentTag.idDoc == doc.idDoc).all():
                     est_present = False
             if est_present:
                 resultat.append(doc)

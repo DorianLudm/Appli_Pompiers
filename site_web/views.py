@@ -24,27 +24,36 @@ def home():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result)
+    print(active_tags)
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util=informations_utlisateurs())
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 def ajouter_filtre():
-    print("FILTRE")
     global active_tags, filtre_texte
     if request.method=='POST':
         tag=request.form['tags']
         if tag != "Choisir un tag":
-            active_tags.append(tag)
+            tag = get_tag(request.form.get('tags')[1:])
+            if tag:
+                active_tags.append(tag)
         if request.form.get('barre_recherche'):
             if request.form.get('barre_recherche')[0] != ".":
                 filtre_texte = request.form.get('barre_recherche')   
             else:
-                active_tags.append(get_tag(request.form.get('barre_recherche')[1:]))   
+                tag = get_tag(request.form.get('barre_recherche')[1:])
+                if tag:
+                    active_tags.append(tag)
         if request.form.get('reset') == 'Reset':
             active_tags = []
             filtre_texte = ""
             return redirect(url_for('home'))
         elif request.form.get('retirer_filtre'):
-            active_tags.remove(request.form.get('retirer_filtre'))
+            tag_supprimer = None
+            for tag in active_tags:
+                if tag.nomTag == request.form.get('retirer_filtre'):
+                    tag_supprimer = tag
+            if tag_supprimer:
+                active_tags.remove(tag_supprimer)
     return redirect(url_for('home'))
 
 
