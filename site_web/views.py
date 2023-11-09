@@ -5,11 +5,12 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
 from hashlib import sha256
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 import webbrowser
 
 active_tags = []
 filtre_texte = ""
+
 
 @app.route('/pompier')
 @login_required
@@ -81,7 +82,10 @@ def login():
         util = f.get_authentification_utilisateur()
         if util:
             login_user(util)
-            return redirect(url_for("home_admin"))
+            if current_user.idRole == -1: # Si l'utilisateur est un administrateur
+                return redirect(url_for("home_admin"))
+            else: # Alors l'utilisateur est un pompier
+                return redirect(url_for("home"))
         else:
             print("probleme")
             return render_template(
