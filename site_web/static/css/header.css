@@ -11,6 +11,7 @@ header section {
     text-align: center;
 }
 
+/* Responsive de l'img */
 @media screen and (min-width: 1251px) {
     header img {
         height: 100%;
@@ -26,7 +27,9 @@ header section {
         height: auto;
     }
 }
+/* Fin responsive de l'img */
 
+/* Responsive du titre */
 @media screen and (min-width: 1251px) {
     h1 {
         font-size: 2.5vw;
@@ -34,12 +37,20 @@ header section {
     }
 }
 
-@media screen and (max-width: 1250px) {
+@media screen and (max-width: 1250px) and (min-width: 701px) {
     h1 {
-        font-size: 2.5vh;
+        font-size: 4vh;
         align-self: center;
     }
 }
+
+@media screen and (max-width: 700px) {
+    h1 {
+        font-size: 5vw;
+        align-self: center;
+    }
+}
+/* Fin responsive du titre */
 
 h2 {
     font-family : "Arial";
