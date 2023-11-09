@@ -2,6 +2,10 @@
 {% block page_specific_css %}
 <link href="/static/css/recherche_doc.css" rel="stylesheet">
 {% endblock %}
+{% block header %}
+<h1>Recherche de documents</h1>
+{% include "informations_utilisateur.html" %}
+{%endblock%}
 {% block main %}
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
@@ -20,9 +24,9 @@
             </select>
             <div class="active_tag">
                 {% for x in active_tags %}
-                    <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+                    <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
                 {% endfor %}
-            </div>
+            </div>      
         </div>
     <div class="bouton_reset">  
         <input name="reset" type="Submit" value="Reset" /> 
