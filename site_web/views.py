@@ -105,7 +105,7 @@ def logout():
 @app.route('/administrateur')
 @login_required
 def home_admin():
-  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
 
 @app.route('/rechercheComptes')
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
@@ -117,7 +117,7 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
 @app.route('/administrateur/ajouteDocument')
 @login_required
 def ajoute_document():
-    return render_template('ajouter_document.html', util = informations_utlisateurs())
+    return render_template('ajouter_document.html', util = informations_utlisateurs(), title='Ajouter un document')
 
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
 def appliquer_filtres():
@@ -137,7 +137,7 @@ def appliquer_filtres():
 @app.route('/administrateur/ajouteCompte')
 @login_required
 def ajoute_compte():
-    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte')
 
 @app.route('/administrateur/supprimerCompte/<id>')
 @login_required
