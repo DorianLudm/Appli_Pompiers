@@ -87,7 +87,6 @@ def login():
             else: # Alors l'utilisateur est un pompier
                 return redirect(url_for("home"))
         else:
-            print("probleme")
             return render_template(
                 "login.html",
                 form=f,
