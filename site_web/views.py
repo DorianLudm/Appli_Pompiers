@@ -112,6 +112,20 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
   
+@app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
+def modifier_compte(id):
+    user = Utilisateur.query.get(id)
+    if request.form.get('save_compte') =="Sauvegarder le compte":
+        user.nomUtilisateur = request.form.get('nom')
+        user.prenomUtilisateur = request.form.get('prenom')
+        user.identifiant = request.form.get('pseudo')
+        if request.form.get('password') != "":
+            user.mdp = sha256(request.form.get('password').encode()).hexdigest()
+        user.idGrade = request.form.get('grades')
+        user.idCas = request.form.get('casernes')
+        db.session.commit() 
+        return redirect(url_for('recherche_comptes')) 
+    return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 
 @app.route('/administrateur/ajouteDocument')
