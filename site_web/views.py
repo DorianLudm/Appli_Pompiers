@@ -27,6 +27,7 @@ def home():
     return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
  
 @app.route('/ajouter_filtre/', methods =("POST",))
+@login_required
 def ajouter_filtre():
     global active_tags, filtre_texte
     if request.method=='POST':
@@ -57,6 +58,7 @@ def ajouter_filtre():
 
 
 @app.route('/ouverture_doc/<id>', methods =("POST",))
+@login_required
 def ouverture_doc(id):
     doc = get_document_id(id).fichierDoc
     webbrowser.open(mkpath('./static/document/' + doc)) 
@@ -71,7 +73,6 @@ class LoginForm( FlaskForm ):
     mdp = PasswordField('Password')
     def get_authentification_utilisateur(self):
         util = get_identifiant_utilisateur(self.identifiant.data)
-        print(util)
         if util is None:
             return None
         m = sha256()
@@ -104,6 +105,7 @@ def login():
         title='Page de connexion')
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))  
@@ -116,11 +118,13 @@ def home_admin():
   return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
 
 @app.route('/rechercheComptes')
+@login_required
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
   
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
+@login_required
 def modifier_compte(id):
     user = Utilisateur.query.get(id)
     if request.form.get('save_compte') =="Sauvegarder le compte":
@@ -136,6 +140,7 @@ def modifier_compte(id):
     return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 @app.route('/rechercheDocAdmin')
+@login_required
 def recherche_doc_admin():
     global active_tags, selectType
     result = []
@@ -155,6 +160,7 @@ def ajoute_document():
     return render_template('ajouter_document.html', util = informations_utlisateurs(), title='Ajouter un document')
 
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
+@login_required
 def appliquer_filtres():
     if request.method == 'POST':
         if "reset" in request.form:
@@ -170,6 +176,7 @@ def appliquer_filtres():
     return recherche_comptes()
 
 @app.route('/appliquer_filtres_doc', methods=['GET', 'POST'])
+@login_required
 def ajouter_filtre_doc_admin():
     global active_tags, filtre_texte, selectType
     if request.method=='POST':
@@ -208,6 +215,7 @@ def supprimer_compte(id):
     return appliquer_filtres()
 
 @app.route("/administrateur/gerer_compte/save")
+@login_required
 def save_compte():
     try:
         return 1
@@ -224,6 +232,7 @@ class CompteForm(FlaskForm):
     # chef = bool('Est chef de caserne', validators = [DataRequired()])
 
 @app.route("/administrateur/gerer_compte/erreur")
+@login_required
 def erreur_compte():
     # Faire un pop-up d'erreur (?)
     print("erreur")
