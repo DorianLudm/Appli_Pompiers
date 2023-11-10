@@ -105,6 +105,8 @@ main{
 }
 .resultat_item_info{
     height: max-content;
+    overflow:scroll;
+    max-height: 32vh;
 }
 .resultat_item_info>form>input{
     background-color: #CCCCCC;   
