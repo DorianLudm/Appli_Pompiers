@@ -24,9 +24,9 @@
             </select>
             <div class="active_tag">
                 {% for x in active_tags %}
-                    <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+                    <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
                 {% endfor %}
-            </div>
+            </div>      
         </div>
     <div class="bouton_reset">
         <input name="reset" type="Submit" value="Reset" /> 
