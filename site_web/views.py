@@ -218,7 +218,7 @@ def ajouter_filtre_doc_admin():
 def ajoute_compte():
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte')
 
-@app.route('/administrateur/supprimerCompte/<id>')
+@app.route('/administrateur/supprimerCompte/<int:id>')
 @login_required
 def supprimer_compte(id):
     util = get_utilisateur(id)
