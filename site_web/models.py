@@ -46,7 +46,7 @@ class Document(db.Model):
     idDoc = db.Column(db.Integer, primary_key =True)
     nomDoc = db.Column(db.String(100))
     fichierDoc = db.Column(db.String(100))
-    idType = db.Column(db.Integer, db.ForeignKey('typedocument.idType'))
+    idType = db.Column(db.Integer, db.ForeignKey('type_document.idType'))
     
 class Tag(db.Model):
     idTag = db.Column(db.Integer, primary_key =True)
@@ -66,6 +66,9 @@ def get_tag(nomTag):
 
 def get_tag_nom(nomTag):
     return Tag.query.filter(Tag.nomTag == nomTag).first().idTag
+
+def get_tag_idDoc(idDoc):
+    return DocumentTag.query.filter(DocumentTag.idDoc == idDoc).all()
 
 def get_types():
     return TypeDocument.query.all()
