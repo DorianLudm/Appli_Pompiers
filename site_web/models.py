@@ -95,7 +95,6 @@ def get_document_id(idDoc):
 
 def get_utilisateurs():
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
- 
 
 def get_grades():
     return Grade.query.all()
