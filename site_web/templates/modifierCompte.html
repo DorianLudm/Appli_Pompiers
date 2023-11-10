@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+    <link rel="stylesheet" href="/../static/css/ajout_compte.css"/>
+{% endblock %}
+{% block header %}
+    <h1>Modifier un compte</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<form method="POST" >
+    <div class="line">
+        <div>
+            <p>Nom</p>
+            <input type="text" value="{{user.nomUtilisateur}}" name="nom" placeholder="Entrez le nom de l'utilisateur" required>
+        </div>
+        <div>
+            <p>Prénom</p>
+            <input type="text" value="{{user.prenomUtilisateur}}" name="prenom" placeholder="Entrez le prénom de l'utilisateur" required>
+        </div>
+    </div>
+    <div class="line">
+        <div>
+            <p>Nom d'utilisateur</p>
+            <input type="text" value="{{user.identifiant}}" name="pseudo" placeholder="Entrez le pseudo de l'utilisateur" required>
+        </div>
+        <div>
+            <p>Mot de passe</p>
+            <input type="password" name="password" placeholder="Entrez le mot de passe">
+        </div>
+    </div>
+    <div class="line">
+        <div>
+            <p>Grade</p>
+            <select name="grades" id="grades-select">
+                {% for x in grades %} 
+                    {% if x.idGrade == user.idGrade %}
+                        <option value="{{x.idGrade}}" hidden="hidden" selected>{{x.nomGrade}}</option>
+                    {% endif %}
+                    <option value="{{x.idGrade}}">{{x.nomGrade}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <p>Caserne</p>
+            <select name="casernes" id="casernes-select">
+                {% for x in casernes %} 
+                    {% if x.idCas == user.idCas %}
+                        <option value="{{x.idCas}}" hidden="hidden" selected>{{x.nomCaserne}}</option>
+                    {% endif %}
+                    <option value="{{x.idCas}}">{{x.nomCaserne}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="line fieldset-container">
+        <fieldset>
+            <legend>Chef de caserne:</legend>
+            <div>
+            <input type="radio" id="true" name="oui" value="true" checked />
+            <label for="oui">Oui</label>
+            </div>
+        
+            <div>
+            <input type="radio" id="true" name="oui" value="true" />
+            <label for="non">Non</label>
+            </div>
+        </fieldset>          
+    </div>
+    <div class="line button-container">
+        <input type="submit"  value="Sauvegarder le compte" name="save_compte" class="bouton">
+        <a href="{{ url_for('recherche_comptes') }}"> <input type="button" value="Retour" id="retour" class="bouton"></a>
+    </div>
+</form>
+{% endblock %}
