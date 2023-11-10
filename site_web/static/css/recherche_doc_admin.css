@@ -157,3 +157,20 @@ li.ImgDoc{
     margin-top: 1%;
     margin-left: 1%;
 }
+
+.aucun_doc {
+    display: block;
+    width: 10vw;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.aucun_doc_texte{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1%;
+    color: black;
+}
