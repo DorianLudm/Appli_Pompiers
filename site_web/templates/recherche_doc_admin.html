@@ -51,9 +51,11 @@
 <div> 
     <ul class="resultat">
         <li class="doc">
+            {% set nbrDoc = namespace(count=0) %}
             {% for elem in result %}
                 {% if elem.nomType == selectType or selectType == "Choisir un type"%}
                     {% for doc in elem.element %}
+                        {% set nbrDoc.count = nbrDoc.count + 1 %}
                         <ul class="in_ligne">
                             <a href=modifierDoc><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
                             <li class="nomDoc"><a href=modifierCompte>{{ doc.nomDoc }}</a></li>
@@ -61,9 +63,13 @@
                             <a href=modifierDoc><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
                             <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
                         </ul>
-                    {% endfor %}
+                    {% endfor %}    
                 {% endif %}
             {% endfor %}
+            {% if nbrDoc.count == 0 %}
+                <img class="aucun_doc" alt="Aucun document ne correspond à votre recherche" src="/static/img/pasDeDoc.png"/>
+                <p class="aucun_doc_texte">Aucun document ne correspond à votre recherche</p>
+            {% endif %}
         </li>
     </ul>
 </div>
