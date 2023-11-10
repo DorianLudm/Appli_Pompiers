@@ -44,6 +44,9 @@
         </div>
     </form>
 </div>
+<div>
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="< Retour à l'accueil"/></a>
+</div>
 <div> 
     <ul class="resultat">
         <li class="compte">
@@ -64,8 +67,8 @@
                     {% if selectGrade == gradeUser[0] or selectGrade == "Choisir un grade" %}
                         {% if selectCaserne == caserneUser[0] or selectCaserne == "Choisir une caserne" %}
                             <ul class="in_ligne">
-                                <a href=modifierCompte><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
-                                <li class="nomCompte"><a href=modifierCompte>{{ user.nomUtilisateur.upper() }} {{ user.prenomUtilisateur }}</a></li>
+                                <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}"><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
+                                <li class="nomCompte"><a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}">{{ user.nomUtilisateur.upper() }} {{ user.prenomUtilisateur }}</a></li>
                                 <li class="gradeCompte">{{ gradeUser[0] }}</li>
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 <a href=modifierCompte><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
