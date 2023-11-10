@@ -154,6 +154,18 @@ def recherche_doc_admin():
         result.append(resultat)
     return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
 
+@app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
+def modifier_document(id):
+    doc = get_document_id(id)
+    if request.form.get('modifier_document') =="Enregistrer":
+        doc.nomDoc = request.form.get('titre')
+        doc.idType = request.form.get('types')
+        db.session.commit()
+        return redirect(url_for('recherche_doc_admin')) 
+    if request.form.get('annuler') =="Annuler":
+        return redirect(url_for('recherche_doc_admin'))
+    return render_template('modifier_document.html', title='Modifier de Document', doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
+
 @app.route('/administrateur/ajouteDocument')
 @login_required
 def ajoute_document():
