@@ -14,7 +14,7 @@ main{
 
 /* Responsive des boutons */
 @media screen and (min-width: 1251px) {
-    input{
+    main input{
         border: black thin solid;
         margin-top: 7vh;
         margin-bottom: 7vh;
@@ -35,7 +35,7 @@ main{
 }
 
 @media screen and (max-width: 1250px) {
-    input{
+    main input{
         border: black thin solid;
         margin-top: 7vh;
         margin-bottom: 7vh;

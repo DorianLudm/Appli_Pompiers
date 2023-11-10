@@ -13,7 +13,11 @@
 </head>
 <body>
     <header>
-        <img src="/../static/img/logoPompier.png" alt="logo pompier">
+        {% if util and util.role == 'Administrateur' : %}
+            <a href="{{ url_for('home_admin') }}" ><input class="buttonHome" type="image" src="/../static/img/logoPompier.png" alt="logo pompier"/></a>
+        {% else %}
+            <a href="{{ url_for('home') }}" ><input class="buttonHome" type="image" src="/../static/img/logoPompier.png" alt="logo pompier"/></a>
+        {% endif %}
         {% block header %}
         {% endblock %}
     </header>
