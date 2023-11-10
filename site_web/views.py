@@ -17,13 +17,14 @@ selectType = "Choisir un type"
 def home():
     global active_tags
     result = []
-    for i in get_types():
-        resultat = dict()
-        resultat["nomType"] = i.nomType
-        resultat["element"] = []
-        for document in get_document_types(3, active_tags,filtre_texte):
-            resultat["element"].append(document)
-        result.append(resultat)
+    if result and active_tags:
+        for i in get_types():
+            resultat = dict()
+            resultat["nomType"] = i.nomType
+            resultat["element"] = []
+            for document in get_document_types(3, active_tags,filtre_texte):
+                resultat["element"].append(document)
+            result.append(resultat)
     return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
  
 @app.route('/ajouter_filtre/', methods =("POST",))
