@@ -1,15 +1,16 @@
-from .app import app, mkpath
+from .app import app, mkpath, db
 from flask import render_template, url_for , redirect, request,  flash, session
-from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs
+from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
 from hashlib import sha256
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 import webbrowser
 
 active_tags = []
 filtre_texte = ""
+selectType = "Choisir un type"
 
 @app.route('/pompier')
 @login_required
@@ -23,7 +24,7 @@ def home():
         for document in get_document_types(i.idType, active_tags,filtre_texte):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(),title = "Recherche Document", active_tags = active_tags, result = result, util=informations_utlisateurs())
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 def ajouter_filtre():
@@ -61,10 +62,7 @@ def ouverture_doc(id):
     webbrowser.open(mkpath('./static/document/' + doc)) 
     return redirect(url_for('home'))
   
-@app.route('/administrateur')
-@login_required
-def home():
-  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+
 
 # LOGIN
 
@@ -91,16 +89,19 @@ def login():
         util = f.get_authentification_utilisateur()
         if util:
             login_user(util)
-            return redirect(url_for("home"))
+            if current_user.idRole == -1: # Si l'utilisateur est un administrateur
+                return redirect(url_for("home_admin"))
+            else: # Alors l'utilisateur est un pompier
+                return redirect(url_for("home"))
         else:
-            print("probleme")
             return render_template(
                 "login.html",
                 form=f,
                 erreur = "Login ou mot de passe incorrect")
     return render_template(
         "login.html",
-        form=f)
+        form=f,
+        title='Page de connexion')
 
 @app.route("/logout")
 def logout():
@@ -109,17 +110,49 @@ def logout():
 
 # ADMINISTRATION
 
+@app.route('/administrateur')
+@login_required
+def home_admin():
+  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
+
 @app.route('/rechercheComptes')
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
-    print(searchNom+"1")
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
   
+@app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
+def modifier_compte(id):
+    user = Utilisateur.query.get(id)
+    if request.form.get('save_compte') =="Sauvegarder le compte":
+        user.nomUtilisateur = request.form.get('nom')
+        user.prenomUtilisateur = request.form.get('prenom')
+        user.identifiant = request.form.get('pseudo')
+        if request.form.get('password') != "":
+            user.mdp = sha256(request.form.get('password').encode()).hexdigest()
+        user.idGrade = request.form.get('grades')
+        user.idCas = request.form.get('casernes')
+        db.session.commit() 
+        return redirect(url_for('recherche_comptes')) 
+    return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
-@app.route('/rechercheDocuments')
+@app.route('/rechercheDocAdmin')
+def recherche_doc_admin():
+    global active_tags, selectType
+    result = []
+    for i in get_types():
+        resultat = dict()
+        resultat["nomType"] = i.nomType
+        resultat["element"] = []
+        
+        for document in get_document_types(i.idType, active_tags,filtre_texte):
+            resultat["element"].append(document)
+        result.append(resultat)
+    return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
+
+@app.route('/administrateur/ajouteDocument')
 @login_required
-def recherche_document():
-    return render_template('rechercheDocuments.html')
+def ajoute_document():
+    return render_template('ajouter_document.html', util = informations_utlisateurs(), title='Ajouter un document')
 
 @app.route('/appliquer_filtres', methods=['GET', 'POST'])
 def appliquer_filtres():
@@ -136,10 +169,43 @@ def appliquer_filtres():
         return recherche_comptes(search_bar_value, selectGrade, selectCaserne)
     return recherche_comptes()
 
-@app.route('/administrateur/ajoutCompte')
+@app.route('/appliquer_filtres_doc', methods=['GET', 'POST'])
+def ajouter_filtre_doc_admin():
+    global active_tags, filtre_texte, selectType
+    if request.method=='POST':
+        filtre_texte = request.form.get('barre_recherche')
+        selectType = request.form.get('types')
+        if selectType == "Tous les types":
+            selectType = "Choisir un type"
+        tag=request.form['tags']
+        if tag != "Choisir un tag":
+            active_tags.append(tag)
+        if request.form.get('barre_recherche'):
+            if request.form.get('barre_recherche')[0] != ".":
+                filtre_texte = request.form.get('barre_recherche')   
+            else:
+                active_tags.append(get_tag(request.form.get('barre_recherche')[1:]))   
+        if request.form.get('reset'):
+            active_tags = []
+            filtre_texte = ""
+            selectType = "Choisir un type"
+            return redirect(url_for('recherche_doc_admin'))
+        elif request.form.get('retirer_filtre'):
+            active_tags.remove(request.form.get('retirer_filtre'))
+    return redirect(url_for('recherche_doc_admin'))
+
+@app.route('/administrateur/ajouteCompte')
 @login_required
-def ajout_compte():
-    return render_template('ajout_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+def ajoute_compte():
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte')
+
+@app.route('/administrateur/supprimerCompte/<id>')
+@login_required
+def supprimer_compte(id):
+    util = get_utilisateur(id)
+    db.session.delete(util)
+    db.session.commit()
+    return appliquer_filtres()
 
 @app.route("/administrateur/gerer_compte/save")
 def save_compte():

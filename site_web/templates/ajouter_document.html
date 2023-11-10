@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block page_specific_css %}
-    <link rel="stylesheet" href="static/css/ajouter_document.css">
+    <link rel="stylesheet" href="/../static/css/ajouter_document.css">
 {% endblock %}
-
+{% block header %}
+    <h1>Ajout d'un document</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
 {% block main %}
-
 <div class="en-tete">
     <h2>Titre du document :</h2>
     <input type="text" name="titre" placeholder="Titre" required>
@@ -48,8 +50,9 @@
 </div>
 
 <div class="boutons-bas">
+    
     <input type="submit" value="Annuler" id="annuler">
     <input type="submit" value="Enregistrer" id="ajouter-document">
+    <a href="{{ url_for ('home_admin')}}"><input type="button" value="Retour"></a>
 </div>
-
 {% endblock %}

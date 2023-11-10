@@ -70,6 +70,9 @@ def get_tag_nom(nomTag):
 def get_types():
     return TypeDocument.query.all()
 
+def get_documents():
+    return Document.query.all()
+
 def get_document_types(idTypeDoc, active_tags,filtre_texte):
     document = Document.query.filter(Document.idType == idTypeDoc).filter(Document.nomDoc.like('%' + filtre_texte + '%')).all()
     resultat = []
@@ -83,6 +86,7 @@ def get_document_types(idTypeDoc, active_tags,filtre_texte):
                 resultat.append(doc)
         return resultat 
     return document
+
 def get_document_id(idDoc):
     return Document.query.get(idDoc)
 
@@ -93,7 +97,8 @@ def get_utilisateurs():
 def get_grades():
     return Grade.query.all()
 
-
+def get_utilisateur(idUtilisateur):
+    return Utilisateur.query.get(idUtilisateur)
 
 def get_nom_role(idRole):
     return Role.query.filter_by(idRole=current_user.idRole).first().nomRole

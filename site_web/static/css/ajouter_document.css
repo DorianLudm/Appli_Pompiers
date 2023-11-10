@@ -2,7 +2,7 @@ body{
     background-color: #F24343;
 }
 
-h2{
+main h2{
     color: white;
     font-size: 3rem;
     font-weight: bold;
@@ -10,7 +10,7 @@ h2{
     text-align: center;
 }
 
-p{
+main p{
     color: white;
     font-size: 2rem;
 }

@@ -3,9 +3,9 @@
 <link href="/static/css/recherche_doc.css" rel="stylesheet">
 {% endblock %}
 {% block header %}
-<h1>Recherche de documents</h1>
-{% include "informations_utilisateur.html" %}
-{%endblock%}
+    <h1>Rechercher un document</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
 {% block main %}
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
@@ -28,7 +28,7 @@
                 {% endfor %}
             </div>      
         </div>
-    <div class="bouton_reset">  
+    <div class="bouton_reset">
         <input name="reset" type="Submit" value="Reset" /> 
     </div>
     </form>
