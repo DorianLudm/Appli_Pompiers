@@ -7,25 +7,26 @@
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
-<form>
+<form role="form" method = "POST" action="{{ url_for('save_compte')}}" >
+    {{ form.hidden_tag() }}
     <div class="line">
         <div>
             <p>Nom</p>
-            <input type="text" name="nom" placeholder="Entrez le nom de l'utilisateur" required>
+            <p>{{ form.nomUser(size=50, class_="form-control") }}</p>
         </div>
         <div>
             <p>Prénom</p>
-            <input type="text" name="prenom" placeholder="Entrez le prénom de l'utilisateur" required>
+            <p>{{ form.prenomUser(size=50, class_="form-control") }}</p>
         </div>
     </div>
     <div class="line">
         <div>
             <p>Nom d'utilisateur</p>
-            <input type="text" name="pseudo" placeholder="Entrez le pseudo de l'utilisateur" required>
+            <p>{{ form.pseudo(size=50, class_="form-control") }}</p>
         </div>
         <div>
             <p>Mot de passe</p>
-            <input type="password" name="password" placeholder="Entrez le mot de passe" required>
+            <p>{{ form.mdp(size=50, class_="form-control") }}</p>
         </div>
     </div>
     <div class="line">

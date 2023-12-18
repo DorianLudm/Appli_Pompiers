@@ -32,3 +32,5 @@ def newuser():
     db.session.add(util)
     db.session.commit()
     click.echo('Utilisateur créé')
+
+

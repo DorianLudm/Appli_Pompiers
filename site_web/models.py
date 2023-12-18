@@ -15,7 +15,7 @@ class Grade(db.Model):
     idGrade = db.Column(db.Integer, primary_key =True)
     nomGrade = db.Column(db.String(100))
 
-    def get_id(self):
+    def get_id(self):   
         return str(self.idGrade)
 
 class Role(db.Model):

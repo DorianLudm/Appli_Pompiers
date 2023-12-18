@@ -213,10 +213,21 @@ def ajouter_filtre_doc_admin():
             active_tags.remove(request.form.get('retirer_filtre'))
     return redirect(url_for('recherche_doc_admin'))
 
+
+class AjouteCompteForm(FlaskForm):
+    nomUser = StringField('Nom', validators = [DataRequired()])
+    prenomUser = StringField('Prenom', validators = [DataRequired()])
+    pseudo = StringField("Nom d'utilisateur", validators = [DataRequired()])
+    mdp = PasswordField('Mot de passe', validators = [DataRequired()])
+    nom_grade = IntegerField('Grade', validators = [DataRequired()])
+    caserne_id = IntegerField('Caserne', validators = [DataRequired()])
+    # chef = bool('Est chef de caserne', validators = [DataRequired()])
+
 @app.route('/administrateur/ajouteCompte')
 @login_required
 def ajoute_compte():
-    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte')
+    f = AjouteCompteForm()
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=f)
 
 @app.route('/administrateur/supprimerCompte/<id>')
 @login_required
@@ -226,22 +237,23 @@ def supprimer_compte(id):
     db.session.commit()
     return appliquer_filtres()
 
-@app.route("/administrateur/gerer_compte/save")
-@login_required
-def save_compte():
-    try:
-        return 1
-    except:
-        erreur_compte()
 
-class CompteForm(FlaskForm):
-    nomUser = StringField('Nom', validators = [DataRequired()])
-    prenomUser = StringField('Prenom', validators = [DataRequired()])
-    pseudo = StringField("Nom d'utilisateur", validators = [DataRequired()])
-    mdp = PasswordField('Mot de passe', validators = [DataRequired()])
-    grade_id = IntegerField('ID Grade', validators = [DataRequired()])
-    caserne_id = IntegerField('ID Caserne', validators = [DataRequired()])
-    # chef = bool('Est chef de caserne', validators = [DataRequired()])
+@app.route("/administrateur/ajouteCompte/save")
+def save_compte():
+    form = AjouteCompteForm()
+    if form.validate_on_submit():
+        util = Utilisateur(
+            max_id_utilisateur() + 1,
+            form.nomUser.data,
+            form.prenomUser.data,
+            form.pseudo.data,
+            sha256(form.mdp.data.encode()).hexdigest(),
+            form.nom_grade.data,
+            form.caserne_id.data,
+        )
+
+    return 0
+
 
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required
