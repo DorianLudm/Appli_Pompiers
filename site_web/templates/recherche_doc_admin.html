@@ -36,13 +36,13 @@
         </div>
         <div class="active_tag">
             {% for x in active_tags %}
-                <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+                <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
             {% endfor %}
         </div>
-    <div class="bouton_reset">
-        <input name="reset" type="Submit" value="Réinitialiser les filtres" /> 
-        <a href="{{ url_for ('ajoute_document')}}"><input type="button" value="Ajouter un document"/></a>
-    </div>
+        <div class="bouton_reset">
+            <input name="reset" type="Submit" value="Réinitialiser les filtres"/> 
+            <a href="{{ url_for ('ajoute_document')}}"><input type="button" value="Ajouter un document"/></a>
+        </div>
     </form>
 </div>
 <div>
