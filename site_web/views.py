@@ -224,7 +224,7 @@ def supprimer_compte(id):
     util = get_utilisateur(id)
     db.session.delete(util)
     db.session.commit()
-    return appliquer_filtres()
+    return redirect(url_for('recherche_comptes'))
 
 @app.route("/administrateur/gerer_compte/save")
 @login_required

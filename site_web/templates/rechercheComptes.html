@@ -79,7 +79,6 @@
                         {% if selectCaserne == caserneUser[0] or selectCaserne == "Choisir une caserne" %}
                             {% set nbrUsers.count = nbrUsers.count + 1 %}
                             <ul class="in_ligne">
-                                <a onclick="togglePopup({{ user.identifiant }});"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="temporaire"/></a>
                                 
                                 <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}"><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
                                 <li class="nomCompte"><a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}">{{ user.nomUtilisateur.upper() }} {{ user.prenomUtilisateur }} {{ user.idUtilisateur }}</a></li>
@@ -87,7 +86,7 @@
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 {% if user.idUtilisateur != current_user.idUtilisateur : %}
                                     <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}" ><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                                    <a href="{{ url_for('supprimer_compte', id= user.idUtilisateur) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                                    <a onclick="togglePopup({{ user.identifiant }});"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="temporaire"/></a>
                                 {% else %}
                                     <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}" ><input class="buttonCompte2" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
                                 {% endif %}
@@ -98,7 +97,7 @@
                                             <h2>Quel pop-up de qualité !</h2>
                                         </div>
                                         <div>
-                                            <a onclick="togglePopup({{user.identifiant}});"><input id="annuler-suppression" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
+                                            <a onclick="togglePopup({{ user.identifiant }});"><input id="annuler-suppression" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
                                             <a href="{{ url_for('supprimer_compte', id= user.idUtilisateur) }}"><input id="valider-suppression" type="button" value="🗑 Confirmer" alt="ValiderSuppression"/></a>
                                         </div>
                                     </div>

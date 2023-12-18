@@ -38,6 +38,9 @@ class Utilisateur(db.Model, UserMixin):
     def get_id(self):
       return str(self.idUtilisateur)
     
+    def __repr__(self):
+        return f'Utilisateur {self.idUtilisateur} : {self.nomUtilisateur} {self.prenomUtilisateur} \tid : {self.identifiant} '
+    
 class TypeDocument(db.Model):
     idType = db.Column(db.Integer, primary_key =True)
     nomType = db.Column(db.String(100))
