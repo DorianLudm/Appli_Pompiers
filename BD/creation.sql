@@ -1,7 +1,7 @@
 CREATE TABLE DOCUMENT (
     idDoc int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nomDoc VARCHAR(10) NOT NULL,
-    fichierDoc VARCHAR(10) NOT NULL,
+    nomDoc VARCHAR(100) NOT NULL,
+    fichierDoc VARCHAR(100) NOT NULL,
     idType int NOT NULL,
     descriptionDoc VARCHAR(500),
     FOREIGN KEY (idType) REFERENCES TYPE_DOCUMENT(idType)
@@ -9,7 +9,7 @@ CREATE TABLE DOCUMENT (
 
 CREATE TABLE TYPE_DOCUMENT(
     idType int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nomType VARCHAR(10) NOT NULL
+    nomType VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE ARCHIVE(
@@ -23,7 +23,7 @@ CREATE TABLE ARCHIVE(
 
 CREATE TABLE TAG (
 	idTag int NOT NULL,
-	nomTag	VARCHAR(10) NOT NULL,
+	nomTag	VARCHAR(100) NOT NULL,
 	niveauProtection int NOT NULL,
 	couleurTag TEXT NOT NULL,
 	PRIMARY KEY(idTag,niveauProtection),
@@ -40,19 +40,19 @@ CREATE TABLE DOCUMENT_TAG(
 
 CREATE TABLE REPERTOIRE (
     idRep int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nomRepertoire VARCHAR(10) NOT NULL,
+    nomRepertoire VARCHAR(100) NOT NULL,
     tagAssocie int NOT NULL,
     FOREIGN KEY (tagAssocie) REFERENCES TAG(idTag)
 );
 
 CREATE TABLE GRADE (
     idGrade int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nomGrade VARCHAR(10) NOT NULL
+    nomGrade VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE ROLE(
     idRole int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nomRole VARCHAR(10) NOT NULL
+    nomRole VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE CASERNE(
@@ -71,10 +71,10 @@ CREATE TABLE DIRIGER_CASERNE(
 
 CREATE TABLE UTILISATEUR(
     idUtilisateur int PRIMARY KEY NOT NULL,
-    nomUtilisateur VARCHAR(10) NOT NULL,
-    prenomUtilisateur VARCHAR(10) NOT NULL,
-    identifiant VARCHAR(10) NOT NULL,
-    mdp VARCHAR(10) NOT NULL,
+    nomUtilisateur VARCHAR(100) NOT NULL,
+    prenomUtilisateur VARCHAR(100) NOT NULL,
+    identifiant VARCHAR(100) NOT NULL,
+    mdp VARCHAR(100) NOT NULL,
     idGrade int NOT NULL,
     idRole int NOT NULL,
     idCas int NOT NULL,
