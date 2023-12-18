@@ -191,9 +191,12 @@ def appliquer_filtres():
 @app.route('/appliquer_filtres_doc', methods=['GET', 'POST'])
 @login_required
 def ajouter_filtre_doc_admin():
-    global active_tags, filtre_texte
+    global active_tags, filtre_texte, selectType
     if request.method=='POST':
         tag=request.form['tags']
+        selectType = request.form.get('types')
+        if selectType == "Tous les types":
+            selectType = "Choisir un type"
         if tag != "Choisir un tag":
             tag = get_tag(request.form.get('tags')[1:])
             if tag:
@@ -208,6 +211,7 @@ def ajouter_filtre_doc_admin():
         if request.form.get('reset'):
             active_tags = []
             filtre_texte = ""
+            selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
         elif request.form.get('retirer_filtre'):
             tag_supprimer = None
