@@ -199,8 +199,7 @@ def ajouter_filtre_doc_admin():
             selectType = "Choisir un type"
         if tag != "Choisir un tag":
             tag = get_tag(request.form.get('tags')[1:])
-            if tag:
-                active_tags.append(tag)
+            active_tags.append(tag)
         if request.form.get('barre_recherche'):
             if request.form.get('barre_recherche')[0] != ".":
                 filtre_texte = request.form.get('barre_recherche')   
