@@ -1,6 +1,6 @@
 from .app import app, mkpath, db
-from flask import render_template, url_for , redirect, request,  flash, session
-from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur
+from flask import render_template, url_for , redirect, request,  flash, session, send_from_directory
+from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur, get_type
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
@@ -17,15 +17,22 @@ selectType = "Choisir un type"
 def home():
     global active_tags
     result = []
-    if result and active_tags:
+    doc = None
+    if request.args.get('id'):
+        id = request.args['id']
+        doc = get_document_id(id)
+        doc.nomType = get_type(doc.idType).nomType
+    
+    if active_tags or filtre_texte:
         for i in get_types():
             resultat = dict()
             resultat["nomType"] = i.nomType
             resultat["element"] = []
-            for document in get_document_types(3, active_tags,filtre_texte):
+            for document in get_document_types(i.idType, active_tags,filtre_texte):
                 resultat["element"].append(document)
-            result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
+            if resultat["element"]:
+                result.append(resultat)
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil',doc = doc)
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
@@ -57,13 +64,23 @@ def ajouter_filtre():
                 active_tags.remove(tag_supprimer)
     return redirect(url_for('home'))
 
-
 @app.route('/ouverture_doc/<id>', methods =("POST",))
 @login_required
 def ouverture_doc(id):
+    return redirect(url_for('home', id=id))
+  
+@app.route('/visualiser/<id>', methods =("POST",))
+@login_required
+def visualiser(id):
     doc = get_document_id(id).fichierDoc
     webbrowser.open(mkpath('./static/document/' + doc)) 
-    return redirect(url_for('home'))
+    return redirect(url_for('home', id=id))
+
+@app.route('/telecharger/<id>', methods =("POST",))
+@login_required
+def telecharger(id):
+    path = mkpath('./static/document/')
+    return send_from_directory(path, get_document_id(id).fichierDoc, as_attachment=True)
   
 
 
@@ -193,10 +210,11 @@ def appliquer_filtres():
 def ajouter_filtre_doc_admin():
     global active_tags, filtre_texte, selectType
     if request.method=='POST':
-        tag=request.form['tags']
+        filtre_texte = request.form.get('barre_recherche')
         selectType = request.form.get('types')
         if selectType == "Tous les types":
             selectType = "Choisir un type"
+        tag=request.form['tags']
         if tag != "Choisir un tag":
             tag = get_tag(request.form.get('tags')[1:])
             active_tags.append(tag)
@@ -204,21 +222,14 @@ def ajouter_filtre_doc_admin():
             if request.form.get('barre_recherche')[0] != ".":
                 filtre_texte = request.form.get('barre_recherche')   
             else:
-                tag = get_tag(request.form.get('barre_recherche')[1:])
-                if tag:
-                    active_tags.append(tag)
+                active_tags.append(get_tag(request.form.get('barre_recherche')[1:]))   
         if request.form.get('reset'):
             active_tags = []
             filtre_texte = ""
             selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
         elif request.form.get('retirer_filtre'):
-            tag_supprimer = None
-            for tag in active_tags:
-                if tag.nomTag == request.form.get('retirer_filtre'):
-                    tag_supprimer = tag
-            if tag_supprimer:
-                active_tags.remove(tag_supprimer)
+            active_tags.remove(request.form.get('retirer_filtre'))
     return redirect(url_for('recherche_doc_admin'))
 
 class AjouteCompteForm(FlaskForm):
