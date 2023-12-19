@@ -1,5 +1,5 @@
 from .app import app, mkpath, db
-from flask import render_template, url_for , redirect, request,  flash, session 
+from flask import render_template, url_for , redirect, request,  flash, session, send_from_directory
 from .models import *
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
@@ -17,14 +17,22 @@ selectType = "Choisir un type"
 def home():
     global active_tags
     result = []
-    for i in get_types():
-        resultat = dict()
-        resultat["nomType"] = i.nomType
-        resultat["element"] = []
-        for document in get_document_types(i.idType, active_tags,filtre_texte):
-            resultat["element"].append(document)
-        result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil')
+    doc = None
+    if request.args.get('id'):
+        id = request.args['id']
+        doc = get_document_id(id)
+        doc.nomType = get_type(doc.idType).nomType
+    
+    if active_tags or filtre_texte:
+        for i in get_types():
+            resultat = dict()
+            resultat["nomType"] = i.nomType
+            resultat["element"] = []
+            for document in get_document_types(i.idType, active_tags,filtre_texte):
+                resultat["element"].append(document)
+            if resultat["element"]:
+                result.append(resultat)
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil',doc = doc)
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
@@ -56,13 +64,23 @@ def ajouter_filtre():
                 active_tags.remove(tag_supprimer)
     return redirect(url_for('home'))
 
-
 @app.route('/ouverture_doc/<id>', methods =("POST",))
 @login_required
 def ouverture_doc(id):
+    return redirect(url_for('home', id=id))
+  
+@app.route('/visualiser/<id>', methods =("POST",))
+@login_required
+def visualiser(id):
     doc = get_document_id(id).fichierDoc
     webbrowser.open(mkpath('./static/document/' + doc)) 
-    return redirect(url_for('home'))
+    return redirect(url_for('home', id=id))
+
+@app.route('/telecharger/<id>', methods =("POST",))
+@login_required
+def telecharger(id):
+    path = mkpath('./static/document/')
+    return send_from_directory(path, get_document_id(id).fichierDoc, as_attachment=True)
   
 
 
@@ -212,6 +230,7 @@ def ajouter_filtre_doc_admin():
             selectType = "Choisir un type"
         tag=request.form['tags']
         if tag != "Choisir un tag":
+            tag = get_tag(request.form.get('tags')[1:])
             active_tags.append(tag)
         if request.form.get('barre_recherche'):
             if request.form.get('barre_recherche')[0] != ".":
@@ -224,9 +243,10 @@ def ajouter_filtre_doc_admin():
             selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
         elif request.form.get('retirer_filtre'):
-            active_tags.remove(request.form.get('retirer_filtre'))
+            for tag in active_tags:
+                if tag.nomTag == request.form.get('retirer_filtre'):
+                    active_tags.remove(tag)
     return redirect(url_for('recherche_doc_admin'))
-
 
 class AjouteCompteForm(FlaskForm):
     nomUser = StringField('Nom', validators = [DataRequired()])

@@ -73,6 +73,9 @@ def get_tag_idDoc(idDoc):
 def get_types():
     return TypeDocument.query.all()
 
+def get_type(idType):
+    return TypeDocument.query.filter(TypeDocument.idType == idType).first()
+
 def get_documents():
     return Document.query.all()
 
