@@ -138,6 +138,4 @@ def informations_utlisateurs():
 
 def is_admin():
     infos = informations_utlisateurs()
-    print(infos)
-    print(infos["role"] == 'Administrateur')
     return "role" in infos.keys() and infos["role"] == 'Administrateur'
