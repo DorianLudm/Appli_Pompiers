@@ -17,9 +17,9 @@ main {
     width: 45%;
 }
 
-input, select {
+/* input, select {
     width: 100%;
-}
+} */
 
 .line p {
     padding: 1vw;

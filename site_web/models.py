@@ -15,7 +15,7 @@ class Grade(db.Model):
     idGrade = db.Column(db.Integer, primary_key =True)
     nomGrade = db.Column(db.String(100))
 
-    def get_id(self):
+    def get_id(self):   
         return str(self.idGrade)
 
 class Role(db.Model):
@@ -76,29 +76,39 @@ def get_tag_idDoc(idDoc):
 def get_types():
     return TypeDocument.query.all()
 
+def get_type(idType):
+    return TypeDocument.query.filter(TypeDocument.idType == idType).first()
+
 def get_documents():
     return Document.query.all()
 
-def get_document_types(idTypeDoc, active_tags,filtre_texte):
-    document = Document.query.filter(Document.idType == idTypeDoc).filter(Document.nomDoc.like('%' + filtre_texte + '%')).all()
+def get_document_types(idTypeDoc, document = []):
     resultat = []
-    if active_tags != []:
-        for doc in document:
-            est_present = True
-            for tag in active_tags:
-                if not DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(DocumentTag.idDoc == doc.idDoc).all():
-                    est_present = False
-            if est_present:
-                resultat.append(doc)
-        return resultat 
-    return document
+    for doc in document:
+        if doc.idType == idTypeDoc:
+            resultat.append(doc)
+    return resultat 
+
+def get_filtrer_document_tag(documents, tag):
+    resultat = []
+    for doc in documents:
+        if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
+            resultat.append(doc)
+    return resultat
+
+def get_filtrer_document_nom(documents, nom):
+    resultat = []
+    for doc in documents:
+        if doc.nomDoc.lower().find(nom.lower()) != -1:
+            print(doc.nomDoc.find(nom))
+            resultat.append(doc)
+    return resultat
 
 def get_document_id(idDoc):
     return Document.query.get(idDoc)
 
 def get_utilisateurs():
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
- 
 
 def get_grades():
     return Grade.query.all()
@@ -137,3 +147,7 @@ def informations_utlisateurs():
     util['grade'] = get_nom_grade(current_user.idGrade)
     util['role'] = get_nom_role(current_user.idRole)
     return util
+
+def is_admin():
+    infos = informations_utlisateurs()
+    return "role" in infos.keys() and infos["role"] == 'Administrateur'

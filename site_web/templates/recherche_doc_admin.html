@@ -36,13 +36,13 @@
         </div>
         <div class="active_tag">
             {% for x in active_tags %}
-                <input name="retirer_filtre" type="Submit" value="{{x}}"/>
+                <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
             {% endfor %}
         </div>
-    <div class="bouton_reset">
-        <input name="reset" type="Submit" value="Réinitialiser les filtres" /> 
-        <a href="{{ url_for ('ajoute_document')}}"><input type="button" value="Ajouter un document"/></a>
-    </div>
+        <div class="bouton_reset">
+            <input name="reset" type="Submit" value="Réinitialiser les filtres"/> 
+            <a href="{{ url_for ('ajoute_document')}}"><input type="button" value="Ajouter un document"/></a>
+        </div>
     </form>
 </div>
 <div>
@@ -59,7 +59,7 @@
                             <li class="nomDoc"><a href={{ url_for('modifier_document', id= doc.idDoc) }}>{{ doc.nomDoc }}</a></li>
                             <li class="typeDoc">{{ elem.nomType }}</li>
                             <a href={{ url_for('modifier_document', id= doc.idDoc) }}><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                            <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                            <a href="{{ url_for('supprimer_document', id=doc.idDoc ) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
                         </ul>
                     {% endfor %}
                 {% endif %}

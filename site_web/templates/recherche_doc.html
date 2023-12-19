@@ -7,6 +7,7 @@
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
+<div class="bloc_recherche">
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
         <div class="research_bar">
@@ -34,11 +35,13 @@
     </form>
 </div> 
 <div> 
+    {% if result != [] %}
     <h2>Resultat :</h2>
     <ul class="resultat">
         {% for x in result %}
-            <li class="resultat_item">
-                    <h3>{{x.nomType}}</h3>
+            <li class="resultat_item" >
+                    <h3>{{x.nomType}} ({{x.element|length}})</h3>
+                    
                     <div class="resultat_item_info"> 
                         {% for element in x.element %}
                             <form method="POST" action ="{{ url_for ('ouverture_doc', id = element.idDoc) }}">
@@ -49,5 +52,28 @@
             </li>
         {% endfor %}
     </ul>
+    {% else %}
+        <h2 class="sans_parametre">Veuillez sélectionner des paramètres de recherches</h2>
+    {% endif %}
 </div>
+</div>
+{% if doc %}
+<aside>
+        <h2>{{doc.nomDoc}}</h2>
+        <div class="doc_info">
+            <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
+            <p>Type : {{doc.nomType}}</p>
+            <p>Description : {{doc.descriptionDoc}}</p>
+            <div class="doc_action">
+                <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
+                    <input type="Submit" value="Visualier"/>
+                </form>
+            
+                <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
+                    <input type="Submit" value="Télécharger"/>
+                </form>
+            </div>
+        </div>
+</aside>
+{% endif %}
 {% endblock %}

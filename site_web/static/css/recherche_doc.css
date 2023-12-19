@@ -1,8 +1,8 @@
-main>#filtre{
+div>#filtre{
     background-color: #F24343;
     margin: 0px;
 }
-div>div,div>form,.tags{
+#filtre>div,div>form,.tags{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -105,6 +105,8 @@ main{
 }
 .resultat_item_info{
     height: max-content;
+    overflow:scroll;
+    max-height: 32vh;
 }
 .resultat_item_info>form>input{
     background-color: #CCCCCC;   
@@ -117,4 +119,46 @@ main{
     height: 6vh;
     width: auto;
     margin-right: 2%;
+}
+
+main{
+    display: flex;
+    flex-wrap: wrap;
+}
+main>div{
+    flex-basis: 70%;
+    flex-grow: 1;
+}
+aside{
+    flex-basis: 20%;
+    background-color: #F24343;
+    margin: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 30px;
+}
+aside>h2{
+    text-align: center;
+    margin: 0px;
+}
+aside>.doc_info{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-grow: 1;
+}
+iframe{
+    flex: 1;
+    height: 100%;
+    border: solid black;
+}
+.doc_action{
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+.sans_parametre{           
+    text-align: center;
 }
