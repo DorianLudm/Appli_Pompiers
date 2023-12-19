@@ -142,7 +142,12 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
         return redirect(url_for('home'))
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
-  
+
+@app.route('/gerer_tags')
+@login_required
+def gerer_tags():
+    return render_template('gerer_tags.html')
+
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
 @login_required
 def modifier_compte(id):
