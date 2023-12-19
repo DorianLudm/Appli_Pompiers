@@ -38,6 +38,9 @@ class Utilisateur(db.Model, UserMixin):
     def get_id(self):
       return str(self.idUtilisateur)
     
+    def __repr__(self):
+        return f'Utilisateur {self.idUtilisateur} : {self.nomUtilisateur} {self.prenomUtilisateur} \tid : {self.identifiant} '
+    
 class TypeDocument(db.Model):
     idType = db.Column(db.Integer, primary_key =True)
     nomType = db.Column(db.String(100))
@@ -138,6 +141,7 @@ def get_identifiant_utilisateur(user):
 
 def informations_utlisateurs():
     util = dict()
+    util['id'] = current_user.idUtilisateur
     util['nom'] = current_user.nomUtilisateur
     util['prenom'] = current_user.prenomUtilisateur
     util['grade'] = get_nom_grade(current_user.idGrade)
