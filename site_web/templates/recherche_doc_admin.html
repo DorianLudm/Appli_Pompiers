@@ -59,7 +59,7 @@
                             <li class="nomDoc"><a href={{ url_for('modifier_document', id= doc.idDoc) }}>{{ doc.nomDoc }}</a></li>
                             <li class="typeDoc">{{ elem.nomType }}</li>
                             <a href={{ url_for('modifier_document', id= doc.idDoc) }}><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                            <a href=supprimerDoc><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                            <a href="{{ url_for('supprimer_document', id=doc.idDoc ) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
                         </ul>
                     {% endfor %}
                 {% endif %}

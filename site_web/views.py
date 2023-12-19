@@ -253,6 +253,16 @@ def ajouter_filtre_doc_admin():
                     active_tags.remove(tag)
     return redirect(url_for('recherche_doc_admin'))
 
+@app.route('/administrateur/supprimerDoc/<id>')
+@login_required
+def supprimer_document(id):
+    if not is_admin():
+        return redirect(url_for('home'))
+    document = get_document_id(id)
+    db.session.delete(document)
+    db.session.commit()
+    return ajouter_filtre_doc_admin()
+
 class AjouteCompteForm(FlaskForm):
     nomUser = StringField('Nom', validators = [DataRequired()])
     prenomUser = StringField('Prenom', validators = [DataRequired()])
