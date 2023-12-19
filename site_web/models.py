@@ -132,3 +132,9 @@ def informations_utlisateurs():
     util['grade'] = get_nom_grade(current_user.idGrade)
     util['role'] = get_nom_role(current_user.idRole)
     return util
+
+def is_admin():
+    infos = informations_utlisateurs()
+    print(infos)
+    print(infos["role"] == 'Administrateur')
+    return "role" in infos.keys() and infos["role"] == 'Administrateur'

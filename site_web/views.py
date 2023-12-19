@@ -1,6 +1,6 @@
 from .app import app, mkpath, db
-from flask import render_template, url_for , redirect, request,  flash, session
-from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur
+from flask import render_template, url_for , redirect, request,  flash, session 
+from .models import *
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
@@ -111,21 +111,25 @@ def logout():
     return redirect(url_for('login'))  
 
 # ADMINISTRATION
-
 @app.route('/administrateur')
-@login_required
 def home_admin():
-  return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
+    if not is_admin():
+        return redirect(url_for('home'))
+    return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
 
-@app.route('/rechercheComptes')
+@app.route('/administrateur/rechercheComptes')
 @login_required
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
+    if not is_admin():
+        return redirect(url_for('home'))
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
   
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
 @login_required
 def modifier_compte(id):
+    if not is_admin():
+        return redirect(url_for('home'))
     user = Utilisateur.query.get(id)
     if request.form.get('save_compte') =="Sauvegarder le compte":
         user.nomUtilisateur = request.form.get('nom')
@@ -139,9 +143,11 @@ def modifier_compte(id):
         return redirect(url_for('recherche_comptes')) 
     return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
-@app.route('/rechercheDocAdmin')
+@app.route('/administrateur/rechercheDocAdmin')
 @login_required
 def recherche_doc_admin():
+    if not is_admin():
+        return redirect(url_for('home'))
     global active_tags, selectType
     result = []
     for i in get_types():
@@ -156,6 +162,8 @@ def recherche_doc_admin():
 
 @app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
 def modifier_document(id):
+    if not is_admin():
+        return redirect(url_for('home'))
     doc = get_document_id(id)
     if request.form.get('modifier_document') =="Enregistrer":
         doc.nomDoc = request.form.get('titre')
@@ -169,11 +177,15 @@ def modifier_document(id):
 @app.route('/administrateur/ajouteDocument')
 @login_required
 def ajoute_document():
+    if not is_admin():
+        return redirect(url_for('home'))
     return render_template('ajouter_document.html', util = informations_utlisateurs(), title='Ajouter un document')
 
-@app.route('/appliquer_filtres', methods=['GET', 'POST'])
+@app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
 def appliquer_filtres():
+    if not is_admin():
+        return redirect(url_for('home'))
     if request.method == 'POST':
         if "reset" in request.form:
             return recherche_comptes()
@@ -187,9 +199,11 @@ def appliquer_filtres():
         return recherche_comptes(search_bar_value, selectGrade, selectCaserne)
     return recherche_comptes()
 
-@app.route('/appliquer_filtres_doc', methods=['GET', 'POST'])
+@app.route('/administrateur/appliquer_filtres_doc', methods=['GET', 'POST'])
 @login_required
 def ajouter_filtre_doc_admin():
+    if not is_admin():
+        return redirect(url_for('home'))
     global active_tags, filtre_texte, selectType
     if request.method=='POST':
         filtre_texte = request.form.get('barre_recherche')
@@ -226,12 +240,16 @@ class AjouteCompteForm(FlaskForm):
 @app.route('/administrateur/ajouteCompte')
 @login_required
 def ajoute_compte():
+    if not is_admin():
+        return redirect(url_for('home'))
     f = AjouteCompteForm()
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=f)
 
 @app.route('/administrateur/supprimerCompte/<id>')
 @login_required
 def supprimer_compte(id):
+    if not is_admin():
+        return redirect(url_for('home'))
     util = get_utilisateur(id)
     db.session.delete(util)
     db.session.commit()
@@ -240,6 +258,8 @@ def supprimer_compte(id):
 
 @app.route("/administrateur/ajouteCompte/save")
 def save_compte():
+    if not is_admin():
+        return redirect(url_for('home'))
     form = AjouteCompteForm()
     if form.validate_on_submit():
         util = Utilisateur(
@@ -251,12 +271,13 @@ def save_compte():
             form.nom_grade.data,
             form.caserne_id.data,
         )
-
     return 0
 
 
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required
 def erreur_compte():
+    if not is_admin():
+        return redirect(url_for('home'))
     # Faire un pop-up d'erreur (?)
     print("erreur")
