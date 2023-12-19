@@ -229,7 +229,9 @@ def ajouter_filtre_doc_admin():
             selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
         elif request.form.get('retirer_filtre'):
-            active_tags.remove(request.form.get('retirer_filtre'))
+            for tag in active_tags:
+                if tag.nomTag == request.form.get('retirer_filtre'):
+                    active_tags.remove(tag)
     return redirect(url_for('recherche_doc_admin'))
 
 class AjouteCompteForm(FlaskForm):
