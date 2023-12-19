@@ -189,12 +189,13 @@ def recherche_doc_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
     result = []
+    document = get_documents()
     for i in get_types():
         resultat = dict()
         resultat["nomType"] = i.nomType
         resultat["element"] = []
         
-        for document in get_document_types(i.idType, active_tags,filtre_texte):
+        for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
         result.append(resultat)
     return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
