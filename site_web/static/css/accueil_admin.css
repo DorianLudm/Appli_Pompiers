@@ -1,6 +1,6 @@
 body{
     margin: 0px;
-    overflow: hidden; /*Désactive la possibilité de scroll*/
+    overflow: hidden;
 }
 
 main{
@@ -8,8 +8,9 @@ main{
     height: 100vh;
 }
 
-.boutons{
-    height: 50%;
+
+input{
+    max-height: 40wh;
 }
 
 /* Responsive des boutons */
@@ -17,7 +18,6 @@ main{
     main input{
         border: black thin solid;
         margin-top: 7vh;
-        margin-bottom: 7vh;
         margin-right: 15px;
         margin-left: 15px;
         padding: 10px;
@@ -27,8 +27,6 @@ main{
         cursor: pointer;
         border-radius: 10px;
         width: 40vw;
-        min-height: 115px;
-        min-width: 800px;
         margin-left: 50%;
         transform: translateX(-50%);
     }
@@ -38,7 +36,6 @@ main{
     main input{
         border: black thin solid;
         margin-top: 7vh;
-        margin-bottom: 7vh;
         margin-right: 15px;
         margin-left: 15px;
         padding: 10px;
@@ -48,8 +45,31 @@ main{
         cursor: pointer;
         border-radius: 10px;
         width: 70vw;
+        height: 15vh;
         margin-left: 50%;
         transform: translateX(-50%);
     }
+
+    body{
+        overflow: auto;
+    }
 }
+
+@media screen and (max-height: 700px) {
+    main input{
+        border: black thin solid;
+        padding: 1px;
+        font-size: 5vh;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 10px;
+        height: 10vh;
+    }
+
+    body{
+        overflow: auto;
+    }
+}
+
 /* Fin responsive des boutons */
