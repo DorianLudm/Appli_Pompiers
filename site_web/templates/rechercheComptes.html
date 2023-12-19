@@ -73,7 +73,7 @@
                             <ul class="in_ligne">
                                 
                                 <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}"><input type="image" class="ImgCompte" src="/static/img/compteIco.png"></a>
-                                <li class="nomCompte"><a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}">{{ user.nomUtilisateur.upper() }} {{ user.prenomUtilisateur }} {{ user.idUtilisateur }}</a></li>
+                                <li class="nomCompte"><a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}">{{ user.nomUtilisateur.upper() }} {{ user.prenomUtilisateur }}</a></li>
                                 <li class="gradeCompte">{{ gradeUser[0] }}</li>
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 {% if user.idUtilisateur != current_user.idUtilisateur : %}

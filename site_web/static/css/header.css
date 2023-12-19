@@ -93,8 +93,7 @@ section{
     flex-wrap: wrap;
 }
 
-.popup-content > div{
-    
+.contenu-popup{
     flex-basis: 100%;
     flex-grow: 1;
 }
