@@ -138,6 +138,7 @@ aside{
     flex-direction: column;
     flex-grow: 1;
     padding: 30px;
+    height: calc(100vh - 220px)
 }
 aside>h2{
     text-align: center;
@@ -158,4 +159,7 @@ iframe{
     display: flex;
     justify-content: center;
     align-items: center;    
+}
+.sans_parametre{           
+    text-align: center;
 }

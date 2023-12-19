@@ -35,12 +35,13 @@
     </form>
 </div> 
 <div> 
-    <h2>Resultat :</h2>
     {% if result != [] %}
+    <h2>Resultat :</h2>
     <ul class="resultat">
         {% for x in result %}
             <li class="resultat_item" >
-                    <h3>{{x.nomType}}</h3>
+                    <h3>{{x.nomType}} ({{x.element|length}})</h3>
+                    
                     <div class="resultat_item_info"> 
                         {% for element in x.element %}
                             <form method="POST" action ="{{ url_for ('ouverture_doc', id = element.idDoc) }}">
@@ -51,6 +52,8 @@
             </li>
         {% endfor %}
     </ul>
+    {% else %}
+        <h2 class="sans_parametre">Veuillez sélectionner des paramètres de recherches</h2>
     {% endif %}
 </div>
 </div>
@@ -63,7 +66,7 @@
             <p>Description : {{doc.descriptionDoc}}</p>
             <div class="doc_action">
                 <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
-                    <input type="Submit" value="Visualier"/>
+                    <input type="Submit" value="Visualiser"/>
                 </form>
             
                 <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">

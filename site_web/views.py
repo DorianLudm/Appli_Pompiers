@@ -6,19 +6,21 @@ from wtforms import StringField, PasswordField, IntegerField, SelectField, Boole
 from wtforms.validators import DataRequired
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required, current_user
+from .cache import documents
 import webbrowser
 import os
 from werkzeug.utils import secure_filename
 
-active_tags = []
+active_tags = set()
 filtre_texte = ""
 selectType = "Choisir un type"
 
 @app.route('/pompier')
 @login_required
 def home():
-    global active_tags
+    global active_tags, documents
     result = []
+    
     doc = None
     if request.args.get('id'):
         id = request.args['id']
@@ -30,7 +32,7 @@ def home():
             resultat = dict()
             resultat["nomType"] = i.nomType
             resultat["element"] = []
-            for document in get_document_types(i.idType, active_tags,filtre_texte):
+            for document in get_document_types(i.idType, documents):
                 resultat["element"].append(document)
             if resultat["element"]:
                 result.append(resultat)
@@ -39,22 +41,28 @@ def home():
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
 def ajouter_filtre():
-    global active_tags, filtre_texte
+    global active_tags, filtre_texte, documents
+    if not documents:
+        if not active_tags and not filtre_texte:
+            documents = get_documents()
     if request.method=='POST':
         tag=request.form['tags']
         if tag != "Choisir un tag":
-            tag = get_tag(request.form.get('tags')[1:])
+            tag = get_tag(request.form.get('tags'))
             if tag:
-                active_tags.append(tag)
+                active_tags.add(tag)
+                documents = get_filtrer_document_tag(documents, tag)
         if request.form.get('barre_recherche'):
             if request.form.get('barre_recherche')[0] != ".":
                 filtre_texte = request.form.get('barre_recherche')   
+                documents = get_filtrer_document_nom(documents, filtre_texte)
             else:
                 tag = get_tag(request.form.get('barre_recherche')[1:])
                 if tag:
-                    active_tags.append(tag)
+                    active_tags.add(tag)
+                    documents = get_filtrer_document_tag(documents, tag)
         if request.form.get('reset') == 'Reset':
-            active_tags = []
+            active_tags = set()
             filtre_texte = ""
             return redirect(url_for('home'))
         elif request.form.get('retirer_filtre'):
@@ -64,6 +72,14 @@ def ajouter_filtre():
                     tag_supprimer = tag
             if tag_supprimer:
                 active_tags.remove(tag_supprimer)
+                
+            documents = get_documents()
+            if filtre_texte:
+                documents = get_filtrer_document_nom(documents, filtre_texte)
+            for tag in active_tags:
+                documents = get_filtrer_document_tag(documents, tag)
+                
+                
     return redirect(url_for('home'))
 
 @app.route('/ouverture_doc/<id>', methods =("POST",))
@@ -175,12 +191,13 @@ def recherche_doc_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
     result = []
+    document = get_documents()
     for i in get_types():
         resultat = dict()
         resultat["nomType"] = i.nomType
         resultat["element"] = []
         
-        for document in get_document_types(i.idType, active_tags,filtre_texte):
+        for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
         result.append(resultat)
     return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
@@ -263,12 +280,12 @@ def ajouter_filtre_doc_admin():
         tag=request.form['tags']
         if tag != "Choisir un tag":
             tag = get_tag(request.form.get('tags')[1:])
-            active_tags.append(tag)
+            active_tags.add(tag)
         if request.form.get('barre_recherche'):
             if request.form.get('barre_recherche')[0] != ".":
                 filtre_texte = request.form.get('barre_recherche')   
             else:
-                active_tags.append(get_tag(request.form.get('barre_recherche')[1:]))   
+                active_tags.add(get_tag(request.form.get('barre_recherche')[1:]))   
         if request.form.get('reset'):
             active_tags = []
             filtre_texte = ""
@@ -309,7 +326,7 @@ def ajoute_compte():
     f.id_caserne.choices = [(c.idCas, c.nomCaserne) for c in get_casernes()]
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=f)
 
-@app.route('/administrateur/supprimerCompte/<id>')
+@app.route('/administrateur/supprimerCompte/<int:id>')
 @login_required
 def supprimer_compte(id):
     if not is_admin():
@@ -317,7 +334,7 @@ def supprimer_compte(id):
     util = get_utilisateur(id)
     db.session.delete(util)
     db.session.commit()
-    return appliquer_filtres()
+    return redirect(url_for('recherche_comptes'))
 
 
 @app.route("/administrateur/ajouteCompte/save", methods=["POST"])

@@ -38,6 +38,9 @@ class Utilisateur(db.Model, UserMixin):
     def get_id(self):
       return str(self.idUtilisateur)
     
+    def __repr__(self):
+        return f'Utilisateur {self.idUtilisateur} : {self.nomUtilisateur} {self.prenomUtilisateur} \tid : {self.identifiant} '
+    
 class TypeDocument(db.Model):
     idType = db.Column(db.Integer, primary_key =True)
     nomType = db.Column(db.String(100))
@@ -79,19 +82,27 @@ def get_type(idType):
 def get_documents():
     return Document.query.all()
 
-def get_document_types(idTypeDoc, active_tags,filtre_texte):
-    document = Document.query.filter(Document.idType == idTypeDoc).filter(Document.nomDoc.like('%' + filtre_texte + '%')).all()
+def get_document_types(idTypeDoc, document = []):
     resultat = []
-    if active_tags != []:
-        for doc in document:
-            est_present = True
-            for tag in active_tags:
-                if not DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(DocumentTag.idDoc == doc.idDoc).all():
-                    est_present = False
-            if est_present:
-                resultat.append(doc)
-        return resultat 
-    return document
+    for doc in document:
+        if doc.idType == idTypeDoc:
+            resultat.append(doc)
+    return resultat 
+
+def get_filtrer_document_tag(documents, tag):
+    resultat = []
+    for doc in documents:
+        if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
+            resultat.append(doc)
+    return resultat
+
+def get_filtrer_document_nom(documents, nom):
+    resultat = []
+    for doc in documents:
+        if doc.nomDoc.lower().find(nom.lower()) != -1:
+            print(doc.nomDoc.find(nom))
+            resultat.append(doc)
+    return resultat
 
 def get_document_id(idDoc):
     return Document.query.get(idDoc)
@@ -130,6 +141,7 @@ def get_identifiant_utilisateur(user):
 
 def informations_utlisateurs():
     util = dict()
+    util['id'] = current_user.idUtilisateur
     util['nom'] = current_user.nomUtilisateur
     util['prenom'] = current_user.prenomUtilisateur
     util['grade'] = get_nom_grade(current_user.idGrade)
