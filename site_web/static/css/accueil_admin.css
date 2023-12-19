@@ -47,8 +47,13 @@ input{
         cursor: pointer;
         border-radius: 10px;
         width: 70vw;
+        height: 15vh;
         margin-left: 50%;
         transform: translateX(-50%);
+    }
+
+    body{
+        overflow: auto;
     }
 }
 
