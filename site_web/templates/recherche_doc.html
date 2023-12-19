@@ -66,7 +66,7 @@
             <p>Description : {{doc.descriptionDoc}}</p>
             <div class="doc_action">
                 <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
-                    <input type="Submit" value="Visualier"/>
+                    <input type="Submit" value="Visualiser"/>
                 </form>
             
                 <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
