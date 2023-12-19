@@ -32,39 +32,20 @@
     <div class="line">
         <div>
             <p>Grade</p>
-            <select name="grades" id="grades-select">
-                <option selected="selected" hidden="hidden">Choisir un grade</option>
-                {% for x in grades %} 
-                    <option value="">{{x.nomGrade}}</option>
-                {% endfor %}
-            </select>
+            {{ form.id_grade(class="form-control") }}
+            <br>
         </div>
         <div>
             <p>Caserne</p>
-            <select name="casernes" id="casernes-select">
-                <option selected="selected" hidden="hidden">Choisir une caserne</option>
-                {% for x in casernes %} 
-                    <option value="">{{x.nomCaserne}}</option>
-                {% endfor %}
-            </select>
+            {{ form.id_caserne(class="form-control") }}
         </div>
     </div>
-    <div class="line fieldset-container">
-        <fieldset>
-            <legend>Chef de caserne:</legend>
-            <div>
-            <input type="radio" id="true" name="oui" value="true" checked />
-            <label for="oui">Oui</label>
-            </div>
-        
-            <div>
-            <input type="radio" id="true" name="oui" value="true" />
-            <label for="non">Non</label>
-            </div>
-        </fieldset>          
+    <div>
+        <p>{{ form.id_role.label }}</p>
+        {{ form.id_role }}
     </div>
     <div class="line button-container">
-        <input type="submit" value="Ajouter le compte" id="valider" class="bouton">
+        <input type="submit" value="Ajouter le compte">
         <a href="{{ url_for('recherche_comptes') }}"> <input type="button" value="Retour" id="retour" class="bouton"></a>
     </div>
 </form>
