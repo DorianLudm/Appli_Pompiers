@@ -1,8 +1,8 @@
 from .app import app, mkpath, db
 from flask import render_template, url_for , redirect, request,  flash, session
-from .models import get_tags, get_types, get_document_id, get_document_types, get_tag_nom,get_tag, Utilisateur, get_identifiant_utilisateur, get_grades, get_casernes, informations_utlisateurs, get_utilisateurs, get_documents, get_utilisateur
+from .models import *
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField
+from wtforms import StringField, PasswordField, IntegerField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required, current_user
@@ -220,14 +220,16 @@ class AjouteCompteForm(FlaskForm):
     prenomUser = StringField('Prenom', validators = [DataRequired()])
     pseudo = StringField("Nom d'utilisateur", validators = [DataRequired()])
     mdp = PasswordField('Mot de passe', validators = [DataRequired()])
-    nom_grade = IntegerField('Grade', validators = [DataRequired()])
-    caserne_id = IntegerField('Caserne', validators = [DataRequired()])
-    # chef = bool('Est chef de caserne', validators = [DataRequired()])
+    id_grade = SelectField('Grade', choices = [])
+    id_caserne = SelectField('Caserne', choices = [])
+    id_role = BooleanField('Administrateur ?')
 
 @app.route('/administrateur/ajouteCompte')
 @login_required
 def ajoute_compte():
     f = AjouteCompteForm()
+    f.id_grade.choices = [(g.idGrade, g.nomGrade) for g in get_grades()]
+    f.id_caserne.choices = [(c.idCas, c.nomCaserne) for c in get_casernes()]
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=f)
 
 @app.route('/administrateur/supprimerCompte/<id>')
@@ -239,21 +241,30 @@ def supprimer_compte(id):
     return appliquer_filtres()
 
 
-@app.route("/administrateur/ajouteCompte/save")
+@app.route("/administrateur/ajouteCompte/save", methods=["POST"])
 def save_compte():
     form = AjouteCompteForm()
-    if form.validate_on_submit():
-        util = Utilisateur(
-            max_id_utilisateur() + 1,
-            form.nomUser.data,
-            form.prenomUser.data,
-            form.pseudo.data,
-            sha256(form.mdp.data.encode()).hexdigest(),
-            form.nom_grade.data,
-            form.caserne_id.data,
-        )
+    form.id_grade.choices = [(g.idGrade, g.nomGrade) for g in get_grades()]
+    form.id_caserne.choices = [(c.idCas, c.nomCaserne) for c in get_casernes()]
 
-    return 0
+    if form.validate_on_submit():
+        if form.id_role.data:
+            role = -1
+        role = 2
+        util = Utilisateur(
+            idUtilisateur= max_id_utilisateur()+1,
+            nomUtilisateur= form.nomUser.data,
+            prenomUtilisateur= form.prenomUser.data,
+            identifiant= form.pseudo.data,
+            mdp= sha256(form.mdp.data.encode()).hexdigest(),
+            idGrade= form.id_grade.data,
+            idRole= role,
+            idCas= form.id_caserne.data
+        )
+        db.session.add(util)
+        db.session.commit()
+        return redirect(url_for('recherche_comptes'))
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form)
 
 
 @app.route("/administrateur/gerer_compte/erreur")
