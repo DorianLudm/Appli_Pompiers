@@ -48,14 +48,6 @@
     <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="< Retour à l'accueil"/></a>
 </div>
 
-<script>
-    function togglePopup(str){
-        console.log(str.getAttribute("id"))
-        let popup = document.querySelector("#"+str.getAttribute("id"));
-        popup.classList.toggle("open");
-    }
-</script>
-
 
 <div> 
     <ul class="resultat">
@@ -86,18 +78,18 @@
                                 <li class="caserneCompte">{{ caserneUser[0] }}</li>
                                 {% if user.idUtilisateur != current_user.idUtilisateur : %}
                                     <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}" ><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                                    <a onclick="togglePopup({{ user.identifiant }});"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="temporaire"/></a>
+                                    <a onclick="togglePopup({{ user.idUtilisateur }});"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="supprimerComptes"/></a>
                                 {% else %}
                                     <a href="{{ url_for('modifier_compte', id= user.idUtilisateur) }}" ><input class="buttonCompte2" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
                                 {% endif %}
 
-                                <div id="{{user.identifiant}}" class="popup-overlay">
+                                <div id="{{user.idUtilisateur}}" class="popup-overlay">
                                     <div class="popup-content">
                                         <div>
-                                            <h2>Quel pop-up de qualité !</h2>
+                                            <h2>Confirmez-vous la suppression ?</h2>
                                         </div>
                                         <div>
-                                            <a onclick="togglePopup({{ user.identifiant }});"><input id="annuler-suppression" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
+                                            <a onclick="togglePopup({{ user.idUtilisateur }});"><input id="annuler-suppression" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
                                             <a href="{{ url_for('supprimer_compte', id= user.idUtilisateur) }}"><input id="valider-suppression" type="button" value="🗑 Confirmer" alt="ValiderSuppression"/></a>
                                         </div>
                                     </div>

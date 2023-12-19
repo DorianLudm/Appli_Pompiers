@@ -131,6 +131,7 @@ def get_identifiant_utilisateur(user):
 
 def informations_utlisateurs():
     util = dict()
+    util['id'] = current_user.idUtilisateur
     util['nom'] = current_user.nomUtilisateur
     util['prenom'] = current_user.prenomUtilisateur
     util['grade'] = get_nom_grade(current_user.idGrade)

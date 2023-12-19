@@ -1,10 +1,35 @@
 {% block page_specific_css %}
     <link rel="stylesheet" href="/../static/css/header.css"/>
 {% endblock %}
+
+<script>
+    function togglePopup(id){
+        let popup = document.getElementById(id);
+        if (popup) {
+            popup.classList.toggle("open");
+        } else{
+            console.error("Identifiant d'utilisateur introuvable :", id);
+        }
+    }
+</script>
+
 <section>
     <p>{{ util.nom}}</p>
     <p>{{ util.prenom}}</p>
     <p>{{ util.grade}}</p>
     <p>{{ util.role}}</p>
-    <a href="{{ url_for ('logout') }}" class="deconnexion"><button>Déconnexion</button></a>
+    <a onclick="togglePopup({{ util.id }});" class="deconnexion"><button>Déconnexion</button></a>
+
+    <div id="{{util.id}}" class="popup-overlay">
+        <div class="popup-content">
+            <div>
+                <h2>Confirmez-vous la déconnexion ?</h2>
+            </div>
+            <div>
+                <a onclick="togglePopup({{ util.id }});"><input id="annuler-deconnexion" type="button" value="❌ Annuler" alt="AnnulerDeconnexion"/></a>
+                <a href="{{ url_for ('logout') }}"><input id="valider-deconnexion" type="button" value="✅ Confirmer" alt="ValiderDeconnexion"/></a>
+            </div>
+        </div>
+    </div>
+
 </section>
