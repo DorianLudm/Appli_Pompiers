@@ -7,6 +7,8 @@ from wtforms.validators import DataRequired
 from hashlib import sha256
 from flask_login import login_user, logout_user, login_required, current_user
 import webbrowser
+import os
+from werkzeug.utils import secure_filename
 
 active_tags = []
 filtre_texte = ""
@@ -197,12 +199,37 @@ def modifier_document(id):
         return redirect(url_for('recherche_doc_admin'))
     return render_template('modifier_document.html', title='Modifier de Document', doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
 
-@app.route('/administrateur/ajouteDocument')
+@app.route('/administrateur/ajouteDocument', methods=['GET', 'POST'])
 @login_required
 def ajoute_document():
     if not is_admin():
         return redirect(url_for('home'))
-    return render_template('ajouter_document.html', util = informations_utlisateurs(), title='Ajouter un document')
+    if request.method == 'POST':   
+        if request.form.get('ajouter_document') =="Enregistrer":
+            # doc = Document(
+            #     idDoc = max_id_document()+1,
+            #     nomDoc = request.form.get('titre'),
+            #     idType = request.form.get('types'),
+            #     fichierDoc = request.form.get('fichier')
+            # )
+            # db.session.add(doc)
+            # db.session.commit()
+            print(request.form.get('titre'))
+            print(request.form.get('types'))
+            #récupère le fichier le fichier uploadé dans le formulaire
+            file = request.files['file']
+            #enregistre le fichier dans le dossier static/upload
+            print("save")
+            print(file.filename)
+            print(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+            file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))))
+            
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('fichier')))
+            print("save")
+            return redirect(url_for('recherche_doc_admin')) 
+        elif request.form.get('annuler') =="Annuler":
+            return redirect(url_for('recherche_doc_admin'))
+    return render_template('ajouter_document.html', util = informations_utlisateurs(),types = get_types(), title='Ajouter un document')
 
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
