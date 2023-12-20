@@ -40,29 +40,35 @@ def home():
 @login_required
 def ajouter_filtre():
     global active_tags, filtre_texte, documents
+    # Si aucun document n'est chargé
     if not documents:
         if not active_tags and not filtre_texte:
             documents = get_documents()
-    if request.method=='POST':
-        tag=request.form['tags']
+    # Si on recoit des infos par POST
+    if request.method == 'POST':
+        tag = request.form['tags']
+        # Nouveau tag (existant en BD), alors on l'ajoute
         if tag != "Choisir un tag":
             tag = get_tag(request.form.get('tags'))
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
+        # Recherche par mot ou ajout tag par point
         if request.form.get('barre_recherche'):
             if request.form.get('barre_recherche')[0] != ".":
-                filtre_texte = request.form.get('barre_recherche')   
+                filtre_texte = request.form.get('barre_recherche')
                 documents = get_filtrer_document_nom(documents, filtre_texte)
             else:
                 tag = get_tag(request.form.get('barre_recherche')[1:])
                 if tag:
                     active_tags.add(tag)
                     documents = get_filtrer_document_tag(documents, tag)
+        # Gestion du bouton reset
         if request.form.get('reset') == 'Reset':
             active_tags = set()
             filtre_texte = ""
             return redirect(url_for('home'))
+        # Suppression d'un tag lorsqu'on appuie sur celui-ci
         elif request.form.get('retirer_filtre'):
             tag_supprimer = None
             for tag in active_tags:
@@ -70,7 +76,6 @@ def ajouter_filtre():
                     tag_supprimer = tag
             if tag_supprimer:
                 active_tags.remove(tag_supprimer)
-                
             documents = get_documents()
             if filtre_texte:
                 documents = get_filtrer_document_nom(documents, filtre_texte)
@@ -260,14 +265,17 @@ def ajouter_filtre_doc_admin():
             else:
                 active_tags.add(get_tag(request.form.get('barre_recherche')[1:]))   
         if request.form.get('reset'):
-            active_tags = []
+            active_tags = set()
             filtre_texte = ""
             selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
         elif request.form.get('retirer_filtre'):
+            tag_to_remove = []
             for tag in active_tags:
                 if tag.nomTag == request.form.get('retirer_filtre'):
-                    active_tags.remove(tag)
+                    tag_to_remove.append(tag)
+            for tag in tag_to_remove:
+                active_tags.remove(tag)
     return redirect(url_for('recherche_doc_admin'))
 
 @app.route('/administrateur/supprimerDoc/<id>')
