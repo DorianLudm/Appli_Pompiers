@@ -54,7 +54,6 @@ class Document(db.Model):
 class Tag(db.Model):
     idTag = db.Column(db.Integer, primary_key =True)
     nomTag = db.Column(db.String(100))
-    niveauProtection = db.Column(db.Integer)
     couleurTag = db.Column(db.String(100))
     
 class DocumentTag(db.Model):
@@ -64,7 +63,9 @@ class DocumentTag(db.Model):
 def get_tags():
     return Tag.query.order_by(Tag.nomTag).all()
 
-def get_tag(nomTag):
+def get_tag(nomTag, exact = False):
+    if exact:
+        return Tag.query.filter(Tag.nomTag == nomTag ).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
 
 def get_tag_nom(nomTag):
@@ -100,7 +101,6 @@ def get_filtrer_document_nom(documents, nom):
     resultat = []
     for doc in documents:
         if doc.nomDoc.lower().find(nom.lower()) != -1:
-            print(doc.nomDoc.find(nom))
             resultat.append(doc)
     return resultat
 
