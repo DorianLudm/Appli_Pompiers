@@ -256,7 +256,6 @@ def supprimer_compte(id):
     db.session.commit()
     return redirect(url_for('recherche_comptes'))
 
-
 @app.route("/administrateur/ajouteCompte/save", methods=["POST"])
 def save_compte():
     if not is_admin():
@@ -287,23 +286,27 @@ def save_compte():
 def handle_filtrage(admin = False):
     global active_tags, filtre_texte, documents, selectType
     tag = request.form['tags']
+    bool_fulldoc = False
     if not documents:
         if admin:
-            if not active_tags and not filtre_texte and selectType != "Choisir un type":
+            if not active_tags and not filtre_texte and selectType == "Choisir un type":
                 documents = get_documents()
+                bool_fulldoc = True
         else:
             if not active_tags and not filtre_texte:
                 documents = get_documents()
-    if admin:
+                bool_fulldoc = True
+    if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get('types') != "Choisir un type":
         selectType = request.form.get('types')
-    # Nouveau tag (existant en BD), alors on l'ajoute
-    if tag != "Choisir un tag":
-        tag = get_tag(request.form.get('tags'))
-        if tag:
-            active_tags.add(tag)
-            documents = get_filtrer_document_tag(documents, tag)
+        documents = get_documents()
+    # Filtre par type
+    elif admin:
+        selectType = request.form.get('types')
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
+        if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
+            documents = get_documents()
+            bool_fulldoc = True
         if request.form.get('barre_recherche')[0] != ".":
             filtre_texte = request.form.get('barre_recherche')
             documents = get_filtrer_document_nom(documents, filtre_texte)
@@ -312,7 +315,17 @@ def handle_filtrage(admin = False):
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
-    
+    # Nouveau tag (existant en BD), alors on l'ajoute
+    if tag != "Choisir un tag":
+        tag = get_tag(request.form.get('tags'), True)
+        if tag:
+            already_in = False
+            for t in active_tags:
+                if t.nomTag == tag.nomTag:
+                    already_in = True
+            if not already_in:
+                active_tags.add(tag)
+                documents = get_filtrer_document_tag(documents, tag)
     # Suppression d'un tag lorsqu'on appuie sur celui-ci
     if request.form.get('retirer_filtre'):
         tag_to_delete = []
