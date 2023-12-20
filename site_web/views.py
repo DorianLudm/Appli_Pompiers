@@ -45,44 +45,13 @@ def home():
 @login_required
 def ajouter_filtre():
     global active_tags, filtre_texte, documents
+    # Si aucun document n'est chargé
     if not documents:
         if not active_tags and not filtre_texte:
             documents = get_documents()
-    if request.method=='POST':
-        tag=request.form['tags']
-        if tag != "Choisir un tag":
-            tag = get_tag(request.form.get('tags'))
-            if tag:
-                active_tags.add(tag)
-                documents = get_filtrer_document_tag(documents, tag)
-        if request.form.get('barre_recherche'):
-            if request.form.get('barre_recherche')[0] != ".":
-                filtre_texte = request.form.get('barre_recherche')   
-                documents = get_filtrer_document_nom(documents, filtre_texte)
-            else:
-                tag = get_tag(request.form.get('barre_recherche')[1:])
-                if tag:
-                    active_tags.add(tag)
-                    documents = get_filtrer_document_tag(documents, tag)
-        if request.form.get('reset') == 'Reset':
-            active_tags = set()
-            filtre_texte = ""
-            return redirect(url_for('home'))
-        elif request.form.get('retirer_filtre'):
-            tag_supprimer = None
-            for tag in active_tags:
-                if tag.nomTag == request.form.get('retirer_filtre'):
-                    tag_supprimer = tag
-            if tag_supprimer:
-                active_tags.remove(tag_supprimer)
-                
-            documents = get_documents()
-            if filtre_texte:
-                documents = get_filtrer_document_nom(documents, filtre_texte)
-            for tag in active_tags:
-                documents = get_filtrer_document_tag(documents, tag)
-                
-                
+    # Si on recoit des infos par POST
+    if request.method == 'POST':
+        handle_filtrage()
     return redirect(url_for('home'))
 
 @app.route('/ouverture_doc/<id>', methods =("POST",))
@@ -321,30 +290,8 @@ def appliquer_filtres():
 def ajouter_filtre_doc_admin():
     if not is_admin():
         return redirect(url_for('home'))
-    global active_tags, filtre_texte, selectType
     if request.method=='POST':
-        filtre_texte = request.form.get('barre_recherche')
-        selectType = request.form.get('types')
-        if selectType == "Tous les types":
-            selectType = "Choisir un type"
-        tag=request.form['tags']
-        if tag != "Choisir un tag":
-            tag = get_tag(request.form.get('tags')[1:])
-            active_tags.add(tag)
-        if request.form.get('barre_recherche'):
-            if request.form.get('barre_recherche')[0] != ".":
-                filtre_texte = request.form.get('barre_recherche')   
-            else:
-                active_tags.add(get_tag(request.form.get('barre_recherche')[1:]))   
-        if request.form.get('reset'):
-            active_tags = []
-            filtre_texte = ""
-            selectType = "Choisir un type"
-            return redirect(url_for('recherche_doc_admin'))
-        elif request.form.get('retirer_filtre'):
-            for tag in active_tags:
-                if tag.nomTag == request.form.get('retirer_filtre'):
-                    active_tags.remove(tag)
+        handle_filtrage(True)
     return redirect(url_for('recherche_doc_admin'))
 
 @app.route('/administrateur/supprimerDoc/<id>')
@@ -386,7 +333,6 @@ def supprimer_compte(id):
     db.session.commit()
     return redirect(url_for('recherche_comptes'))
 
-
 @app.route("/administrateur/ajouteCompte/save", methods=["POST"])
 def save_compte():
     if not is_admin():
@@ -398,7 +344,7 @@ def save_compte():
     if form.validate_on_submit():
         if form.id_role.data:
             role = -1
-        role = 2
+        role = 1
         util = Utilisateur(
             idUtilisateur= max_id_utilisateur()+1,
             nomUtilisateur= form.nomUser.data,
@@ -414,7 +360,86 @@ def save_compte():
         return redirect(url_for('recherche_comptes'))
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form)
 
-
+def handle_filtrage(admin = False):
+    global active_tags, filtre_texte, documents, selectType
+    tag = request.form['tags']
+    bool_fulldoc = False
+    # Cas qui demande le chargement de tous les documents
+    if not documents:
+        if admin:
+            if not active_tags and not filtre_texte and selectType == "Choisir un type":
+                documents = get_documents()
+                bool_fulldoc = True
+        else:
+            if not active_tags and not filtre_texte:
+                documents = get_documents()
+                bool_fulldoc = True
+    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
+            documents = get_documents()
+            bool_fulldoc = True
+    if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get('types') != "Choisir un type":
+        selectType = request.form.get('types')
+        documents = get_documents()
+    # Filtre par type
+    elif admin:
+        selectType = request.form.get('types')
+    # Recherche par mot ou ajout tag par point
+    if request.form.get('barre_recherche'):
+        if request.form.get('barre_recherche')[0] != ".":
+            filtre_texte = request.form.get('barre_recherche')
+            documents = get_filtrer_document_nom(documents, filtre_texte)
+        else:
+            tag = get_tag(request.form.get('barre_recherche')[1:])
+            if tag:
+                active_tags.add(tag)
+                documents = get_filtrer_document_tag(documents, tag)
+    else:
+        filtre_texte = ""
+    # Nouveau tag (existant en BD), alors on l'ajoute
+    if tag != "Choisir un tag":
+        tag = get_tag(request.form.get('tags'), True)
+        if tag:
+            already_in = False
+            for t in active_tags:
+                if t.nomTag == tag.nomTag:
+                    already_in = True
+            if not already_in:
+                active_tags.add(tag)
+                documents = get_filtrer_document_tag(documents, tag)
+    # Suppression d'un tag lorsqu'on appuie sur celui-ci
+    if request.form.get('retirer_filtre'):
+        tag_to_delete = []
+        for tag in active_tags:
+            if tag.nomTag == request.form.get('retirer_filtre'):
+                tag_to_delete.append(tag)
+        for tag in tag_to_delete:
+            active_tags.remove(tag)
+                
+        documents = get_documents()
+        if filtre_texte:
+            documents = get_filtrer_document_nom(documents, filtre_texte)
+        for tag in active_tags:
+            documents = get_filtrer_document_tag(documents, tag)
+    
+    if request.form.get('reset'):
+        if admin:
+            selectType = "Choisir un type"
+            active_tags = set()
+            filtre_texte = ""
+            documents = []
+            return redirect(url_for('recherche_doc_admin'))
+        active_tags = set()
+        filtre_texte = ""
+        documents = []
+        return redirect(url_for('home'))
+    
+    # Si il y a aucun critère de recherche, alors on load aucun document
+    if admin:
+        if not active_tags and not filtre_texte and selectType == "Choisir un type":
+            documents = []
+    else:
+        if not active_tags and not filtre_texte:
+            documents = []
 
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required
