@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block page_specific_css %}
+    <link rel="stylesheet" href="/../static/css/ajouter_document.css">
+{% endblock %}
+{% block header %}
+    <h1>Modifier un document</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<form method="POST">
+<div class="en-tete">
+    <h2>Titre du document :</h2>
+    <input type="text" name="titre" value="{{doc.nomDoc}}" placeholder="Titre" required>
+</div>
+
+<div class="central">
+    <section>
+        <div>
+            <p>Description :</p>
+            <textarea rows="6" cols="60" placeholder="Entrez la description du document"></textarea>
+        </div>
+        <div class="type">
+            <p>Type</p>
+            <select name="types" id="types-select">
+                {% for x in types %} 
+                    {% if x.idType == doc.idType %}
+                        <option value="{{x.idType}}" selected="selected" hidden="hidden">{{x.nomType}}</option>
+                    {% endif %}
+                    <option value="{{x.idType}}">{{x.nomType}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </section>
+
+    <section>
+        <input type="submit" value="Importer document" id="importer">
+        <div>
+            <p>Tags associés</p>
+            <p>==== tags associés au fichier importé ====</p>
+        </div>
+        <div class="tags-manuels">
+            <p>Tags manuels :</p>
+            <select name="tags" id="tags-select">
+                <option selected="selected" hidden="hidden">Tags</option>
+                {% for x in tags %} 
+                    <option value="">{{x.nomTag}}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="tag-manuel">
+        </div>
+    </section>
+</div>
+
+<div class="boutons-bas">
+    
+    <input type="submit" value="Annuler" name="annuler">
+    <input type="submit" value="Enregistrer" name="modifier_document">
+</div>
+</form>
+{% endblock %}

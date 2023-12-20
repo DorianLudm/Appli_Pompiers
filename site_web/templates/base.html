@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/../static/css/header.css"/>
+    {% block styles %}
+        {{ bootstrap.load_css()}}
+    {% endblock %}
+    {% block page_specific_css %}
+    {% endblock %}
+    <title>{{ title }}</title>
+</head>
+<body>
+    <header>
+        {% if util and util.role == 'Administrateur' : %}
+            <a href="{{ url_for('home_admin') }}" ><input class="buttonHome" type="image" src="/../static/img/logoPompier.png" alt="logo pompier"/></a>
+        {% else %}
+            <a href="{{ url_for('home') }}" ><input class="buttonHome" type="image" src="/../static/img/logoPompier.png" alt="logo pompier"/></a>
+        {% endif %}
+        {% block header %}
+        {% endblock %}
+    </header>
+    <main>
+        {% block main %}
+        {% endblock %}
+    </main>
+</body>
+</html>
