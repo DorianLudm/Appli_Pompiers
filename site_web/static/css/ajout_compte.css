@@ -17,9 +17,15 @@ main {
     width: 45%;
 }
 
-/* input, select {
+.line > div > input, select{
     width: 100%;
-} */
+    border-radius: 10px;
+}
+
+.chef{
+    width: 100%;
+    border-radius: 10px;
+}
 
 .line p {
     padding: 1vw;
@@ -37,6 +43,7 @@ form fieldset div {
 fieldset input{
     height: 1.5vw;
 }
+
 
 .fieldset-container{
     display: flex;

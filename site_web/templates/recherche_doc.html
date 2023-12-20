@@ -62,8 +62,10 @@
         <h2>{{doc.nomDoc}}</h2>
         <div class="doc_info">
             <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
-            <p>Type : {{doc.nomType}}</p>
-            <p>Description : {{doc.descriptionDoc}}</p>
+            <p><b>Type :</b> {{doc.nomType}}</p>
+            {% if doc.description != null %}
+                <p><b>Description :</b> {{doc.descriptionDoc}}</p>
+            {% endif %}
             <div class="doc_action">
                 <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
                     <input type="Submit" value="Visualiser"/>
