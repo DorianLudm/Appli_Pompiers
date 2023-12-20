@@ -287,33 +287,29 @@ def save_compte():
 def handle_filtrage(admin = False):
     global active_tags, filtre_texte, documents, selectType
     tag = request.form['tags']
-    bool_filtrer_tag = False
-    bool_filtrer_texte = False
-    bool_filtrer_type = False
-    # if not documents:
-    #     if not active_tags and not filtre_texte:
-    #         documents = get_documents()
-    documents = get_documents()
+    if not documents:
+        if admin:
+            if not active_tags and not filtre_texte and selectType != "Choisir un type":
+                documents = get_documents()
+        else:
+            if not active_tags and not filtre_texte:
+                documents = get_documents()
     if admin:
         selectType = request.form.get('types')
-        bool_filtrer_type = True
     # Nouveau tag (existant en BD), alors on l'ajoute
     if tag != "Choisir un tag":
         tag = get_tag(request.form.get('tags'))
         if tag:
-            bool_filtrer_tag = True
             active_tags.add(tag)
             documents = get_filtrer_document_tag(documents, tag)
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
             filtre_texte = request.form.get('barre_recherche')
-            bool_filtrer_tag = True
             documents = get_filtrer_document_nom(documents, filtre_texte)
         else:
             tag = get_tag(request.form.get('barre_recherche')[1:])
             if tag:
-                bool_filtrer_tag = True
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
     
@@ -341,16 +337,15 @@ def handle_filtrage(admin = False):
             return redirect(url_for('recherche_doc_admin'))
         active_tags = set()
         filtre_texte = ""
-        selectType = "Choisir un type"
         documents = []
         return redirect(url_for('home'))
     
     # Si il y a aucun critère de recherche, alors on load aucun document
     if admin:
-        if not bool_filtrer_tag and not bool_filtrer_texte and not bool_filtrer_type:
+        if not active_tags and not filtre_texte and selectType == "Choisir un type":
             documents = []
     else:
-        if not bool_filtrer_tag and not bool_filtrer_texte:
+        if not active_tags and not filtre_texte:
             documents = []
 
 @app.route("/administrateur/gerer_compte/erreur")
