@@ -14,6 +14,7 @@ app.config['BOOTSTRAP_SERVE_LOCAL']=True
 bootstrap = Bootstrap5(app)
 
 app.config['SECRET_KEY'] = '94da14e7-22ba-424c-b262-f5eeb505e5e9'
+app.config['UPLOAD_FOLDER'] = 'static/document'
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
