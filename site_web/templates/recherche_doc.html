@@ -11,7 +11,7 @@
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
         <div class="research_bar">
-          <input type="text" name="barre_recherche" placeholder="Rechercher un document !" id="barre_recherche"/>
+          <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
         </div>
         <div class="loop_research">
             <input type="image" src="/static/img/loupe.png" alt="Submit"/>
@@ -62,8 +62,8 @@
         <h2>{{doc.nomDoc}}</h2>
         <div class="doc_info">
             <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
-            <p>Type : {{doc.nomType}}</p>
-            <p>Description : {{doc.descriptionDoc}}</p>
+            <p><strong>Type :</strong> {{doc.nomType}}</p>
+            <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
             <div class="doc_action">
                 <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
                     <input type="Submit" value="Visualiser"/>
