@@ -287,6 +287,7 @@ def handle_filtrage(admin = False):
     global active_tags, filtre_texte, documents, selectType
     tag = request.form['tags']
     bool_fulldoc = False
+    # Cas qui demande le chargement de tous les documents
     if not documents:
         if admin:
             if not active_tags and not filtre_texte and selectType == "Choisir un type":
@@ -296,6 +297,9 @@ def handle_filtrage(admin = False):
             if not active_tags and not filtre_texte:
                 documents = get_documents()
                 bool_fulldoc = True
+    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
+            documents = get_documents()
+            bool_fulldoc = True
     if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get('types') != "Choisir un type":
         selectType = request.form.get('types')
         documents = get_documents()
@@ -304,9 +308,6 @@ def handle_filtrage(admin = False):
         selectType = request.form.get('types')
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
-        if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
-            documents = get_documents()
-            bool_fulldoc = True
         if request.form.get('barre_recherche')[0] != ".":
             filtre_texte = request.form.get('barre_recherche')
             documents = get_filtrer_document_nom(documents, filtre_texte)
@@ -315,6 +316,8 @@ def handle_filtrage(admin = False):
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
+    else:
+        filtre_texte = ""
     # Nouveau tag (existant en BD), alors on l'ajoute
     if tag != "Choisir un tag":
         tag = get_tag(request.form.get('tags'), True)
