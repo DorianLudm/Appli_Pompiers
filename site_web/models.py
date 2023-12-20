@@ -46,9 +46,10 @@ class TypeDocument(db.Model):
     nomType = db.Column(db.String(100))
     
 class Document(db.Model):
-    idDoc = db.Column(db.Integer, primary_key =True)
+    idDoc = db.Column(db.Integer, primary_key =True, autoincrement=True)
     nomDoc = db.Column(db.String(100))
     fichierDoc = db.Column(db.String(100))
+    descriptionDoc = db.Column(db.String(500))
     idType = db.Column(db.Integer, db.ForeignKey('type_document.idType'))
     
 class Tag(db.Model):
@@ -76,11 +77,21 @@ def get_tag_idDoc(idDoc):
 def get_types():
     return TypeDocument.query.all()
 
+def get_id_type(nomType):
+    return TypeDocument.query.filter(TypeDocument.nomType == nomType).first().idType
+
 def get_type(idType):
     return TypeDocument.query.filter(TypeDocument.idType == idType).first()
 
 def get_documents():
     return Document.query.all()
+
+def get_max_id_document():
+    max_id = db.session.query(db.func.max(Document.idDoc)).scalar()
+    if max_id is None:
+        return 0
+    else:
+        return max_id
 
 def get_document_types(idTypeDoc, document = []):
     resultat = []

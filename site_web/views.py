@@ -12,6 +12,7 @@ import os
 from werkzeug.utils import secure_filename
 
 active_tags = set()
+tag_manuel = set()
 filtre_texte = ""
 selectType = "Choisir un type"
 
@@ -36,7 +37,8 @@ def home():
                 resultat["element"].append(document)
             if resultat["element"]:
                 result.append(resultat)
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, util = informations_utlisateurs(), title='Accueil',doc = doc)
+    info_doc = filtre_texte or "Rechercher un document !"
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc)
  
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
@@ -221,33 +223,62 @@ def modifier_document(id):
 def ajoute_document():
     if not is_admin():
         return redirect(url_for('home'))
-    if request.method == 'POST':   
-        if request.form.get('ajouter_document') =="Enregistrer":
-            # doc = Document(
-            #     idDoc = max_id_document()+1,
-            #     nomDoc = request.form.get('titre'),
-            #     idType = request.form.get('types'),
-            #     fichierDoc = request.form.get('fichier')
-            # )
-            # db.session.add(doc)
-            # db.session.commit()
-            print(request.form.get('titre'))
-            print(request.form.get('types'))
-            #récupère le fichier le fichier uploadé dans le formulaire
+    if request.method == 'POST':  
+        if request.form.get('tag'):
+            tag_a_supprimer = None
+            for tag in tag_manuel:
+                if tag.nomTag == request.form.get('tag'):
+                    tag_a_supprimer = tag
+            if tag_a_supprimer:
+                tag_manuel.remove(tag_a_supprimer)            
+        if request.form.get('tag-manuel'):
+            est_present = False
+            tag_ajoute = get_tag(request.form.get('tag-manuel'))
+            for tag in tag_manuel:                
+                if tag.nomTag == tag_ajoute.nomTag:
+                    est_present = True
+            if not est_present:
+                tag = get_tag(request.form.get('tag-manuel'))
+                tag_manuel.add(tag)
+        elif request.form.get('ajouter_document') =="Enregistrer":
             file = request.files['file']
-            #enregistre le fichier dans le dossier static/upload
-            print("save")
-            print(file.filename)
-            print(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
-            file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))))
-            
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('fichier')))
-            print("save")
+            type = get_id_type(request.form.get('type_document'))
+            document = Document(
+                nomDoc = request.form.get('titre'),
+                idType = type,
+                fichierDoc = request.form.get('repertoire')+"/"+secure_filename(file.filename),
+                descriptionDoc = request.form.get('description')
+            )
+            db.session.add(document)
+            db.session.commit()
+            for tag in tag_manuel:
+                document_tag = DocumentTag(
+                    idDoc = document.idDoc,
+                    idTag = tag.idTag
+                )
+                db.session.add(document_tag)
+                db.session.commit()
+            if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire')))):
+                os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'))))
+            file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'), secure_filename(file.filename))))
+            les_tags = request.form.get('repertoire').split("/")
+            for tag in les_tags:
+                if tag != "":
+                    tag = get_tag(tag)
+                    for tag_actif in tag_manuel:
+                        if tag_actif.nomTag == tag.nomTag:
+                            tag = ""
+                    if tag:
+                        document_tag = DocumentTag(
+                            idDoc = document.idDoc,
+                            idTag = tag.idTag
+                        )
+                        db.session.add(document_tag)
+                        db.session.commit()
+            tag_manuel.clear()
             return redirect(url_for('recherche_doc_admin')) 
-        elif request.form.get('annuler') =="Annuler":
-            return redirect(url_for('recherche_doc_admin'))
-    return render_template('ajouter_document.html', util = informations_utlisateurs(),types = get_types(), title='Ajouter un document')
-
+        return render_template('ajouter_document.html', tags=get_tags(), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
+    return render_template('ajouter_document.html', types = get_types(),titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
 def appliquer_filtres():
