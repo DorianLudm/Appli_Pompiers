@@ -9,6 +9,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from .cache import documents
 import webbrowser
 import os
+import random
 from werkzeug.utils import secure_filename
 
 active_tags = set()
@@ -264,11 +265,29 @@ def ajoute_document():
             les_tags = request.form.get('repertoire').split("/")
             for tag in les_tags:
                 if tag != "":
-                    tag = get_tag(tag)
+                    newtag = get_tag(tag)
                     for tag_actif in tag_manuel:
-                        if tag_actif.nomTag == tag.nomTag:
-                            tag = ""
-                    if tag:
+                        if tag_actif.nomTag == newtag.nomTag:
+                            newtag = ""
+                    if newtag:
+                        document_tag = DocumentTag(
+                            idDoc = document.idDoc,
+                            idTag = tag.idTag
+                        )
+                        db.session.add(document_tag)
+                        db.session.commit()
+                    if newtag is None:
+                        a = hex(random.randrange(0,256))
+                        b = hex(random.randrange(0,256))
+                        c = hex(random.randrange(0,256))
+                        tag = Tag(
+                            idTag = get_max_id_tag()+1,
+                            nomTag = tag,
+                            niveauProtection = 0,
+                            couleurTag = a[2:]+b[2:]+c[2:]
+                        )
+                        db.session.add(tag)
+                        db.session.commit()
                         document_tag = DocumentTag(
                             idDoc = document.idDoc,
                             idTag = tag.idTag
