@@ -290,9 +290,10 @@ def handle_filtrage(admin = False):
     bool_filtrer_tag = False
     bool_filtrer_texte = False
     bool_filtrer_type = False
-    if not documents:
-        if not active_tags and not filtre_texte:
-            documents = get_documents()
+    # if not documents:
+    #     if not active_tags and not filtre_texte:
+    #         documents = get_documents()
+    documents = get_documents()
     if admin:
         selectType = request.form.get('types')
         bool_filtrer_type = True
@@ -318,12 +319,13 @@ def handle_filtrage(admin = False):
     
     # Suppression d'un tag lorsqu'on appuie sur celui-ci
     if request.form.get('retirer_filtre'):
-        tag_supprimer = None
+        tag_to_delete = []
         for tag in active_tags:
             if tag.nomTag == request.form.get('retirer_filtre'):
-                tag_supprimer = tag
-        if tag_supprimer:
-            active_tags.remove(tag_supprimer)
+                tag_to_delete.append(tag)
+        for tag in tag_to_delete:
+            active_tags.remove(tag)
+                
         documents = get_documents()
         if filtre_texte:
             documents = get_filtrer_document_nom(documents, filtre_texte)
@@ -333,10 +335,14 @@ def handle_filtrage(admin = False):
     if request.form.get('reset'):
         if admin:
             selectType = "Choisir un type"
+            active_tags = set()
+            filtre_texte = ""
+            documents = []
             return redirect(url_for('recherche_doc_admin'))
         active_tags = set()
         filtre_texte = ""
         selectType = "Choisir un type"
+        documents = []
         return redirect(url_for('home'))
     
     # Si il y a aucun critère de recherche, alors on load aucun document
