@@ -8,57 +8,60 @@
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
+<form method="POST" enctype="multipart/form-data">
 <div class="en-tete">
     <h2>Titre du document :</h2>
-    <input type="text" name="titre" placeholder="Titre" required>
+    <input type="text" name="titre" placeholder="Titre" value="{{titre}}">
 </div>
 
 <div class="central">
     <section>
         <div>
             <p>Description :</p>
-            <textarea rows="6" cols="60" placeholder="Entrez la description du document"></textarea>
+            <textarea name="description" rows="6" cols="60" placeholder="Entrez la description du document">{{description}}</textarea>
         </div>
         <div class="type">
             <p>Type</p>
-            <select name="types" id="types-select">
+            <select name="type_document" id="types-select">
                 <option selected="selected" hidden="hidden">Type</option>
                 {% for x in types %} 
-                    <option value="">{{x.nomType}}</option>
+                    <option name="type_document" value="{{x.nomType}}">{{x.nomType}}</option>
                 {% endfor %}
             </select>
         </div>
     </section>
 
     <section>
-        <input type="submit" value="Importer document" id="importer">
+        <input type="file" value="Importer document" name="file" id="importer">
         <div>
-            <p>Tags associés</p>
-            <p>==== tags associés au fichier importé ====</p>
+            <p>Tags :</p>
+            <div class="tags">
+            {% for t in new_tag%}
+                <input style="background-color:#{{t.couleurTag}}" type="submit" value="{{t.nomTag}}" name="tag">
+            {% endfor %}
         </div>
         <div class="tags-manuels">
-            <p>Tags manuels :</p>
-            <select name="tags" id="tags-select">
-                <option selected="selected" hidden="hidden">Tags</option>
-                {% for x in tags %} 
-                    <option value="">{{x.nomTag}}</option>
+            </div>
+            <input type="text" list="allTags" name="tag-manuel">
+            <datalist id="allTags"> 
+                {% for t in tags %}
+                    <option value="{{t.nomTag}}">{{t.nomTag}}</option> 
                 {% endfor %}
-            </select>
-            <input type="text" name="tag-manuel">
+            </datalist> 
+            <input type="submit" value="Ajouter">
         </div>
     </section>
     <section>
         <p>Répertoire du fichier</p>
-        <input type="text" name="repertoire" placeholder="Entrez le chemin">
-        <input type="checkbox" value="Crée le chemin">
-        <label>Crée le chemin</label>
+        <input type="text" name="repertoire" placeholder="Entrez le chemin" value="{{repertoire}}">
+        <input type="checkbox" name"creer" value="ajouter_chemin">
+        <label for="creer">Crée le chemin</label>
     </section>
 </div>
 
 <div class="boutons-bas">
-    
-    <input type="submit" value="Annuler" id="annuler">
-    <input type="submit" value="Enregistrer" id="ajouter-document">
-    <a href="{{ url_for ('home_admin')}}"><input type="button" value="Retour"></a>
+    <input type="submit" value="Enregistrer" name="ajouter_document">
+    <a href="{{ url_for ('recherche_doc_admin')}}"><input type="button" value="Retour"></a>
 </div>
+</form>
 {% endblock %}
