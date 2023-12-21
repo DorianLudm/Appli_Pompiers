@@ -164,8 +164,6 @@ def recherche_doc_admin():
     global active_tags, selectType
     result = []
     documents = get_documents()
-    for doc in documents:
-        print(doc.nomDoc)
     for i in get_types():
         resultat = dict()
         resultat["nomType"] = i.nomType
