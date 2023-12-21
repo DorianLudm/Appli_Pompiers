@@ -183,6 +183,9 @@ def modifier_document(id):
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
         db.session.commit()
+        global documents
+        documents = []
+        handle_filtrage(True)
         return redirect(url_for('recherche_doc_admin'))
     if request.form.get('annuler') =="Annuler":
         return redirect(url_for('recherche_doc_admin'))
