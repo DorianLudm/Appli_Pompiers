@@ -23,7 +23,7 @@
         <div class="type">
             <p>Type</p>
             <select name="type_document" id="types-select">
-                <option selected="selected" hidden="hidden">Type</option>
+                <option selected="selected" hidden="hidden">{{type}}</option>
                 {% for x in types %} 
                     <option name="type_document" value="{{x.nomType}}">{{x.nomType}}</option>
                 {% endfor %}
@@ -32,7 +32,9 @@
     </section>
 
     <section>
-        <input type="file" value="Importer document" name="file" id="importer">
+        <input type="file" value="{{document}}" name="file" id="importer">
+        
+        <p> {{document}}</p>
         <div>
             <p>Tags :</p>
             <div class="tags">

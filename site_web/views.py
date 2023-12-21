@@ -241,7 +241,7 @@ def ajoute_document():
                     if newtag:
                         document_tag = DocumentTag(
                             idDoc = document.idDoc,
-                            idTag = tag.idTag
+                            idTag = newtag.idTag
                         )
                         db.session.add(document_tag)
                         db.session.commit()
@@ -264,8 +264,8 @@ def ajoute_document():
                         db.session.commit()
             tag_manuel.clear()
             return redirect(url_for('recherche_doc_admin')) 
-        return render_template('ajouter_document.html', tags=get_tags(), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
-    return render_template('ajouter_document.html', types = get_types(),titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
+        return render_template('ajouter_document.html', tags=get_tags(),document = request.files['file'], type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
+    return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
 def appliquer_filtres():
