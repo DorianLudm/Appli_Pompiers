@@ -232,7 +232,7 @@ def ajoute_document():
                 les_tags = request.form.get('repertoire').split("/")
                 for tag in les_tags:
                     if tag != "":
-                        newtag = get_tag(tag)
+                        newtag = get_tag(tag, True)
                         for tag_actif in tag_manuel:
                             if tag_actif.nomTag == newtag.nomTag:
                                 newtag = ""
