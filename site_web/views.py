@@ -163,7 +163,9 @@ def recherche_doc_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
     result = []
-    document = get_documents()
+    documents = get_documents()
+    for doc in documents:
+        print(doc.nomDoc)
     for i in get_types():
         resultat = dict()
         resultat["nomType"] = i.nomType
@@ -301,7 +303,7 @@ def supprimer_document(id):
     document = get_document_id(id)
     db.session.delete(document)
     db.session.commit()
-    return ajouter_filtre_doc_admin()
+    return redirect(url_for('recherche_doc_admin'))
 
 class AjouteCompteForm(FlaskForm):
     nomUser = StringField('Nom', validators = [DataRequired()])
