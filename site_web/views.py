@@ -246,13 +246,12 @@ def ajoute_document():
                         db.session.add(document_tag)
                         db.session.commit()
                     if newtag is None:
-                        a = hex(random.randrange(0,256))
-                        b = hex(random.randrange(0,256))
-                        c = hex(random.randrange(0,256))
+                        a = hex(random.randrange(100,256))
+                        b = hex(random.randrange(100,256))
+                        c = hex(random.randrange(100,256))
                         tag = Tag(
                             idTag = get_max_id_tag()+1,
                             nomTag = tag,
-                            niveauProtection = 0,
                             couleurTag = a[2:]+b[2:]+c[2:]
                         )
                         db.session.add(tag)
