@@ -123,7 +123,7 @@ def logout():
 def home_admin():
     if not is_admin():
         return redirect(url_for('home'))
-    return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Acceuil administrateur')
+    return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Accueil administrateur')
 
 @app.route('/administrateur/rechercheComptes')
 @login_required
