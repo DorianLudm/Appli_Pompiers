@@ -163,7 +163,7 @@ def recherche_doc_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
     result = []
-    documents = get_documents()
+    # document = get_documents()
     for i in get_types():
         resultat = dict()
         resultat["nomType"] = i.nomType
