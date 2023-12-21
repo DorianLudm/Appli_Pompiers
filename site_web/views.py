@@ -183,7 +183,7 @@ def modifier_document(id):
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
         db.session.commit()
-        return redirect(url_for('recherche_doc_admin')) 
+        return redirect(url_for('recherche_doc_admin'))
     if request.form.get('annuler') =="Annuler":
         return redirect(url_for('recherche_doc_admin'))
     return render_template('modifier_document.html', title='Modifier de Document', doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
@@ -381,7 +381,7 @@ def handle_filtrage(admin = False):
         documents = get_documents()
     # Filtre par type
     elif admin:
-        selectType = request.form.get('types')
+        selectType = "Choisir un type"
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
