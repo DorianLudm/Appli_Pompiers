@@ -11,7 +11,7 @@
 <form method="POST">
 <div class="en-tete">
     <h2>Titre du document :</h2>
-    <input type="text" name="titre" value="{{doc.nomDoc}}" placeholder="Titre" required>
+    <input type="text" name="titre" value="{{doc.nomDoc}}" placeholder="Titre">
 </div>
 
 <div class="central">
@@ -36,8 +36,7 @@
     <section>
         <input type="submit" value="Importer document" id="importer">
         <div>
-            <p>Tags associés</p>
-            <p>==== tags associés au fichier importé ====</p>
+            <p>Tags associés : </p>
         </div>
         <div class="tags-manuels">
             <p>Tags manuels :</p>
