@@ -20,6 +20,7 @@ selectType = "Choisir un type"
 @app.route('/pompier')
 @login_required
 def home():
+    """fonction d'affichage de la page d'accueil des pompiers"""
     global active_tags, documents
     result = []
     
@@ -44,6 +45,7 @@ def home():
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
 def ajouter_filtre():
+    """fonction d'ajout de filtre dans la recherche de documents"""
     global active_tags, filtre_texte, documents
     # Si aucun document n'est chargé
     if not documents:
@@ -57,6 +59,7 @@ def ajouter_filtre():
 @app.route('/ouverture_doc/<id>', methods =("POST",))
 @login_required
 def ouverture_doc(id):
+    """fonction de redirection vers la page d'accueil"""
     return redirect(url_for('home', id=id))
   
 @app.route('/visualiser/<id>', methods =("POST",))
@@ -77,6 +80,7 @@ def telecharger(id):
 # LOGIN
 
 class LoginForm( FlaskForm ):
+    """formulaire de connexion"""
     identifiant = StringField('Identifiant')
     mdp = PasswordField('Password')
     def get_authentification_utilisateur(self):
@@ -93,6 +97,7 @@ class LoginForm( FlaskForm ):
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    """fonction de connexion pour un utilisateur"""
     f = LoginForm()
     if f.validate_on_submit():
         util = f.get_authentification_utilisateur()
@@ -115,12 +120,14 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
+    """fonction de déconnexion"""
     logout_user()
     return redirect(url_for('login'))  
 
 # ADMINISTRATION
 @app.route('/administrateur')
 def home_admin():
+    """fonction de redirection vers l'accueil administrateur"""
     if not is_admin():
         return redirect(url_for('home'))
     return render_template('accueil_admin.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Accueil administrateur')
@@ -128,19 +135,16 @@ def home_admin():
 @app.route('/administrateur/rechercheComptes')
 @login_required
 def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCaserne="Choisir une caserne"):
+    """redirection vers la page de recherche de compte"""
     if not is_admin():
         return redirect(url_for('home'))
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
 
-@app.route('/gerer_tags')
-@login_required
-def gerer_tags():
-    return render_template('gerer_tags.html')
-
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
 @login_required
 def modifier_compte(id):
+    """redirection vers la page de modification d'un compte"""
     if not is_admin():
         return redirect(url_for('home'))
     user = Utilisateur.query.get(id)
@@ -159,6 +163,7 @@ def modifier_compte(id):
 @app.route('/administrateur/rechercheDocAdmin')
 @login_required
 def recherche_doc_admin():
+    """page de recherche des documents pour l'administrateur"""
     if not is_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
@@ -176,6 +181,7 @@ def recherche_doc_admin():
 
 @app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
 def modifier_document(id):
+    """fonction de modification de document"""
     if not is_admin():
         return redirect(url_for('home'))
     doc = get_document_id(id)
@@ -189,11 +195,12 @@ def modifier_document(id):
         return redirect(url_for('recherche_doc_admin'))
     if request.form.get('annuler') =="Annuler":
         return redirect(url_for('recherche_doc_admin'))
-    return render_template('modifier_document.html', title='Modifier de Document', doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
+    return render_template('modifier_document.html', title='Modifier le Document', doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
 
 @app.route('/administrateur/ajouteDocument', methods=['GET', 'POST'])
 @login_required
 def ajoute_document():
+    """fonction d'ajout d'un document"""
     if not is_admin():
         return redirect(url_for('home'))
     if request.method == 'POST':  
@@ -226,48 +233,49 @@ def ajoute_document():
                 )
                 db.session.add(document)
                 db.session.commit()
-                if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire')))):
-                    os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'))))
-                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'), secure_filename(file.filename))))
-                les_tags = request.form.get('repertoire').split("/")
-                for tag in les_tags:
-                    if tag != "":
-                        newtag = get_tag(tag, True)
-                        for tag_actif in tag_manuel:
-                            if tag_actif.nomTag == newtag.nomTag:
-                                newtag = ""
-                        if newtag:
-                            document_tag = DocumentTag(
-                                idDoc = document.idDoc,
-                                idTag = newtag.idTag
-                            )
-                            db.session.add(document_tag)
-                            db.session.commit()
-                        if newtag is None:
-                            a = hex(random.randrange(100,256))
-                            b = hex(random.randrange(100,256))
-                            c = hex(random.randrange(100,256))
-                            tag = Tag(
-                                idTag = get_max_id_tag()+1,
-                                nomTag = tag,
-                                couleurTag = a[2:]+b[2:]+c[2:]
-                            )
-                            db.session.add(tag)
-                            db.session.commit()
-                            document_tag = DocumentTag(
-                                idDoc = document.idDoc,
-                                idTag = tag.idTag
-                            )
-                            db.session.add(document_tag)
-                            db.session.commit()
-                tag_manuel.clear()
-                return redirect(url_for('recherche_doc_admin')) 
+              if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire')))):
+                  os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'))))
+              file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'), secure_filename(file.filename))))
+              les_tags = request.form.get('repertoire').split("/")
+              for tag in les_tags:
+                  if tag != "":
+                      newtag = get_tag(tag, True)
+                      for tag_actif in tag_manuel:
+                          if tag_actif.nomTag == newtag.nomTag:
+                              newtag = ""
+                      if newtag:
+                          document_tag = DocumentTag(
+                              idDoc = document.idDoc,
+                              idTag = newtag.idTag
+                          )
+                          db.session.add(document_tag)
+                          db.session.commit()
+                      if newtag is None:
+                          a = hex(random.randrange(100,256))
+                          b = hex(random.randrange(100,256))
+                          c = hex(random.randrange(100,256))
+                          tag = Tag(
+                              idTag = get_max_id_tag()+1,
+                              nomTag = tag,
+                              couleurTag = a[2:]+b[2:]+c[2:]
+                          )
+                          db.session.add(tag)
+                          db.session.commit()
+                          document_tag = DocumentTag(
+                              idDoc = document.idDoc,
+                              idTag = tag.idTag
+                          )
+                          db.session.add(document_tag)
+                          db.session.commit()
+              tag_manuel.clear()
+              return redirect(url_for('recherche_doc_admin')) 
         return render_template('ajouter_document.html', tags=get_tags(),document = request.files['file'], type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
     return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
 
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
 def appliquer_filtres():
+    """fonction de filtrage des comptes utilisateurs"""
     if not is_admin():
         return redirect(url_for('home'))
     if request.method == 'POST':
@@ -286,6 +294,7 @@ def appliquer_filtres():
 @app.route('/administrateur/appliquer_filtres_doc', methods=['GET', 'POST'])
 @login_required
 def ajouter_filtre_doc_admin():
+    """fonction d'ajout de filtre pour la recherche de documents, partie administrateur"""
     if not is_admin():
         return redirect(url_for('home'))
     if request.method=='POST':
@@ -295,6 +304,7 @@ def ajouter_filtre_doc_admin():
 @app.route('/administrateur/supprimerDoc/<id>')
 @login_required
 def supprimer_document(id):
+    """fonction de suppression d'un document"""
     if not is_admin():
         return redirect(url_for('home'))
     document = get_document_id(id)
@@ -303,6 +313,7 @@ def supprimer_document(id):
     return redirect(url_for('recherche_doc_admin'))
 
 class AjouteCompteForm(FlaskForm):
+    """formulaire d'ajout de compte utilisateur"""
     nomUser = StringField('Nom', validators = [DataRequired()])
     prenomUser = StringField('Prenom', validators = [DataRequired()])
     pseudo = StringField("Nom d'utilisateur", validators = [DataRequired()])
@@ -314,6 +325,7 @@ class AjouteCompteForm(FlaskForm):
 @app.route('/administrateur/ajouteCompte')
 @login_required
 def ajoute_compte():
+    """fonction d'ajoute de compte"""
     if not is_admin():
         return redirect(url_for('home'))
     f = AjouteCompteForm()
@@ -324,6 +336,7 @@ def ajoute_compte():
 @app.route('/administrateur/supprimerCompte/<int:id>')
 @login_required
 def supprimer_compte(id):
+    """fonction de suppression de compte"""
     if not is_admin():
         return redirect(url_for('home'))
     util = get_utilisateur(id)
@@ -333,6 +346,7 @@ def supprimer_compte(id):
 
 @app.route("/administrateur/ajouteCompte/save", methods=["POST"])
 def save_compte():
+    """fonction d'enregistrement d'un nouveau compte"""
     if not is_admin():
         return redirect(url_for('home'))
     form = AjouteCompteForm()
@@ -442,7 +456,7 @@ def handle_filtrage(admin = False):
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required
 def erreur_compte():
+    """fonction destinée à gérer les erreurs de connexion"""
     if not is_admin():
         return redirect(url_for('home'))
-    # Faire un pop-up d'erreur (?)
-    print("erreur")
+    print("\nerreur\n")
