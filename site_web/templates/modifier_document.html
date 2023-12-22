@@ -18,7 +18,8 @@
     <section>
         <div>
             <p>Description :</p>
-            <textarea rows="6" cols="60" placeholder="Entrez la description du document"></textarea>
+            <textarea name= "description" rows="6" cols="60" placeholder="Entrez la description du document">{{ doc.descriptionDoc }}</textarea>
+            <!-- <input name= "description" rows="6" cols="60" placeholder="Entrez la description du document" value="{{ doc.descriptionDoc }}"> -->
         </div>
         <div class="type">
             <p>Type</p>
@@ -36,8 +37,7 @@
     <section>
         <input type="submit" value="Importer document" id="importer">
         <div>
-            <p>Tags associés</p>
-            <p>==== tags associés au fichier importé ====</p>
+            <p>Tags associés : </p>
         </div>
         <div class="tags-manuels">
             <p>Tags manuels :</p>
