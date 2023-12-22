@@ -310,6 +310,9 @@ def supprimer_document(id):
     document = get_document_id(id)
     db.session.delete(document)
     db.session.commit()
+    for doc in documents:
+        if doc.idDoc == document.idDoc:
+            documents.remove(doc)
     return redirect(url_for('recherche_doc_admin'))
 
 class AjouteCompteForm(FlaskForm):
