@@ -186,8 +186,10 @@ def modifier_document(id):
         return redirect(url_for('home'))
     doc = get_document_id(id)
     if request.form.get('modifier_document') =="Enregistrer":
+        print(request.form.get('description'))
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
+        doc.descriptionDoc = request.form.get('description')
         db.session.commit()
         global documents
         documents = []
