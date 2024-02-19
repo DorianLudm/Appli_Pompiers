@@ -192,6 +192,8 @@ def modifier_compte(id):
         return redirect(url_for('home'))
     user = Utilisateur.query.get(id)
     if request.form.get('save_compte') =="Sauvegarder le compte":
+        if request.form.get('pseudo') != user.identifiant and is_identifant(request.form.get('pseudo')):
+            return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), erreur = "L'identifiant existe déjà")
         user.nomUtilisateur = request.form.get('nom')
         user.prenomUtilisateur = request.form.get('prenom')
         user.identifiant = request.form.get('pseudo')
@@ -268,7 +270,7 @@ def ajoute_document():
                     tag_manuel.add(tag)
         elif request.form.get('ajouter_document') =="Enregistrer":
             file = request.files['file']
-            if request.form.get('type_document') != "Type":
+            if request.form.get('type_document') != "Type": 
                 type = get_id_type(request.form.get('type_document'))
                 document = Document(
                     nomDoc = request.form.get('titre'),
@@ -395,6 +397,7 @@ def supprimer_compte(id):
 @app.route("/administrateur/ajouteCompte/save", methods=["POST"])
 def save_compte():
     """fonction d'enregistrement d'un nouveau compte"""
+    msg_erreur = ""
     if not is_admin():
         return redirect(url_for('home'))
     form = AjouteCompteForm()
@@ -405,19 +408,22 @@ def save_compte():
         if form.id_role.data:
             role = -1
         role = 1
-        util = Utilisateur(
-            idUtilisateur= max_id_utilisateur()+1,
-            nomUtilisateur= form.nomUser.data,
-            prenomUtilisateur= form.prenomUser.data,
-            identifiant= form.pseudo.data,
-            mdp= sha256(form.mdp.data.encode()).hexdigest(),
-            idGrade= form.id_grade.data,
-            idRole= role,
-            idCas= form.id_caserne.data
-        )
-        db.session.add(util)
-        db.session.commit()
-        return redirect(url_for('recherche_comptes'))
+        if is_identifant(form.pseudo.data):
+            return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form, erreur = "L'identifiant existe déjà")
+        else:
+            util = Utilisateur(
+                idUtilisateur= max_id_utilisateur()+1,
+                nomUtilisateur= form.nomUser.data,
+                prenomUtilisateur= form.prenomUser.data,
+                identifiant= form.pseudo.data,
+                mdp= sha256(form.mdp.data.encode()).hexdigest(),
+                idGrade= form.id_grade.data,
+                idRole= role,
+                idCas= form.id_caserne.data
+            )
+            db.session.add(util)
+            db.session.commit()
+            return redirect(url_for('recherche_comptes'))
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form)
 
 def handle_filtrage(admin = False):

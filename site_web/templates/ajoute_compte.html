@@ -44,6 +44,12 @@
         <p>{{ form.id_role.label }}</p>
         {{ form.id_role }}
     </div>
+    {% if erreur %}
+        <div class="alert alert-danger" role="alert">
+            {{ erreur }}
+        </div>
+    {% endif %}
+    
     <div class="line button-container">
         <a href="{{ url_for('recherche_comptes') }}"> <input type="button" value="Retour" id="retour" class="bouton"></a>
         <input type="submit" value="Ajouter le compte" id="valider" class="bouton">
