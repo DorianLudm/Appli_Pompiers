@@ -94,6 +94,7 @@ def get_max_id_tag():
         return 0
     return max_id
 
+
 def get_types():
     """fonction d'obtention des types des documents"""
     return TypeDocument.query.all()
@@ -149,6 +150,14 @@ def get_utilisateurs():
     """fonction d'obtention de l'ensemble des utilisateurs"""
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
 
+def is_identifant(identifant):
+    """fonction de vérification de l'existence d'un identifiant dans la BD"""
+    return Utilisateur.query.filter(Utilisateur.identifiant == identifant).first()
+
+def is_admin_identifiant(identifant):
+    """fonction de vérification de l'existence d'un identifiant dans la BD"""
+    return Utilisateur.query.filter(Utilisateur.identifiant == identifant).filter(Utilisateur.idRole == -1).first()
+    
 def get_grades():
     """fonction d'obtention de l'ensemble des grades"""
     return Grade.query.all()

@@ -95,6 +95,17 @@ class LoginForm( FlaskForm ):
         else:
             return None
 
+class MdpOublieForm( FlaskForm ):
+    """formulaire de mot de passe oublié"""
+    identifiant = StringField('Identifiant')
+    mdp = PasswordField('Password')
+    mdpConfirm = PasswordField('Confirm Password')
+    def get_authentification_utilisateur(self):
+        util = get_identifiant_utilisateur(self.identifiant.data)
+        if util is None:
+            return None
+        return util
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     """fonction de connexion pour un utilisateur"""
@@ -117,12 +128,43 @@ def login():
         form=f,
         title='Page de connexion')
 
+
+@app.route('/motDePasseOublie')
+def mdp_oublie():
+    """fonction de redirection vers la page de mot de passe oublié"""
+    f = MdpOublieForm()
+    return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f)
+
+@app.route('/motDePasseOublie/valider', methods=['POST'])
+def valider_mdp_oublie():
+    """fonction de validation de mot de passe oublié"""
+    msg_erreur = ""
+    f = MdpOublieForm()
+    if f.validate_on_submit():
+        if is_admin_identifiant(f.identifiant.data):
+            msg_erreur = "Vous ne pouvez pas changer le mot de passe d'un administrateur"
+        elif f.identifiant.data == "" or f.mdp.data == "" or f.mdpConfirm.data == "":
+            msg_erreur = "Veuillez remplir tous les champs"
+        elif is_identifant(f.identifiant.data) is None:
+            msg_erreur = "L'identifiant n'existe pas"
+        elif f.mdp.data == f.mdpConfirm.data:
+            m = sha256()
+            m.update(f.mdp.data.encode())
+            mdp = m.hexdigest()
+            util = f.get_authentification_utilisateur()
+            util.mdp = mdp
+            db.session.commit()
+            return redirect(url_for('login'))
+        else:
+            msg_erreur = "Les mots de passe ne correspondent pas"
+    return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f, erreur = msg_erreur)
+
 @app.route("/logout")
 @login_required
 def logout():
     """fonction de déconnexion"""
     logout_user()
-    return redirect(url_for('login'))  
+    return redirect(url_for('login')) 
 
 # ADMINISTRATION
 @app.route('/administrateur')
@@ -140,6 +182,7 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
         return redirect(url_for('home'))
     return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
+
 
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
 @login_required
