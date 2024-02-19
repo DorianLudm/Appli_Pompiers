@@ -37,6 +37,7 @@
               </div>
               <button class="btn btn-outline-light btn-lg px-5" type="submit">Se Connecter</button>
             </form>
+            <a href="{{ url_for('mdp_oublie')}}">Mot de passe oublié ?</a>
             {% if erreur %}
               <p class="error"><strong>Erreur:</strong> {{ erreur }}</p>
             {% endif %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_specific_css %}
-    <link rel="stylesheet" href="static/css/login.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 {% block header %}
   <section>
@@ -17,9 +17,9 @@
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark text-white" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
-            <form method="POST" role="form" action="">
+            <form method="POST" role="form" action="{{ url_for('valider_mdp_oublie') }}">
               {{ form.hidden_tag() }}
-              <h2 class="fw-bold mb-2 text-uppercase">Mot De Passe Oublié</h2>
+              <h2 class="fw-bold mb-2 text-uppercase">Mot De Passe Oublié ?</h2>
               <p class="text-white-50 mb-5">Compléter les champs pour réinitialiser votre mot de passe</p>
   
               <div class="form-outline form-white mb-4">
@@ -45,7 +45,6 @@
 
               <button class="btn btn-outline-light btn-lg px-5" type="submit">Réinistialiser</button>
             </form>
-            <a href="{{ url_for('mdp_oublie')}}">Mot de passe oublié ?</a>
             {% if erreur %}
               <p class="error"><strong>Erreur:</strong> {{ erreur }}</p>
             {% endif %}
