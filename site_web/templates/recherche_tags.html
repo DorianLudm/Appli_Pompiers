@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_doc_admin.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+    <h1>Gestion des tags</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" value="{{ search }}" name="barre_recherche" placeholder="Rechercher un tag !" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="bouton_reset">
+            <input name="reset" type="Submit" value="Réinitialiser les filtres"/> 
+        </div>
+    </form>
+</div>
+<div>
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="Retour à l'accueil"/></a>
+</div>
+<div id="liste_tags">
+    <p> Insert tags </p>
+</div>
+{% endblock %}
