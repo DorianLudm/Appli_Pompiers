@@ -145,7 +145,7 @@ def get_filtrer_document_nom(documents, nom):
 def get_document_id(idDoc):
     """fonction d'obtention d'un document à partir de son id"""
     return Document.query.get(idDoc)
-
+    
 def get_utilisateurs():
     """fonction d'obtention de l'ensemble des utilisateurs"""
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
