@@ -153,6 +153,10 @@ def get_utilisateurs():
 def is_identifant(identifant):
     """fonction de vérification de l'existence d'un identifiant dans la BD"""
     return Utilisateur.query.filter(Utilisateur.identifiant == identifant).first()
+
+def is_admin_identifiant(identifant):
+    """fonction de vérification de l'existence d'un identifiant dans la BD"""
+    return Utilisateur.query.filter(Utilisateur.identifiant == identifant).filter(Utilisateur.idRole == -1).first()
     
 def get_grades():
     """fonction d'obtention de l'ensemble des grades"""

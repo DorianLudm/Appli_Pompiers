@@ -135,18 +135,19 @@ def mdp_oublie():
     f = MdpOublieForm()
     return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f)
 
-
 @app.route('/motDePasseOublie/valider', methods=['POST'])
 def valider_mdp_oublie():
     """fonction de validation de mot de passe oublié"""
     msg_erreur = ""
     f = MdpOublieForm()
     if f.validate_on_submit():
-        if f.identifiant.data == "" or f.mdp.data == "" or f.mdpConfirm.data == "":
-            return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f, erreur = "Veuillez remplir tous les champs")
-        if is_identifant(f.identifiant.data) is None:
-            return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f, erreur = "L'identifiant n'existe pas")
-        if f.mdp.data == f.mdpConfirm.data:
+        if is_admin_identifiant(f.identifiant.data):
+            msg_erreur = "Vous ne pouvez pas changer le mot de passe d'un administrateur"
+        elif f.identifiant.data == "" or f.mdp.data == "" or f.mdpConfirm.data == "":
+            msg_erreur = "Veuillez remplir tous les champs"
+        elif is_identifant(f.identifiant.data) is None:
+            msg_erreur = "L'identifiant n'existe pas"
+        elif f.mdp.data == f.mdpConfirm.data:
             m = sha256()
             m.update(f.mdp.data.encode())
             mdp = m.hexdigest()
@@ -155,7 +156,7 @@ def valider_mdp_oublie():
             db.session.commit()
             return redirect(url_for('login'))
         else:
-            return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f, erreur = "Les mots de passe ne correspondent pas")
+            msg_erreur = "Les mots de passe ne correspondent pas"
     return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f, erreur = msg_erreur)
 
 @app.route("/logout")
