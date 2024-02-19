@@ -63,6 +63,14 @@ class Tag(db.Model):
     idTag = db.Column(db.Integer, primary_key =True, autoincrement=True)
     nomTag = db.Column(db.String(100))
     couleurTag = db.Column(db.String(100))
+
+    def __hash__(self):
+        return hash((self.idTag, self.nomTag, self.couleurTag))
+
+    def __eq__(self, other):
+        if isinstance(other, Tag):
+            return self.idTag == other.idTag and self.nomTag == other.nomTag and self.couleurTag == other.couleurTag
+        return False
     
 class DocumentTag(db.Model):
     """classe représentant la relation entre les documents et leurs tags"""
@@ -76,7 +84,7 @@ def get_tags():
 def get_tag(nomTag, exact = False):
     """fonction d'obtention d'un tag à partir de son nom"""
     if exact:
-        return Tag.query.filter(Tag.nomTag == nomTag ).first()
+        return Tag.query.filter(Tag.nomTag.ilike(nomTag)).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
 
 def get_tag_nom(nomTag):

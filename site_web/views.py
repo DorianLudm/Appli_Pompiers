@@ -23,13 +23,13 @@ def home():
     """fonction d'affichage de la page d'accueil des pompiers"""
     global active_tags, documents
     result = []
-    
+
     doc = None
     if request.args.get('id'):
         id = request.args['id']
         doc = get_document_id(id)
         doc.nomType = get_type(doc.idType).nomType
-    
+
     if active_tags or filtre_texte:
         for i in get_types():
             resultat = dict()
@@ -41,7 +41,7 @@ def home():
                 result.append(resultat)
     info_doc = filtre_texte or "Rechercher un document !"
     return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc)
- 
+
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
 def ajouter_filtre():
@@ -61,12 +61,12 @@ def ajouter_filtre():
 def ouverture_doc(id):
     """fonction de redirection vers la page d'accueil"""
     return redirect(url_for('home', id=id))
-  
+
 @app.route('/visualiser/<id>', methods =("POST",))
 @login_required
 def visualiser(id):
     doc = get_document_id(id).fichierDoc
-    webbrowser.open(mkpath('./static/document/' + doc)) 
+    webbrowser.open(mkpath('./static/document/' + doc))
     return redirect(url_for('home', id=id))
 
 @app.route('/telecharger/<id>', methods =("POST",))
@@ -74,7 +74,7 @@ def visualiser(id):
 def telecharger(id):
     path = mkpath('./static/document/')
     return send_from_directory(path, get_document_id(id).fichierDoc, as_attachment=True)
-  
+
 
 
 # LOGIN
@@ -164,7 +164,7 @@ def valider_mdp_oublie():
 def logout():
     """fonction de déconnexion"""
     logout_user()
-    return redirect(url_for('login')) 
+    return redirect(url_for('login'))
 
 # ADMINISTRATION
 @app.route('/administrateur')
@@ -180,7 +180,7 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
     """redirection vers la page de recherche de compte"""
     if not is_admin():
         return redirect(url_for('home'))
-    return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
+    return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(),
                             selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
 
 
@@ -201,8 +201,8 @@ def modifier_compte(id):
             user.mdp = sha256(request.form.get('password').encode()).hexdigest()
         user.idGrade = request.form.get('grades')
         user.idCas = request.form.get('casernes')
-        db.session.commit() 
-        return redirect(url_for('recherche_comptes')) 
+        db.session.commit()
+        return redirect(url_for('recherche_comptes'))
     return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 @app.route('/administrateur/rechercheDocAdmin')
@@ -218,7 +218,7 @@ def recherche_doc_admin():
         resultat = dict()
         resultat["nomType"] = i.nomType
         resultat["element"] = []
-        
+
         for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
         result.append(resultat)
@@ -250,18 +250,18 @@ def ajoute_document():
     """fonction d'ajout d'un document"""
     if not is_admin():
         return redirect(url_for('home'))
-    if request.method == 'POST':  
+    if request.method == 'POST':
         if request.form.get('tag'):
             tag_a_supprimer = None
             for tag in tag_manuel:
                 if tag.nomTag == request.form.get('tag'):
                     tag_a_supprimer = tag
             if tag_a_supprimer:
-                tag_manuel.remove(tag_a_supprimer)            
+                tag_manuel.remove(tag_a_supprimer)
         if request.form.get('tag-manuel'):
             est_present = False
             tag_ajoute = get_tag(request.form.get('tag-manuel'))
-            for tag in tag_manuel:                
+            for tag in tag_manuel:
                 if tag.nomTag == tag_ajoute.nomTag:
                     est_present = True
             if not est_present:
@@ -315,7 +315,7 @@ def ajoute_document():
                         db.session.add(document_tag)
                         db.session.commit()
             tag_manuel.clear()
-            return redirect(url_for('recherche_doc_admin')) 
+            return redirect(url_for('recherche_doc_admin'))
         return render_template('ajouter_document.html', tags=get_tags(),document = request.files['file'], type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
     return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
 
@@ -426,7 +426,8 @@ def save_compte():
             return redirect(url_for('recherche_comptes'))
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form)
 
-def handle_filtrage(admin = False):
+
+def handle_filtrage(admin=False):
     global active_tags, filtre_texte, documents, selectType
     tag = request.form['tags']
     bool_fulldoc = False
@@ -440,10 +441,12 @@ def handle_filtrage(admin = False):
             if not active_tags and not filtre_texte:
                 documents = get_documents()
                 bool_fulldoc = True
-    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
-            documents = get_documents()
-            bool_fulldoc = True
-    if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get('types') != "Choisir un type":
+    if not bool_fulldoc and filtre_texte != request.form.get(
+            'barre_recherche'):
+        documents = get_documents()
+        bool_fulldoc = True
+    if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
+            'types') != "Choisir un type":
         selectType = request.form.get('types')
         documents = get_documents()
     # Filtre par type
@@ -455,7 +458,9 @@ def handle_filtrage(admin = False):
             filtre_texte = request.form.get('barre_recherche')
             documents = get_filtrer_document_nom(documents, filtre_texte)
         else:
-            tag = get_tag(request.form.get('barre_recherche')[1:])
+            tag = get_tag(request.form.get('barre_recherche')[1:], True)
+            if not tag or tag in active_tags:
+                tag = get_tag(request.form.get('barre_recherche')[1:])
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
@@ -480,13 +485,13 @@ def handle_filtrage(admin = False):
                 tag_to_delete.append(tag)
         for tag in tag_to_delete:
             active_tags.remove(tag)
-                
+
         documents = get_documents()
         if filtre_texte:
             documents = get_filtrer_document_nom(documents, filtre_texte)
         for tag in active_tags:
             documents = get_filtrer_document_tag(documents, tag)
-    
+
     if request.form.get('reset'):
         if admin:
             selectType = "Choisir un type"
@@ -498,7 +503,7 @@ def handle_filtrage(admin = False):
         filtre_texte = ""
         documents = []
         return redirect(url_for('home'))
-    
+
     # Si il y a aucun critère de recherche, alors on load aucun document
     if admin:
         if not active_tags and not filtre_texte and selectType == "Choisir un type":
