@@ -15,7 +15,7 @@
 <body>
     <header>
         {% if util and util.role == 'Administrateur' : %}
-            <a href="{{ url_for('home_admin') }}" ><input class="buttonHome" type="image" src="/site_web/static/img" alt="logo pompier"/></a>
+            <a href="{{ url_for('home_admin') }}" ><input class="buttonHome" type="image" src="/../static/img/logoPompier.png" alt="logo pompier"/></a>
         {% else %}
             <a href="{{ url_for('home') }}" ><input class="buttonHome" type="image" src="/../static/img/logoPompier.png" alt="logo pompier"/></a>
         {% endif %}
