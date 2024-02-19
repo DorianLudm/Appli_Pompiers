@@ -192,6 +192,8 @@ def modifier_compte(id):
         return redirect(url_for('home'))
     user = Utilisateur.query.get(id)
     if request.form.get('save_compte') =="Sauvegarder le compte":
+        if request.form.get('pseudo') != user.identifiant and is_identifant(request.form.get('pseudo')):
+            return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), erreur = "L'identifiant existe déjà")
         user.nomUtilisateur = request.form.get('nom')
         user.prenomUtilisateur = request.form.get('prenom')
         user.identifiant = request.form.get('pseudo')
