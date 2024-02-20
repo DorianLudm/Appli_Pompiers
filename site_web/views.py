@@ -343,7 +343,7 @@ def ajoute_document():
             tag_manuel.clear()
             session['files']= ""
             return redirect(url_for('recherche_doc_admin')) 
-        return render_template('ajouter_document.html', tags=get_tags(),document = request.files['file'], type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
+        return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
     session['files'] = ""
     return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title="Ajouter un document")
 
