@@ -2,6 +2,7 @@ from flask_bootstrap import Bootstrap5
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask import request
 import os.path
 
 def mkpath(p):
@@ -18,3 +19,23 @@ app.config['UPLOAD_FOLDER'] = 'static/document'
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+
+from .models import Tag
+
+@app.route('/update-tag-color', methods=['POST'])
+def update_tag_color_route():
+    data = request.get_json()
+    tag = Tag.query.get(data['id'])
+    if tag:
+        tag.couleurTag = data['color'][1:]
+        db.session.commit()
+    return '', 204
+
+@app.route('/update-tag-name', methods=['POST'])
+def update_tag_name_route():
+    data = request.get_json()
+    tag = Tag.query.get(data['id'])
+    if tag:
+        tag.nomTag = data['name']
+        db.session.commit()
+    return '', 204
