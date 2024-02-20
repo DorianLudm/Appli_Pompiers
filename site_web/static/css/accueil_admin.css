@@ -8,9 +8,8 @@ main{
     height: 100vh;
 }
 
-
 input{
-    max-height: 40wh;
+    max-height: 40vh;
 }
 
 /* Responsive des boutons */
