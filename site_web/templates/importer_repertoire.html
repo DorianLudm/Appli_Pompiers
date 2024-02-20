@@ -21,7 +21,7 @@
     </div>
     <section>
         <input type="file" name="files" id="importer"style="display: none;" webkitdirectory multiple>
-        <label for="importer" class="bouton-importer">Importer</label>
+        <label for="importer" class="bouton-importer">Importer un Répertoire</label>
     </section>
 </div>
 <div class="documents">
@@ -30,6 +30,7 @@
         <li class="doc">
             <img class="ImgDoc" src="/static/img/documentIco.png">
             <p class="nomDoc">{{ doc.nomDoc }}</p>
+            <p class="typeDoc">{{ doc.nomType }}</p>
             <a href="{{ url_for('modifier_document', id= doc.idDoc) }}"><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
             <a href="{{ url_for('supprimer_document', id=doc.idDoc ) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
 
@@ -40,7 +41,7 @@
 
 <div class="boutons-bas">
     <input type="submit" value="Enregistrer" name="ajouter_document">
-    <a href="{{ url_for ('recherche_doc_admin')}}"><input type="button" value="Retour"></a>
+    <a href="{{ url_for ('recherche_doc_admin')}}" id="Retour">Retour</a>
 </div>
 </form>
 {% endblock %}
