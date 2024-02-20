@@ -12,6 +12,7 @@ import os
 import random
 from werkzeug.utils import secure_filename
 import shutil
+from .generationTag import generationTag
 
 active_tags = set()
 tag_manuel = set()
@@ -250,6 +251,7 @@ def ajoute_document():
     """fonction d'ajout d'un document"""
     if not is_admin():
         return redirect(url_for('home'))
+    print("JE PASEEE ICI")
     if request.method == 'POST':
         if request.form.get('tag'):
             tag_a_supprimer = None
@@ -339,6 +341,10 @@ def ajoute_document():
             filename = secure_filename(file.filename)
             session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
             file.save(session['file'])
+            print("bonjour" + session['file'])
+            tags_auto = generationTag(session['file'])
+            print(tags_auto)
+
         document = session.get('file').split("temporaire/")[-1]
         return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
     else:
