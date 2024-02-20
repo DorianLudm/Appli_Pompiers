@@ -7,6 +7,9 @@
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
+<head>
+    <script src="../static/js/personnalisationTags.js" defer></script>
+</head>
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
         <div class="research_bar">
@@ -27,9 +30,10 @@
             <div class="circle" style="background-color: #{{tag.couleurTag }}"></div>
             <p class="nomTag">{{ tag.nomTag }}</p>
             <div class="boutons">
-                <input class="buttonTag" type="image" src="/static/img/modificationIco.png" alt="Modifier Tag"/></a>
-                <input class="buttonTag" type="image" src="/static/img/colorPalette.png" alt="Modifier Tag"/></a>
-                <a href="{{ url_for('supprimer_tag', id= tag.idTag) }}" > <input class="buttonTag" id="buttonSupprimer" type="image" src="/static/img/poubelleIco.png" alt="Modifier Tag"/></a>
+                <input id="modifierTag" class="buttonTag" type="image" src="/static/img/modificationIco.png" title="Modifier les informations du tag" alt="Modifier Tag"/>
+                <input class="modifierCouleurTag buttonTag" type="image" src="/static/img/colorPalette.png" title="Modifier la couleur du tag" alt="Modifier la couleur du tag" data-tag-id="{{ tag.idTag }}"/>
+                <input type="color" class="colorPicker" style="display: none;">
+                <a href="{{ url_for('supprimer_tag', id= tag.idTag) }}" > <input class="buttonTag" title="Supprimer le tag" id="buttonSupprimer" type="image" src="/static/img/poubelleIco.png" alt="Modifier Tag"/></a>
             </div>
         </div>
     {% endfor %}
