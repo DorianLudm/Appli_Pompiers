@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block page_specific_css %}
+    <link rel="stylesheet" href="/../static/css/importer_repertoire.css">
+{% endblock %}
+{% block header %}
+    <h1>Importer un Répertoire</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<form method="POST" enctype="multipart/form-data">
+<div class="central">
+    <div class="type">
+        <p>Type</p>
+        <select name="type_document" id="types-select">
+            <option selected="selected" hidden="hidden">{{type}}</option>
+            {% for x in types %} 
+                <option name="type_document" value="{{x.idType}}">{{x.nomType}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <section>
+        <input type="file" name="files" id="importer"style="display: none;" webkitdirectory multiple>
+        <label for="importer" class="bouton-importer">Importer</label>
+    </section>
+</div>
+<div class="documents">
+    <ul class="resultat">
+    {% for doc in documents %}
+        <li class="doc">
+            <img class="ImgDoc" src="/static/img/documentIco.png">
+            <p class="nomDoc">{{ doc.nomDoc }}</p>
+            <a href="{{ url_for('modifier_document', id= doc.idDoc) }}"><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+            <a href="{{ url_for('supprimer_document', id=doc.idDoc ) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="boutons-bas">
+    <input type="submit" value="Enregistrer" name="ajouter_document">
+    <a href="{{ url_for ('recherche_doc_admin')}}"><input type="button" value="Retour"></a>
+</div>
+</form>
+{% endblock %}

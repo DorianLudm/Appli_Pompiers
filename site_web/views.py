@@ -345,6 +345,38 @@ def ajoute_document():
         session['file'] = ""
     return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
 
+@app.route('/administrateur/importerRepertoire', methods=['GET', 'POST'])
+@login_required
+def importer_repertoire():
+    """fonction d'importation de répertoire"""
+    if not is_admin():
+        return redirect(url_for('home'))
+    documents = []
+    if request.method == 'POST':
+        if request.form.get('ajouter_document') =="Enregistrer":
+            files = request.files.getlist('files')
+            for file in files:
+                if file.filename != "":
+                    filename = file.filename
+                    path = filename.split("/")
+                    pathfinal = ""
+                    for i in range(len(path)-1):
+                        pathfinal += path[i]+"/"
+                        if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], pathfinal))):
+                            os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], pathfinal)))
+                    file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                    document = Document(
+                        nomDoc = filename,
+                        idType = request.form.get('type_document') or 1,
+                        fichierDoc = filename,
+                        descriptionDoc = ""
+                    )
+                    db.session.add(document)
+                    db.session.commit()
+                    documents.append(document)
+                    document.nomType = get_type(document.idType).nomType
+    return render_template('importer_repertoire.html', title='Importer un répertoire', util = informations_utlisateurs(), types = get_types(), tags=get_tags(), documents = documents)
+
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
 def appliquer_filtres():
