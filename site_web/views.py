@@ -11,6 +11,7 @@ import webbrowser
 import os
 import random
 from werkzeug.utils import secure_filename
+import shutil
 
 active_tags = set()
 tag_manuel = set()
@@ -250,6 +251,25 @@ def ajoute_document():
     if not is_admin():
         return redirect(url_for('home'))
     if request.method == 'POST':
+        newfiles = request.files.getlist('files')
+        if newfiles and newfiles[0].filename != "":
+            if session.get('files'):
+                files = os.listdir(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",session.get('files'))))
+                for file in files:
+                    os.remove(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",session.get('files'), file)))
+                os.rmdir(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",session.get('files'))))
+            for file in newfiles: 
+                filename = file.filename.split("/")[-1]
+                pathfolder = file.filename.split("/")[0]
+                if pathfolder != filename:  
+                    if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",pathfolder))):
+                        os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",pathfolder)))
+                    file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",file.filename)))
+                else:               
+                    session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
+                    file.save(session['file'])
+            session['files'] = pathfolder or session['file']
+        document = session['files']
         if request.form.get('tag'):
             tag_a_supprimer = None
             for tag in tag_manuel:
@@ -257,6 +277,7 @@ def ajoute_document():
                     tag_a_supprimer = tag
             if tag_a_supprimer:
                 tag_manuel.remove(tag_a_supprimer)
+
         if request.form.get('tag-manuel'):
             est_present = False
             tag_ajoute = get_tag(request.form.get('tag-manuel'))
@@ -267,55 +288,62 @@ def ajoute_document():
                 tag = get_tag(request.form.get('tag-manuel'))
                 if tag:
                     tag_manuel.add(tag)
+
         elif request.form.get('ajouter_document') =="Enregistrer":
-            file = request.files['file']
-            if request.form.get('type_document') != "Type": 
-                type = get_id_type(request.form.get('type_document'))
-                document = Document(
-                    nomDoc = request.form.get('titre'),
-                    idType = type,
-                    fichierDoc = request.form.get('repertoire')+"/"+secure_filename(file.filename),
-                    descriptionDoc = request.form.get('description')
-                )
-                db.session.add(document)
-                db.session.commit()
-            if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire')))):
-                os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'))))
-            file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'), secure_filename(file.filename))))
-            les_tags = request.form.get('repertoire').split("/")
-            for tag in les_tags:
-                if tag != "":
-                    newtag = get_tag(tag, True)
-                    for tag_actif in tag_manuel:
-                        if tag_actif.nomTag == newtag.nomTag:
-                            newtag = ""
-                    if newtag:
-                        document_tag = DocumentTag(
-                            idDoc = document.idDoc,
-                            idTag = newtag.idTag
+            files = files = session.get('files')
+            files = os.listdir(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",files)))
+            for file in files:
+                if file != "":
+                    filepath = secure_filename(file)
+                    if request.form.get('type_document') != "Type": 
+                        type = get_id_type(request.form.get('type_document'))
+                        document = Document(
+                            nomDoc = request.form.get('titre'),
+                            idType = type,
+                            fichierDoc = request.form.get('repertoire')+"/"+ filepath,
+                            descriptionDoc = request.form.get('description')
                         )
-                        db.session.add(document_tag)
+                        db.session.add(document)
                         db.session.commit()
-                    if newtag is None:
-                        a = hex(random.randrange(100,256))
-                        b = hex(random.randrange(100,256))
-                        c = hex(random.randrange(100,256))
-                        tag = Tag(
-                            idTag = get_max_id_tag()+1,
-                            nomTag = tag,
-                            couleurTag = a[2:]+b[2:]+c[2:]
-                        )
-                        db.session.add(tag)
-                        db.session.commit()
-                        document_tag = DocumentTag(
-                            idDoc = document.idDoc,
-                            idTag = tag.idTag
-                        )
-                        db.session.add(document_tag)
-                        db.session.commit()
+                    if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire')))):
+                        os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'))))
+                    shutil.move(mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire",session.get('files'), file)), mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'), filepath)))
+                    les_tags = request.form.get('repertoire').split("/")
+                    for tag in les_tags:
+                        if tag != "":
+                            newtag = get_tag(tag, True)
+                            for tag_actif in tag_manuel:
+                                if tag_actif.nomTag == newtag.nomTag:
+                                    newtag = ""
+                            if newtag:
+                                document_tag = DocumentTag(
+                                    idDoc = document.idDoc,
+                                    idTag = newtag.idTag
+                                )
+                                db.session.add(document_tag)
+                                db.session.commit()
+                            if newtag is None:
+                                a = hex(random.randrange(100,256))
+                                b = hex(random.randrange(100,256))
+                                c = hex(random.randrange(100,256))
+                                tag = Tag(
+                                    idTag = get_max_id_tag()+1,
+                                    nomTag = tag,
+                                    couleurTag = a[2:]+b[2:]+c[2:]
+                                )
+                                db.session.add(tag)
+                                db.session.commit()
+                                document_tag = DocumentTag(
+                                    idDoc = document.idDoc,
+                                    idTag = tag.idTag
+                                )
+                                db.session.add(document_tag)
+                                db.session.commit()
             tag_manuel.clear()
+            session['files']= ""
             return redirect(url_for('recherche_doc_admin')) 
-        return render_template('ajouter_document.html', tags=get_tags(),document = request.files['file'], type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
+        return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
+    session['files'] = ""
     return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title="Ajouter un document")
 
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
