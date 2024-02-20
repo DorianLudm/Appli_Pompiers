@@ -441,6 +441,9 @@ def supprimer_tag(id):
     for liaison in liaisons_tag_docs:
         db.session.delete(liaison)
     tag = get_tag_id(id)
+    global active_tags
+    if tag in active_tags:
+        active_tags.remove(tag)
     db.session.delete(tag)
     db.session.commit()
     return redirect(url_for('recherche_tags'))
