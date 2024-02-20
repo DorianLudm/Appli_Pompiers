@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_tag.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+    <h1>Gestion des tags</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" value="{{ search }}" name="barre_recherche" placeholder="Rechercher un tag !" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="bouton_reset">
+            <input name="reset" type="Submit" value="Réinitialiser les filtres"/> 
+        </div>
+    </form>
+</div>
+<div id="liste_tags">
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="Retour à l'accueil"/></a>
+    {% for tag in  tags %}
+        <div class="tag">
+            <div class="circle" style="background-color: #{{tag.couleurTag }}"></div>
+            <p class="nomTag">{{ tag.nomTag }}</p>
+            <div class="boutons">
+                <input class="buttonTag" type="image" src="/static/img/modificationIco.png" alt="Modifier Tag"/></a>
+                <input class="buttonTag" type="image" src="/static/img/colorPalette.png" alt="Modifier Tag"/></a>
+                <a href="{{ url_for('supprimer_tag', id= tag.idTag) }}" > <input class="buttonTag" id="buttonSupprimer" type="image" src="/static/img/poubelleIco.png" alt="Modifier Tag"/></a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

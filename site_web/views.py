@@ -181,8 +181,7 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
     """redirection vers la page de recherche de compte"""
     if not is_admin():
         return redirect(url_for('home'))
-    return render_template('rechercheComptes.html', title='Recherche de comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(),
-                            selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
+    return render_template('rechercheComptes.html', title='Gestion des comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
 
 
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
@@ -202,9 +201,9 @@ def modifier_compte(id):
             user.mdp = sha256(request.form.get('password').encode()).hexdigest()
         user.idGrade = request.form.get('grades')
         user.idCas = request.form.get('casernes')
-        db.session.commit()
-        return redirect(url_for('recherche_comptes'))
-    return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+        db.session.commit() 
+        return redirect(url_for('recherche_comptes')) 
+    return render_template('modifierCompte.html', title="Modification d'un compte", user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 @app.route('/administrateur/rechercheDocAdmin')
 @login_required
@@ -223,7 +222,7 @@ def recherche_doc_admin():
         for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
         result.append(resultat)
-    return render_template("recherche_doc_admin.html",title="Admin | Recherche documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
+    return render_template("recherche_doc_admin.html",title="Gestion des documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
 
 @app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
 def modifier_document(id):
@@ -243,7 +242,7 @@ def modifier_document(id):
         return redirect(url_for('recherche_doc_admin'))
     if request.form.get('annuler') =="Annuler":
         return redirect(url_for('recherche_doc_admin'))
-    return render_template('modifier_document.html', title='Modifier le Document', doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
+    return render_template('modifier_document.html', title="Modification d'un document", doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
 
 @app.route('/administrateur/ajouteDocument', methods=['GET', 'POST'])
 @login_required
@@ -342,12 +341,11 @@ def ajoute_document():
                                 db.session.add(document_tag)
                                 db.session.commit()
             tag_manuel.clear()
-            session['files'] = ""
-            return redirect(url_for('recherche_doc_admin'))
-        return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
-    else:
-        session['files'] = ""
-    return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
+            session['files']= ""
+            return redirect(url_for('recherche_doc_admin')) 
+        return render_template('ajouter_document.html', tags=get_tags(),document = request.files['file'], type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
+    session['files'] = ""
+    return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title="Ajouter un document")
 
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
@@ -411,7 +409,7 @@ def ajoute_compte():
     f = AjouteCompteForm()
     f.id_grade.choices = [(g.idGrade, g.nomGrade) for g in get_grades()]
     f.id_caserne.choices = [(c.idCas, c.nomCaserne) for c in get_casernes()]
-    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=f)
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title="Ajout d'un compte", form=f)
 
 @app.route('/administrateur/supprimerCompte/<int:id>')
 @login_required
@@ -455,7 +453,26 @@ def save_compte():
             db.session.commit()
             return redirect(url_for('recherche_comptes'))
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form)
+  
+@app.route('/administrateur/recherche_tags')
+@login_required
+def recherche_tags():
+    if not is_admin():
+        return redirect(url_for('home'))
+    return render_template('recherche_tags.html', util = informations_utlisateurs(), title='Gestion des tags', tags = get_tags())
 
+@app.route('/administrateur/supprimerTag/<id>')
+@login_required
+def supprimer_tag(id):
+    if not is_admin():
+        return redirect(url_for('home'))
+    liaisons_tag_docs = get_liaison_document_tag(id)
+    for liaison in liaisons_tag_docs:
+        db.session.delete(liaison)
+    tag = get_tag_id(id)
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect(url_for('recherche_tags'))
 
 def handle_filtrage(admin=False):
     global active_tags, filtre_texte, documents, selectType
