@@ -70,10 +70,28 @@ main p{
     text-align:center;
 }
 
-input[type="submit"]{
+input[type="submit"], .bouton-importer{
     border-radius: 10px;
     font-size: 1.5em;
     margin-bottom: 1vw;
+    border: none;
+    cursor: pointer;
+    background-color: lightgray;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover, .bouton-importer:hover{
+    background-color: gray;
+    color: white;
+}
+#file-label{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 30vw;
+}
+.tags{
+    width: 30vw;
 }
 
 .boutons-bas > input{
