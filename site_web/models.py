@@ -79,6 +79,10 @@ def get_tag(nomTag, exact = False):
         return Tag.query.filter(Tag.nomTag == nomTag ).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
 
+def get_tag_id(idTag):
+    """fonction d'obtention d'un tag à partir de son id"""
+    return Tag.query.get(idTag)
+
 def get_tag_nom(nomTag):
     """fonction d'obtention de l'id d'un tag à partir de son nom"""
     return Tag.query.filter(Tag.nomTag == nomTag).first().idTag
@@ -132,6 +136,10 @@ def get_filtrer_document_tag(documents, tag):
         if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
             resultat.append(doc)
     return resultat
+
+def get_liaison_document_tag(idTag):
+    """fonction d'obtention des liaisons entre un document et un tag pour tout les documents associés au tag"""
+    return DocumentTag.query.filter(DocumentTag.idTag == idTag).all()
 
 def get_filtrer_document_nom(documents, nom):
     """fonction de filtrage de documents à partir d'un nom donné"""

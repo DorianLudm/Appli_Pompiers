@@ -1,0 +1,97 @@
+main>#filtre{
+    background-color: #F24343;
+    margin: 0px;
+}
+
+div>div,div>form{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.loop_research {
+    width: auto;
+    height: 6vh;
+    margin-right: 2%;
+}
+
+.loop_research>input{
+    width: 100%;
+    height: 100%;
+}
+
+.research_bar{
+    flex-basis: 40%;
+}
+
+.research_bar>input{
+    padding: 7px;
+    flex-grow: 1;
+    width: 89%;
+    margin: 4%;
+}
+
+.bouton_reset{
+    flex-grow: 0;
+    justify-content: right;
+    flex-basis: auto;
+}
+
+input{
+    border: none;
+    margin: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+body{
+    margin: 0px;
+    background-color: #BBBBBB;
+}
+
+.bouton_reset{
+    margin-right: 2%;
+}
+
+.retourHome{
+    margin-top: 1%;
+    margin-left: 1%;
+}
+
+/* CLEAN LS CSS PRECEDENT A CE MESSAGE */
+.tag{
+    min-height: 100px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    margin: 10px;
+    background-color: #F24343;
+    list-style-type: none;
+}
+
+.circle {
+    align-self: flex-start;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: thin black solid;
+}
+
+.buttonTag{
+    height: 45px;
+    width: 45px;
+}
+
+#buttonSupprimer{
+    height: 76px;
+    width: 51px;
+}

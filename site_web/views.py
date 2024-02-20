@@ -382,7 +382,20 @@ def save_compte():
 def recherche_tags():
     if not is_admin():
         return redirect(url_for('home'))
-    return render_template('recherche_tags.html', util = informations_utlisateurs(), title='Gestion des tags')
+    return render_template('recherche_tags.html', util = informations_utlisateurs(), title='Gestion des tags', tags = get_tags())
+
+@app.route('/administrateur/supprimerTag/<id>')
+@login_required
+def supprimer_tag(id):
+    if not is_admin():
+        return redirect(url_for('home'))
+    liaisons_tag_docs = get_liaison_document_tag(id)
+    for liaison in liaisons_tag_docs:
+        db.session.delete(liaison)
+    tag = get_tag_id(id)
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect(url_for('recherche_tags'))
 
 def handle_filtrage(admin = False):
     global active_tags, filtre_texte, documents, selectType

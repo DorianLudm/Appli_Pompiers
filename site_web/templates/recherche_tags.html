@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block page_specific_css %}
-<link href="/static/css/recherche_doc_admin.css" rel="stylesheet">
+<link href="/static/css/recherche_tag.css" rel="stylesheet">
 {% endblock %}
 {% block header %}
     <h1>Gestion des tags</h1>
@@ -20,10 +20,18 @@
         </div>
     </form>
 </div>
-<div>
-    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="Retour à l'accueil"/></a>
-</div>
 <div id="liste_tags">
-    <p> Insert tags </p>
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="Retour à l'accueil"/></a>
+    {% for tag in  tags %}
+        <div class="tag">
+            <div class="circle" style="background-color: #{{tag.couleurTag }}"></div>
+            <p>{{ tag.nomTag }}</p>
+            <div class="boutons">
+                <input class="buttonTag" type="image" src="/static/img/modificationIco.png" alt="Modifier Tag"/></a>
+                <input class="buttonTag" type="image" src="/static/img/colorPalette.png" alt="Modifier Tag"/></a>
+                <a href="{{ url_for('supprimer_tag', id= tag.idTag) }}" > <input class="buttonTag" id="buttonSupprimer" type="image" src="/static/img/poubelleIco.png" alt="Modifier Tag"/></a>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}
