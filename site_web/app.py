@@ -25,9 +25,17 @@ from .models import Tag
 @app.route('/update-tag-color', methods=['POST'])
 def update_tag_color_route():
     data = request.get_json()
-    print(data)  # Add this line to check the received data
     tag = Tag.query.get(data['id'])
     if tag:
         tag.couleurTag = data['color'][1:]
+        db.session.commit()
+    return '', 204
+
+@app.route('/update-tag-name', methods=['POST'])
+def update_tag_name_route():
+    data = request.get_json()
+    tag = Tag.query.get(data['id'])
+    if tag:
+        tag.nomTag = data['name']
         db.session.commit()
     return '', 204
