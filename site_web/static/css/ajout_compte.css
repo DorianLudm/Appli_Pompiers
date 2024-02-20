@@ -110,21 +110,21 @@ input.bouton:last-child {
     transform:translate(-50%, -50%);
     display: flex;
     flex-wrap: wrap;
+    position: relative;
 }
 
 .contenu-popup{
     flex-basis: 100%;
     flex-grow: 1;
+    text-align: center;
 }
 
 .popup-content h2{
     margin:20px 0;
     color: red;
-    
-
 }
 
-#annuler-retour{
+#annuler{
     font-size: xx-large;
     color: white;
     background-color: #954D4D;
@@ -133,7 +133,7 @@ input.bouton:last-child {
     border-radius: 10px;
 }
 
-#valider-retour{
+#valider{
     font-size: xx-large;
     color: white;
     background-color: #84B546;
