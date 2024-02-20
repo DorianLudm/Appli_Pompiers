@@ -295,7 +295,6 @@ def ajoute_document():
             for file in files:
                 if file != "":
                     filepath = secure_filename(file)
-                    print(filepath)
                     if request.form.get('type_document') != "Type": 
                         type = get_id_type(request.form.get('type_document'))
                         document = Document(
