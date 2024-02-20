@@ -106,8 +106,16 @@ class MdpOublieForm( FlaskForm ):
         if util is None:
             return None
         return util
+    
+@app.route('/')
+def index():
+    if current_user.is_authenticated:
+        if current_user.idRole == -1:
+            return redirect(url_for('home_admin'))
+        else:
+            return redirect(url_for('home'))
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     """fonction de connexion pour un utilisateur"""
     f = LoginForm()
