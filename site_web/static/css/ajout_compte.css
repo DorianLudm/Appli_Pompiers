@@ -1,3 +1,7 @@
+body{
+    overflow: hidden;
+}
+
 main {
     background-color: #F24343;
     /* display: flex;
