@@ -23,13 +23,13 @@ def home():
     """fonction d'affichage de la page d'accueil des pompiers"""
     global active_tags, documents
     result = []
-    
+
     doc = None
     if request.args.get('id'):
         id = request.args['id']
         doc = get_document_id(id)
         doc.nomType = get_type(doc.idType).nomType
-    
+
     if active_tags or filtre_texte:
         for i in get_types():
             resultat = dict()
@@ -41,7 +41,7 @@ def home():
                 result.append(resultat)
     info_doc = filtre_texte or "Rechercher un document !"
     return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc)
- 
+
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
 def ajouter_filtre():
@@ -61,12 +61,12 @@ def ajouter_filtre():
 def ouverture_doc(id):
     """fonction de redirection vers la page d'accueil"""
     return redirect(url_for('home', id=id))
-  
+
 @app.route('/visualiser/<id>', methods =("POST",))
 @login_required
 def visualiser(id):
     doc = get_document_id(id).fichierDoc
-    webbrowser.open(mkpath('./static/document/' + doc)) 
+    webbrowser.open(mkpath('./static/document/' + doc))
     return redirect(url_for('home', id=id))
 
 @app.route('/telecharger/<id>', methods =("POST",))
@@ -74,7 +74,7 @@ def visualiser(id):
 def telecharger(id):
     path = mkpath('./static/document/')
     return send_from_directory(path, get_document_id(id).fichierDoc, as_attachment=True)
-  
+
 
 
 # LOGIN
@@ -94,6 +94,17 @@ class LoginForm( FlaskForm ):
             return util
         else:
             return None
+
+class MdpOublieForm( FlaskForm ):
+    """formulaire de mot de passe oublié"""
+    identifiant = StringField('Identifiant')
+    mdp = PasswordField('Password')
+    mdpConfirm = PasswordField('Confirm Password')
+    def get_authentification_utilisateur(self):
+        util = get_identifiant_utilisateur(self.identifiant.data)
+        if util is None:
+            return None
+        return util
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -117,12 +128,43 @@ def login():
         form=f,
         title='Page de connexion')
 
+
+@app.route('/motDePasseOublie')
+def mdp_oublie():
+    """fonction de redirection vers la page de mot de passe oublié"""
+    f = MdpOublieForm()
+    return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f)
+
+@app.route('/motDePasseOublie/valider', methods=['POST'])
+def valider_mdp_oublie():
+    """fonction de validation de mot de passe oublié"""
+    msg_erreur = ""
+    f = MdpOublieForm()
+    if f.validate_on_submit():
+        if is_admin_identifiant(f.identifiant.data):
+            msg_erreur = "Vous ne pouvez pas changer le mot de passe d'un administrateur"
+        elif f.identifiant.data == "" or f.mdp.data == "" or f.mdpConfirm.data == "":
+            msg_erreur = "Veuillez remplir tous les champs"
+        elif is_identifant(f.identifiant.data) is None:
+            msg_erreur = "L'identifiant n'existe pas"
+        elif f.mdp.data == f.mdpConfirm.data:
+            m = sha256()
+            m.update(f.mdp.data.encode())
+            mdp = m.hexdigest()
+            util = f.get_authentification_utilisateur()
+            util.mdp = mdp
+            db.session.commit()
+            return redirect(url_for('login'))
+        else:
+            msg_erreur = "Les mots de passe ne correspondent pas"
+    return render_template('mdp_oublie.html', title='Mot de passe oublié', form = f, erreur = msg_erreur)
+
 @app.route("/logout")
 @login_required
 def logout():
     """fonction de déconnexion"""
     logout_user()
-    return redirect(url_for('login'))  
+    return redirect(url_for('login'))
 
 # ADMINISTRATION
 @app.route('/administrateur')
@@ -138,8 +180,8 @@ def recherche_comptes(searchNom="", selectGrade="Choisir un grade", selectCasern
     """redirection vers la page de recherche de compte"""
     if not is_admin():
         return redirect(url_for('home'))
-    return render_template('rechercheComptes.html', title='Gestion des comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), 
-                            selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
+    return render_template('rechercheComptes.html', title='Gestion des comptes', users=get_utilisateurs(), casernes = get_casernes(), grades = get_grades(), selectGrade=selectGrade, selectCaserne=selectCaserne, searchNom=searchNom, util = informations_utlisateurs())
+
 
 @app.route('/administrateur/modifierCompte/<id>', methods=['GET', 'POST'])
 @login_required
@@ -149,6 +191,8 @@ def modifier_compte(id):
         return redirect(url_for('home'))
     user = Utilisateur.query.get(id)
     if request.form.get('save_compte') =="Sauvegarder le compte":
+        if request.form.get('pseudo') != user.identifiant and is_identifant(request.form.get('pseudo')):
+            return render_template('modifierCompte.html', title='Modifier de Compte', user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), erreur = "L'identifiant existe déjà")
         user.nomUtilisateur = request.form.get('nom')
         user.prenomUtilisateur = request.form.get('prenom')
         user.identifiant = request.form.get('pseudo')
@@ -173,7 +217,7 @@ def recherche_doc_admin():
         resultat = dict()
         resultat["nomType"] = i.nomType
         resultat["element"] = []
-        
+
         for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
         result.append(resultat)
@@ -205,18 +249,18 @@ def ajoute_document():
     """fonction d'ajout d'un document"""
     if not is_admin():
         return redirect(url_for('home'))
-    if request.method == 'POST':  
+    if request.method == 'POST':
         if request.form.get('tag'):
             tag_a_supprimer = None
             for tag in tag_manuel:
                 if tag.nomTag == request.form.get('tag'):
                     tag_a_supprimer = tag
             if tag_a_supprimer:
-                tag_manuel.remove(tag_a_supprimer)            
+                tag_manuel.remove(tag_a_supprimer)
         if request.form.get('tag-manuel'):
             est_present = False
             tag_ajoute = get_tag(request.form.get('tag-manuel'))
-            for tag in tag_manuel:                
+            for tag in tag_manuel:
                 if tag.nomTag == tag_ajoute.nomTag:
                     est_present = True
             if not est_present:
@@ -225,7 +269,7 @@ def ajoute_document():
                     tag_manuel.add(tag)
         elif request.form.get('ajouter_document') =="Enregistrer":
             file = request.files['file']
-            if request.form.get('type_document') != "Type":
+            if request.form.get('type_document') != "Type": 
                 type = get_id_type(request.form.get('type_document'))
                 document = Document(
                     nomDoc = request.form.get('titre'),
@@ -352,6 +396,7 @@ def supprimer_compte(id):
 @app.route("/administrateur/ajouteCompte/save", methods=["POST"])
 def save_compte():
     """fonction d'enregistrement d'un nouveau compte"""
+    msg_erreur = ""
     if not is_admin():
         return redirect(url_for('home'))
     form = AjouteCompteForm()
@@ -362,21 +407,24 @@ def save_compte():
         if form.id_role.data:
             role = -1
         role = 1
-        util = Utilisateur(
-            idUtilisateur= max_id_utilisateur()+1,
-            nomUtilisateur= form.nomUser.data,
-            prenomUtilisateur= form.prenomUser.data,
-            identifiant= form.pseudo.data,
-            mdp= sha256(form.mdp.data.encode()).hexdigest(),
-            idGrade= form.id_grade.data,
-            idRole= role,
-            idCas= form.id_caserne.data
-        )
-        db.session.add(util)
-        db.session.commit()
-        return redirect(url_for('recherche_comptes'))
-    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title="Ajout d'un compte", form=form)
-
+        if is_identifant(form.pseudo.data):
+            return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form, erreur = "L'identifiant existe déjà")
+        else:
+            util = Utilisateur(
+                idUtilisateur= max_id_utilisateur()+1,
+                nomUtilisateur= form.nomUser.data,
+                prenomUtilisateur= form.prenomUser.data,
+                identifiant= form.pseudo.data,
+                mdp= sha256(form.mdp.data.encode()).hexdigest(),
+                idGrade= form.id_grade.data,
+                idRole= role,
+                idCas= form.id_caserne.data
+            )
+            db.session.add(util)
+            db.session.commit()
+            return redirect(url_for('recherche_comptes'))
+    return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form)
+  
 @app.route('/administrateur/recherche_tags')
 @login_required
 def recherche_tags():
@@ -397,7 +445,7 @@ def supprimer_tag(id):
     db.session.commit()
     return redirect(url_for('recherche_tags'))
 
-def handle_filtrage(admin = False):
+def handle_filtrage(admin=False):
     global active_tags, filtre_texte, documents, selectType
     tag = request.form['tags']
     bool_fulldoc = False
@@ -411,10 +459,12 @@ def handle_filtrage(admin = False):
             if not active_tags and not filtre_texte:
                 documents = get_documents()
                 bool_fulldoc = True
-    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
-            documents = get_documents()
-            bool_fulldoc = True
-    if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get('types') != "Choisir un type":
+    if not bool_fulldoc and filtre_texte != request.form.get(
+            'barre_recherche'):
+        documents = get_documents()
+        bool_fulldoc = True
+    if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
+            'types') != "Choisir un type":
         selectType = request.form.get('types')
         documents = get_documents()
     # Filtre par type
@@ -426,7 +476,9 @@ def handle_filtrage(admin = False):
             filtre_texte = request.form.get('barre_recherche')
             documents = get_filtrer_document_nom(documents, filtre_texte)
         else:
-            tag = get_tag(request.form.get('barre_recherche')[1:])
+            tag = get_tag(request.form.get('barre_recherche')[1:], True)
+            if not tag or tag in active_tags:
+                tag = get_tag(request.form.get('barre_recherche')[1:])
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
@@ -451,13 +503,13 @@ def handle_filtrage(admin = False):
                 tag_to_delete.append(tag)
         for tag in tag_to_delete:
             active_tags.remove(tag)
-                
+
         documents = get_documents()
         if filtre_texte:
             documents = get_filtrer_document_nom(documents, filtre_texte)
         for tag in active_tags:
             documents = get_filtrer_document_tag(documents, tag)
-    
+
     if request.form.get('reset'):
         if admin:
             selectType = "Choisir un type"
@@ -469,7 +521,7 @@ def handle_filtrage(admin = False):
         filtre_texte = ""
         documents = []
         return redirect(url_for('home'))
-    
+
     # Si il y a aucun critère de recherche, alors on load aucun document
     if admin:
         if not active_tags and not filtre_texte and selectType == "Choisir un type":

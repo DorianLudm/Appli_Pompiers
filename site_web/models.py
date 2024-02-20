@@ -63,6 +63,14 @@ class Tag(db.Model):
     idTag = db.Column(db.Integer, primary_key =True, autoincrement=True)
     nomTag = db.Column(db.String(100))
     couleurTag = db.Column(db.String(100))
+
+    def __hash__(self):
+        return hash((self.idTag, self.nomTag, self.couleurTag))
+
+    def __eq__(self, other):
+        if isinstance(other, Tag):
+            return self.idTag == other.idTag and self.nomTag == other.nomTag and self.couleurTag == other.couleurTag
+        return False
     
 class DocumentTag(db.Model):
     """classe représentant la relation entre les documents et leurs tags"""
@@ -76,7 +84,7 @@ def get_tags():
 def get_tag(nomTag, exact = False):
     """fonction d'obtention d'un tag à partir de son nom"""
     if exact:
-        return Tag.query.filter(Tag.nomTag == nomTag ).first()
+        return Tag.query.filter(Tag.nomTag.ilike(nomTag)).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
 
 def get_tag_id(idTag):
@@ -97,6 +105,7 @@ def get_max_id_tag():
     if max_id is None:
         return 0
     return max_id
+
 
 def get_types():
     """fonction d'obtention des types des documents"""
@@ -152,11 +161,19 @@ def get_filtrer_document_nom(documents, nom):
 def get_document_id(idDoc):
     """fonction d'obtention d'un document à partir de son id"""
     return Document.query.get(idDoc)
-
+    
 def get_utilisateurs():
     """fonction d'obtention de l'ensemble des utilisateurs"""
     return Utilisateur.query.order_by(func.upper(Utilisateur.nomUtilisateur), func.upper(Utilisateur.prenomUtilisateur)).all()
 
+def is_identifant(identifant):
+    """fonction de vérification de l'existence d'un identifiant dans la BD"""
+    return Utilisateur.query.filter(Utilisateur.identifiant == identifant).first()
+
+def is_admin_identifiant(identifant):
+    """fonction de vérification de l'existence d'un identifiant dans la BD"""
+    return Utilisateur.query.filter(Utilisateur.identifiant == identifant).filter(Utilisateur.idRole == -1).first()
+    
 def get_grades():
     """fonction d'obtention de l'ensemble des grades"""
     return Grade.query.all()

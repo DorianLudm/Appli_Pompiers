@@ -66,6 +66,11 @@
             </div>
         </fieldset>
     </div>
+    {% if erreur %}
+    <div class="alert alert-danger" role="alert">
+        {{ erreur }}
+    </div>
+    {% endif %}
     <div class="line button-container">
         <a onclick="togglePopup(0);"> <input type="button" value="Retour" id="retour" class="bouton"></a>
         <input type="submit" value="Sauvegarder le compte" name="save_compte" class="bouton">
