@@ -33,7 +33,10 @@ modifierNom.forEach((button, index) => {
         event.preventDefault();
         var tagId = button.getAttribute('data-tag-id');
         var nom = prompt('Entrez le nouveau nom pour ce tag');
-        if (nom != null) {
+        nom = nom.trim();
+        if(nom.length <= 0) {
+            alert('Veuillez entrer un nom valide !');
+        } else if (nom != null) {
             fetch('/update-tag-name', {
                 method: 'POST',
                 headers: {
@@ -46,6 +49,8 @@ modifierNom.forEach((button, index) => {
             });
             button.innerHTML = nom;
             nomTag[index].innerHTML = nom;
+        } else {
+            alert('Veuillez entrer un nom valide !');
         }
     });
 });
