@@ -10,3 +10,7 @@ pip install bootstrap-flask
 pip install flask-sqlalchemy
 pip install pysqlite3
 pip install werkzeug==2.2.2
+
+pip install pdfminer.six
+pip install nltk
+pip install unidecode
