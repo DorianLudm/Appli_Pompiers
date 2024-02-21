@@ -112,8 +112,8 @@ def index():
     if current_user.is_authenticated:
         if current_user.idRole == -1:
             return redirect(url_for('home_admin'))
-        else:
-            return redirect(url_for('home'))
+        return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
