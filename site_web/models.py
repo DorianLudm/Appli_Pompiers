@@ -123,8 +123,7 @@ def get_type(idType):
 
 def get_documents():
     """fonction d'obtention de l'ensemble des documents existants"""
-    role = Role.query.filter(Role.idRole == current_user.idRole).first()
-    return Document.query.filter(Document.niveauProtection <= role.niveauProtection).all()
+    return Document.query.all()
 
 def get_max_id_document():
     """fonction d'obtention de l'id de document le plus élevé"""
