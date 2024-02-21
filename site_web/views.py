@@ -549,7 +549,7 @@ def handle_filtrage(admin=False):
                 documents = get_documents()
                 bool_fulldoc = True
     if not bool_fulldoc and filtre_texte != request.form.get(
-            'barre_recherche'):
+            'barre_recherche') and active_tags == set():
         documents = get_documents()
         bool_fulldoc = True
     if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
