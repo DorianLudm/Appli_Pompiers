@@ -7,7 +7,7 @@ INSERT INTO CASERNE VALUES
     (3, 'Caserne 3', '3 allée des tulipes'),
     (4, 'Caserne 4', '4 rue Victor Hugo');
 
-INSERT INTO ROLE VALUES  
+INSERT INTO ROLE VALUES
     (-1, 'Administrateur', 10),(1 ,'Sapeur-pompier', 1);
 
 INSERT INTO UTILISATEUR VALUES

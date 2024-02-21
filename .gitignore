@@ -1,8 +1,10 @@
+BD/DB_Pompiers.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
+BD/DB_Pompiers.db
 # C extensions
 *.so
 
