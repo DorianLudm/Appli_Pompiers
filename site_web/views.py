@@ -549,7 +549,7 @@ def handle_filtrage(admin=False):
             if not active_tags and not filtre_texte:
                 documents = get_documents()
                 bool_fulldoc = True
-    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
+    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
         documents = get_documents()
         bool_fulldoc = True
     if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
@@ -560,9 +560,8 @@ def handle_filtrage(admin=False):
     # Filtre par type
     elif admin:
         selectType = "Choisir un type"
-    if bool_fulldoc:
-        for tag in active_tags:
-            documents = get_filtrer_document_tag(documents, tag)
+    for tag in active_tags:
+        documents = get_filtrer_document_tag(documents, tag)
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
@@ -575,8 +574,6 @@ def handle_filtrage(admin=False):
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
-    else:
-        filtre_texte = ""
     # Nouveau tag (existant en BD), alors on l'ajoute
     if tag != "Choisir un tag":
         tag = get_tag(request.form.get('tags'), True)
