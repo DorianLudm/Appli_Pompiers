@@ -556,9 +556,13 @@ def handle_filtrage(admin=False):
             'types') != "Choisir un type":
         selectType = request.form.get('types')
         documents = get_documents()
+        bool_fulldoc = True
     # Filtre par type
     elif admin:
         selectType = "Choisir un type"
+    if bool_fulldoc:
+        for tag in active_tags:
+            documents = get_filtrer_document_tag(documents, tag)
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
