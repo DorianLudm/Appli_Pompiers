@@ -1,35 +1,6 @@
 window.onload = function() {
-    var selectedTag = localStorage.getItem('selectedTag');
-    if (selectedTag) {
-        fetch('/ajouter_filtre/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              tags: selectedTag
-            })
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else {
-                return response.json();
-            }
-        })
-        .then(data => {
-            if (data) {
-                console.log(data);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-        localStorage.removeItem('selectedTag');
-    }
-
     document.getElementById('tags-select').addEventListener('change', function() {
-        selectedTag = this.value;
+        var selectedTag = this.value;
         fetch('/add_active_tag', {
             method: 'POST',
             headers: {
@@ -38,11 +9,22 @@ window.onload = function() {
             body: JSON.stringify({tag: selectedTag})
         })
         .then(function(response) {
-            return response.text();
+            return response.json(); // Change this line
         })
-        .then(function(text) {
+        .then(function(tagObject) {
+            // Créez un nouvel élément input
+            var newInput = document.createElement("input");
+            newInput.setAttribute("type", "submit");
+            newInput.setAttribute("name", "retirer_filtre");
+            newInput.setAttribute("value", tagObject.nomTag); // Change this line
+            newInput.style.backgroundColor = "#" + tagObject.couleurTag; // Add this line
+        
+            // Ajoutez le nouvel élément à la div active_tag
+            var activeTagDiv = document.getElementsByClassName('active_tag')[0];
+            activeTagDiv.appendChild(newInput);
+        
+            // Stockez le tag sélectionné dans le localStorage
             localStorage.setItem('selectedTag', selectedTag);
-            window.location.reload();
         });
     });
 }

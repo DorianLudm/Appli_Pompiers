@@ -54,4 +54,4 @@ def add_active_tag():
     if selected_tag is None:
         return jsonify('Tag not found')
     active_tags.add(selected_tag)
-    return jsonify()
+    return jsonify({'nomTag': selected_tag.nomTag, 'couleurTag': selected_tag.couleurTag})
