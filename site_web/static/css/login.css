@@ -1,3 +1,8 @@
-main{
+body{
     background-color: #F24343;
+}
+
+.error{
+    padding-top: 10%;
+    color: #F24343;
 }

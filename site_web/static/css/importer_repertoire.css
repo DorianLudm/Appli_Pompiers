@@ -1,0 +1,58 @@
+body {
+    background-color: #F24343;
+    justify-content: space-around;
+}
+#Retour, input[type="submit"]{
+    text-decoration: none;
+    color: black;
+}
+input[type="submit"], .bouton-importer,#Retour{
+    border-radius: 10px;
+    font-size: 1.5em;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: lightgray;
+    transition: 0.3s;
+}
+input[type="submit"]:hover, .bouton-importer:hover,#Retour:hover{
+    background-color: gray;
+    color: white;
+}
+.bouton-importer{
+    font-size: 1em;
+    padding: 3px;
+}
+.doc{
+    display: flex;
+    flex-wrap: nowrap;
+    border: 2px solid white;
+    border-radius: 10px;
+    align-items: center;
+    margin: 10px;
+}
+.ImgDoc {
+    width: 3vw;
+    height: 3vw;
+    margin-right: 1.3vw;
+}
+
+li.ImgDoc{
+    margin-right: 1.5vw;
+}
+.doc .nomDoc{
+    flex-basis: 60%;
+    flex-grow: 1;
+    margin-bottom: 0px;
+    text-align: center;
+}
+.doc .typeDoc{
+    flex-basis: 10%;
+    margin-bottom: 0px;
+    flex-grow: 1;
+}
+.resultat{
+    padding: 10px;
+    overflow: auto; /* Adds a scroll bar if the content overflows the element's box */
+    height: 50vh;
+}

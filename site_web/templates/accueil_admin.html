@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+    <link rel="stylesheet" href="../static/css/accueil_admin.css"/>
+{% endblock %}
+{% block header %}
+    <h1>Accueil administrateur</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<div class="boutons">
+    <a href="{{ url_for('recherche_comptes') }}"><input type="button" value="Gérer les comptes"/></a>
+    <a href="{{ url_for('recherche_doc_admin') }}"><input type="button" value="Gérer les documents"/></a>
+    <a href="{{ url_for('recherche_tags') }}"><input type="button" value="Gérer les tags"/></a>
+    <a href="{{ url_for('home') }}"><input type="button" value="Rechercher des documents"/></a>
+</div>
+{% endblock %}

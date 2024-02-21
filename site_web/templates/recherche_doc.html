@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_doc.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+    <h1>Rechercher un document</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<div class="bloc_recherche">
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="tags">
+            <select name="tags" id="tags-select">
+                <option selected="selected" hidden="hidden">Choisir un tag</option>
+                {% for x in tags %} 
+                    <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
+                {% endfor %}
+            </select>
+            <div class="active_tag">
+                {% for x in active_tags %}
+                    <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
+                {% endfor %}
+            </div>      
+        </div>
+    <div class="bouton_reset">
+        <input name="reset" type="Submit" value="Reset" /> 
+    </div>
+    </form>
+</div> 
+<div> 
+    {% if result != [] %}
+    <h2>Resultat :</h2>
+    <ul class="resultat">
+        {% for x in result %}
+            <li class="resultat_item" >
+                    <h3>{{x.nomType}} ({{x.element|length}})</h3>
+                    
+                    <div class="resultat_item_info"> 
+                        {% for element in x.element %}
+                            <form method="POST" action ="{{ url_for ('ouverture_doc', id = element.idDoc) }}">
+                                <input type="Submit" value="{{element.nomDoc}}"/>
+                            </form>
+                        {% endfor %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <h2 class="sans_parametre">Veuillez sélectionner des paramètres de recherches</h2>
+    {% endif %}
+</div>
+</div>
+{% if doc %}
+<aside>
+        <h2>{{doc.nomDoc}}</h2>
+        <div class="doc_info">
+            <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
+            <p><strong>Type :</strong> {{doc.nomType}}</p>
+            <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
+            <div class="doc_action">
+                <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
+                    <input type="Submit" value="Visualiser"/>
+                </form>
+            
+                <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
+                    <input type="Submit" value="Télécharger"/>
+                </form>
+            </div>
+        </div>
+</aside>
+{% endif %}
+{% endblock %}

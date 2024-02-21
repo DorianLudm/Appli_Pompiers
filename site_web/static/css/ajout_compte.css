@@ -1,0 +1,142 @@
+main {
+    background-color: #F24343;
+    /* display: flex;
+    flex-direction: column; */
+    justify-content: space-around;
+    padding: 1vw;
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.line > div {
+    width: 45%;
+}
+
+.line > div > input, select{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.chef{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.line p {
+    padding: 1vw;
+    padding-left: 0px;
+    font-size: 2vw;
+}
+
+form fieldset div {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px; /* adjust these values as needed */
+    cursor: pointer;
+}
+
+fieldset input{
+    height: 1.5vw;
+}
+
+
+.fieldset-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 3vh;
+}
+
+main > input, select {
+    border: black thin solid;
+    border-radius: 10px;
+    font-size: 1vw;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+input.bouton {
+    width: auto;
+    padding: 1vw 2vw;
+    margin-left: 25vw;
+    border-radius: 10px;
+}
+
+input.bouton:last-child {
+    margin-left: 50%;
+}
+
+
+.popup-overlay{
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 99;
+    display: none;
+}
+
+.open{
+    display:block !important;
+}
+
+.popup-content{
+    max-width: 600px;
+    width: 100%;
+    padding: 1vw;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 30px;
+    border-color: red;
+    border-style: solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.contenu-popup{
+    flex-basis: 100%;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.popup-content h2{
+    margin:20px 0;
+    color: red;
+}
+
+#annuler{
+    font-size: xx-large;
+    color: white;
+    background-color: #954D4D;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+#valider{
+    font-size: xx-large;
+    color: white;
+    background-color: #84B546;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+}

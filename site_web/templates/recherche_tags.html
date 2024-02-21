@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block page_specific_css %}
+<link href="/static/css/recherche_tag.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+    <h1>Gestion des tags</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<head>
+    <script src="../static/js/personnalisationTags.js" defer></script>
+</head>
+<div id="filtre">
+    <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" value="{{ search }}" name="barre_recherche" placeholder="Rechercher un tag !" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
+        <div class="bouton_reset">
+            <input name="reset" type="Submit" value="Réinitialiser les filtres"/> 
+        </div>
+    </form>
+</div>
+<div id="liste_tags">
+    <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="Retour à l'accueil"/></a>
+    {% for tag in  tags %}
+        <div class="tag">
+            <div class="circle" style="background-color: #{{tag.couleurTag }}"></div>
+            <p class="nomTag">{{ tag.nomTag }}</p>
+            <div class="boutons">
+                <input class="modifierNomTag" data-tag-id="{{ tag.idTag }}" class="buttonTag" type="image" src="/static/img/modificationIco.png" title="Modifier le nom du tag" alt="Modifier le nom du tag"/>
+                <input class="modifierCouleurTag buttonTag" type="image" src="/static/img/colorPalette.png" title="Modifier la couleur du tag" alt="Modifier la couleur du tag" data-tag-id="{{ tag.idTag }}"/>
+                <input type="color" class="colorPicker" style="display: none;">
+                <a href="{{ url_for('supprimer_tag', id= tag.idTag) }}" > <input class="buttonTag" title="Supprimer le tag" id="buttonSupprimer" type="image" src="/static/img/poubelleIco.png" alt="Modifier Tag"/></a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block page_specific_css %}
+    <link rel="stylesheet" href="/../static/css/ajouter_document.css">
+{% endblock %}
+{% block header %}
+    <h1>Ajout d'un document</h1>
+    {% include "informations_utilisateur.html" %}
+{% endblock %}
+{% block main %}
+<form method="POST" enctype="multipart/form-data">
+<div class="en-tete">
+    <h2>Titre du document :</h2>
+    <input type="text" name="titre" placeholder="Titre" value="{{titre}}">
+</div>
+
+<div class="central">
+    <section>
+        <div>
+            <p>Description :</p>
+            <textarea name="description" rows="6" cols="60" placeholder="Entrez la description du document">{{description}}</textarea>
+        </div>
+        <div class="type">
+            <p>Type</p>
+            <select name="type_document" id="types-select">
+                <option selected="selected" hidden="hidden">{{type}}</option>
+                {% for x in types %} 
+                    <option name="type_document" value="{{x.idType}}">{{x.nomType}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </section>
+
+    <section>
+        <input type="file" value="{{document}}" name="file" id="importer"style="display: none;">
+        <label for="importer" class="bouton-importer">Importer</label>
+        <p id="file-label">{{document}}</p>
+        <script>
+            document.getElementById('importer').addEventListener('change', function(e) {
+                var fileName = e.target.files[0].name;
+                document.getElementById('file-label').innerText = fileName;
+                console.log(fileName);
+            });
+            </script>
+        <div>
+            <p>Tags :</p>
+            <div class="tags">
+            {% for t in new_tag%}
+                <input style="background-color:#{{t.couleurTag}}" type="submit" value="{{t.nomTag}}" name="tag">
+            {% endfor %}
+        </div>
+        <div class="tags-manuels">
+            </div>
+            <input type="text" list="allTags" name="tag-manuel">
+            <datalist id="allTags"> 
+                {% for t in tags %}
+                    <option value="{{t.nomTag}}">{{t.nomTag}}</option> 
+                {% endfor %}
+            </datalist> 
+            <input type="submit" value="Ajouter">
+        </div>
+        <select name="niveau_document" id="niveau-select">
+            <option selected="selected" hidden="hidden" value="1">Choisir un Niveau de Protection</option>
+            {% for x in roles %} 
+                <option name="niveau_document" value="{{x.niveauProtection}}">{{x.niveauProtection}}</option>
+            {% endfor %}
+        </select>
+    </section>
+    <section>
+        <p>Répertoire du fichier</p>
+        <input type="text" name="repertoire" placeholder="Entrez le chemin" value="{{repertoire}}">
+        <input type="checkbox" name"creer" value="ajouter_chemin">
+        <label for="creer">Crée le chemin</label>
+    </section>
+</div>
+
+<div class="boutons-bas">
+    <input type="submit" value="Enregistrer" name="ajouter_document">
+    <a href="{{ url_for ('recherche_doc_admin')}}"><input type="button" value="Retour"></a>
+</div>
+</form>
+{% endblock %}
