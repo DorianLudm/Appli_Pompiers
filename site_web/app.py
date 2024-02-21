@@ -1,9 +1,9 @@
 from flask_bootstrap import Bootstrap5
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask import request
 import os.path
+from flask import request, jsonify, render_template
 
 def mkpath(p):
     return os.path.normpath(os.path.join(os.path.dirname( __file__ ),p))
@@ -39,3 +39,19 @@ def update_tag_name_route():
         tag.nomTag = data['name']
         db.session.commit()
     return '', 204
+
+from .views import active_tags, ajouter_filtre
+
+@app.route('/add_active_tag', methods=['POST'])
+def add_active_tag():
+    data = request.get_json()
+    selected_tag_name = data['tag']
+    tags = Tag.query.all()
+    for tag in tags:
+        if tag.nomTag == selected_tag_name:
+            selected_tag = tag
+            break
+    if selected_tag is None:
+        return jsonify('Tag not found')
+    active_tags.add(selected_tag)
+    return jsonify()
