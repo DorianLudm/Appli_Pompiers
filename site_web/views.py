@@ -373,6 +373,14 @@ def importer_repertoire():
                     )
                     db.session.add(document)
                     db.session.commit()
+                    id_tag = request.form.get('tag_document')
+                    if id_tag != "Choisir un Tag":
+                        document_tag = DocumentTag(
+                            idDoc = document.idDoc,
+                            idTag = id_tag
+                        )
+                        db.session.add(document_tag)
+                        db.session.commit()
                     documents.append(document)
                     document.nomType = get_type(document.idType).nomType
     return render_template('importer_repertoire.html', title='Importer un répertoire', util = informations_utlisateurs(), types = get_types(), tags=get_tags(), documents = documents)

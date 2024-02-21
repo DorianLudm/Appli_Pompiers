@@ -18,6 +18,12 @@
                 <option name="type_document" value="{{x.idType}}">{{x.nomType}}</option>
             {% endfor %}
         </select>
+        <select name="tag_document" id="tags-select">
+            <option selected="selected" hidden="hidden">Choisir un Tag</option>
+            {% for x in tags %} 
+                <option name="tag_document" value="{{x.idTag}}">{{x.nomTag}}</option>
+            {% endfor %}
+        </select>
     </div>
     <section>
         <input type="file" name="files" id="importer"style="display: none;" webkitdirectory multiple>
