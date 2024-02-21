@@ -17,6 +17,7 @@ active_tags = set()
 tag_manuel = set()
 filtre_texte = ""
 selectType = "Choisir un type"
+favoris = False
 
 @app.route('/pompier')
 @login_required
@@ -60,9 +61,24 @@ def ajouter_filtre():
 @app.route("/favoris")
 @login_required
 def filtrer_favoris():
-    global documents
-    documents = filtrer_document_favoris(documents, current_user.idUtilisateur)
+    global documents, favoris
+    if not favoris:
+        documents = filtrer_document_favoris(documents, current_user.idUtilisateur)
+        favoris = True
+    else:
+        # Refaire la requete pour obtenir les documents qui remplissent les conditions filtrés
+        favoris = False
     return redirect(url_for('home'))
+
+@app.route("/ajouter_favoris/<id>", methods =("GET",))
+@login_required
+def ajouter_favoris(id):
+    doc = get_document_id(id)
+    if doc in get_favoris(current_user.idUtilisateur):
+        remove_favoris(current_user.idUtilisateur, id)
+    else:
+        add_favoris(current_user.idUtilisateur, id)
+    return redirect(url_for('home', id=id))
 
 @app.route('/ouverture_doc/<id>', methods =("POST",))
 @login_required

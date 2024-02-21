@@ -165,10 +165,30 @@ def get_filtrer_document_nom(documents, nom):
 def filtrer_document_favoris(documents, idUtilisateur):
     """fonction de filtrage de documents à partir des favoris d'un utilisateur"""
     resultat = []
-    for doc in documents:
-        if UtilisateurFavoris.query.filter(UtilisateurFavoris.idUtilisateur == idUtilisateur).filter(UtilisateurFavoris.idDoc == doc.idDoc).first():
+    if documents:
+        for doc in documents:
+            if UtilisateurFavoris.query.filter(UtilisateurFavoris.idUtilisateur == idUtilisateur).filter(UtilisateurFavoris.idDoc == doc.idDoc).first():
+                resultat.append(doc)
+    else:
+        for doc in UtilisateurFavoris.query.filter(UtilisateurFavoris.idUtilisateur == idUtilisateur).all():
             resultat.append(doc)
     return resultat
+
+def get_favoris(idUtilisateur):
+    """fonction d'obtention des favoris d'un utilisateur"""
+    return UtilisateurFavoris.query.filter(UtilisateurFavoris.idUtilisateur == idUtilisateur).all()
+
+def add_favoris(idUtilisateur, idDoc):
+    """fonction d'ajout d'un document aux favoris d'un utilisateur"""
+    favoris = UtilisateurFavoris(idUtilisateur = idUtilisateur, idDoc = idDoc)
+    db.session.add(favoris)
+    db.session.commit()
+
+def remove_favoris(idUtilisateur, idDoc):
+    """fonction de suppression d'un document des favoris d'un utilisateur"""
+    favoris = UtilisateurFavoris.query.filter(UtilisateurFavoris.idUtilisateur == idUtilisateur).filter(UtilisateurFavoris.idDoc == idDoc).first()
+    db.session.delete(favoris)
+    db.session.commit()
 
 def get_document_id(idDoc):
     """fonction d'obtention d'un document à partir de son id"""

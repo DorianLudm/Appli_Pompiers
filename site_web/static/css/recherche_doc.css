@@ -172,10 +172,20 @@ iframe{
 
 #filtre > a {
     margin-left: 5px;
-    color: rgb(255, 187, 0); /* inherit the color from the parent element */
-    text-decoration: none; /* remove the underline */
+    color: rgb(255, 187, 0);
+    text-decoration: none;
 }
 
-#filtre > a > span{
+#favoris_filtre{
     font-size: 50px;
+}
+
+aside a {
+    margin-left: 5px;
+    color: rgb(255, 187, 0);
+    text-decoration: none;
+}
+
+#favoris_aside{
+    font-size: 25px;
 }

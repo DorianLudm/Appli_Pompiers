@@ -10,7 +10,7 @@
 {% block main %}
 <div class="bloc_recherche">
 <div id="filtre">
-    <a href="{{url_for ('filtrer_favoris')}}"><span id="favoris" class="material-symbols-outlined">star</span></a>
+    <a href="{{url_for ('filtrer_favoris')}}"><span id="favoris_filtre" class="material-symbols-outlined">star</span></a>
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
         <div class="research_bar">
           <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
@@ -61,21 +61,22 @@
 </div>
 {% if doc %}
 <aside>
-        <h2>{{doc.nomDoc}}</h2>
-        <div class="doc_info">
-            <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
-            <p><strong>Type :</strong> {{doc.nomType}}</p>
-            <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
-            <div class="doc_action">
-                <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
-                    <input type="Submit" value="Visualiser"/>
-                </form>
-            
-                <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
-                    <input type="Submit" value="Télécharger"/>
-                </form>
-            </div>
+    <h2>{{doc.nomDoc}}</h2>
+    <div class="doc_info">
+        <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
+        <a href="{{url_for ('ajouter_favoris', id = doc.idDoc)}}"><span id="favoris_aside" class="material-symbols-outlined">star</span></a>
+        <p><strong>Type :</strong> {{doc.nomType}}</p>
+        <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
+        <div class="doc_action">
+            <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
+                <input type="Submit" value="Visualiser"/>
+            </form>
+        
+            <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
+                <input type="Submit" value="Télécharger"/>
+            </form>
         </div>
+    </div>
 </aside>
 {% endif %}
 {% endblock %}
