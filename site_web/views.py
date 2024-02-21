@@ -48,7 +48,6 @@ def home():
 def ajouter_filtre():
     """fonction d'ajout de filtre dans la recherche de documents"""
     global active_tags, filtre_texte, documents
-    print(active_tags)
     # Si aucun document n'est chargé
     if not documents:
         if not active_tags and not filtre_texte:
@@ -242,7 +241,6 @@ def modifier_document(id):
         return redirect(url_for('home'))
     doc = get_document_id(id)
     if request.form.get('modifier_document') =="Enregistrer":
-        print(request.form.get('description'))
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
         doc.descriptionDoc = request.form.get('description')
@@ -383,7 +381,6 @@ def importer_repertoire():
                     file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
                     nom_document = filename.split("/")[-1]
                     protection = request.form.get('niveau_document')
-                    print(protection)
                     document = Document(
                         nomDoc = nom_document,
                         idType = request.form.get('type_document') or 1,
