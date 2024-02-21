@@ -19,9 +19,15 @@
             {% endfor %}
         </select>
         <select name="tag_document" id="tags-select">
-            <option selected="selected" hidden="hidden">Choisir un Tag</option>
+            <option selected="selected" hidden="hidden" value ="Choisir un Tag">Choisir un Tag</option>
             {% for x in tags %} 
                 <option name="tag_document" value="{{x.idTag}}">{{x.nomTag}}</option>
+            {% endfor %}
+        </select>
+        <select name="niveau_document" id="niveau-select">
+            <option selected="selected" hidden="hidden" value="1">Choisir un Niveau de Protection</option>
+            {% for x in roles %} 
+                <option name="niveau_document" value="{{x.niveauProtection}}">{{x.niveauProtection}}</option>
             {% endfor %}
         </select>
     </div>
