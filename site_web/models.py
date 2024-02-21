@@ -24,6 +24,7 @@ class Role(db.Model):
     """classe représentant le rôle d'un utilisateur de l'application"""
     idRole = db.Column(db.Integer, primary_key =True)
     nomRole = db.Column(db.String(100))
+    niveauProtection = db.Column(db.Integer)
 
     def get_id(self):
       return str(self.idRole)
@@ -56,6 +57,7 @@ class Document(db.Model):
     nomDoc = db.Column(db.String(100))
     fichierDoc = db.Column(db.String(100))
     descriptionDoc = db.Column(db.String(500))
+    niveauProtection = db.Column(db.Integer)
     idType = db.Column(db.Integer, db.ForeignKey('type_document.idType'))
     
 class Tag(db.Model):
@@ -177,6 +179,10 @@ def is_admin_identifiant(identifant):
 def get_grades():
     """fonction d'obtention de l'ensemble des grades"""
     return Grade.query.all()
+
+def get_roles():
+    """fonction d'obtention de l'ensemble des roles"""
+    return Role.query.all()
 
 def get_utilisateur(idUtilisateur):
     """fonction d'obtention d'un utilisateur à partir d'un id donné"""

@@ -25,7 +25,7 @@
             <select name="type_document" id="types-select">
                 <option selected="selected" hidden="hidden">{{type}}</option>
                 {% for x in types %} 
-                    <option name="type_document" value="{{x.nomType}}">{{x.nomType}}</option>
+                    <option name="type_document" value="{{x.idType}}">{{x.nomType}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -59,6 +59,12 @@
             </datalist> 
             <input type="submit" value="Ajouter">
         </div>
+        <select name="niveau_document" id="niveau-select">
+            <option selected="selected" hidden="hidden" value="1">Choisir un Niveau de Protection</option>
+            {% for x in roles %} 
+                <option name="niveau_document" value="{{x.niveauProtection}}">{{x.niveauProtection}}</option>
+            {% endfor %}
+        </select>
     </section>
     <section>
         <p>Répertoire du fichier</p>
