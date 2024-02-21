@@ -276,11 +276,16 @@ def ajoute_document():
                 filepath = secure_filename(file.filename)
             if request.form.get('type_document') != "Type": 
                 type = get_id_type(request.form.get('type_document'))
+                nom_document = filename.split("/")[-1]
+                protection = request.form.get('niveau_document')
+                if protection == "Niveau de protection":
+                    protection = 1
                 document = Document(
                     nomDoc = request.form.get('titre'),
                     idType = type,
                     fichierDoc = request.form.get('repertoire')+"/"+filepath,
-                    descriptionDoc = request.form.get('description')
+                    descriptionDoc = request.form.get('description'),
+                    niveauProtection = protection
                 )
                 db.session.add(document)
                 db.session.commit()
@@ -343,7 +348,7 @@ def ajoute_document():
         return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
     else:
         session['file'] = ""
-    return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
+    return render_template('ajouter_document.html', types = get_types(), roles = get_roles(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
 
 @app.route('/administrateur/importerRepertoire', methods=['GET', 'POST'])
 @login_required
@@ -365,11 +370,15 @@ def importer_repertoire():
                         if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], pathfinal))):
                             os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], pathfinal)))
                     file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                    nom_document = filename.split("/")[-1]
+                    protection = request.form.get('niveau_document')
+                    print(protection)
                     document = Document(
-                        nomDoc = filename,
+                        nomDoc = nom_document,
                         idType = request.form.get('type_document') or 1,
                         fichierDoc = filename,
-                        descriptionDoc = ""
+                        descriptionDoc = "",
+                        niveauProtection = request.form.get('niveau_document')
                     )
                     db.session.add(document)
                     db.session.commit()
@@ -383,7 +392,7 @@ def importer_repertoire():
                         db.session.commit()
                     documents.append(document)
                     document.nomType = get_type(document.idType).nomType
-    return render_template('importer_repertoire.html', title='Importer un répertoire', util = informations_utlisateurs(), types = get_types(), tags=get_tags(), documents = documents)
+    return render_template('importer_repertoire.html', title='Importer un répertoire', util = informations_utlisateurs(), types = get_types(), tags=get_tags(), roles = get_roles(), documents = documents)
 
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
