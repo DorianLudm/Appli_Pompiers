@@ -232,7 +232,6 @@ def recherche_doc_admin():
             resultat["element"].append(document)
             has_result = True
         result.append(resultat)
-    print(result)
     return render_template("recherche_doc_admin.html",title="Gestion des documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte, has_result = has_result)
 
 @app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
