@@ -48,6 +48,7 @@ def home():
 def ajouter_filtre():
     """fonction d'ajout de filtre dans la recherche de documents"""
     global active_tags, filtre_texte, documents
+    print(active_tags)
     # Si aucun document n'est chargé
     if not documents:
         if not active_tags and not filtre_texte:
@@ -485,7 +486,7 @@ def supprimer_tag(id):
 
 def handle_filtrage(admin=False):
     global active_tags, filtre_texte, documents, selectType
-    tag = request.form['tags']
+    tag = request.form.get('tags')
     bool_fulldoc = False
     # Cas qui demande le chargement de tous les documents
     if not documents:
