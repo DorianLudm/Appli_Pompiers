@@ -57,6 +57,13 @@ def ajouter_filtre():
         handle_filtrage()
     return redirect(url_for('home'))
 
+@app.route("/favoris")
+@login_required
+def filtrer_favoris():
+    global documents
+    documents = filtrer_document_favoris(documents, current_user.idUtilisateur)
+    return redirect(url_for('home'))
+
 @app.route('/ouverture_doc/<id>', methods =("POST",))
 @login_required
 def ouverture_doc(id):

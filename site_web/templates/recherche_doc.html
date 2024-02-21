@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block page_specific_css %}
 <link href="/static/css/recherche_doc.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 {% endblock %}
 {% block header %}
     <h1>Rechercher un document</h1>
@@ -9,6 +10,7 @@
 {% block main %}
 <div class="bloc_recherche">
 <div id="filtre">
+    <a href="{{url_for ('filtrer_favoris')}}"><span id="favoris" class="material-symbols-outlined">star</span></a>
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
         <div class="research_bar">
           <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>

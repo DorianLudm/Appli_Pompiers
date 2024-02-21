@@ -158,9 +158,24 @@ iframe{
 .doc_action{
     display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
 }
 
-.sans_parametre{           
+.sans_parametre{
     text-align: center;
+}
+
+#filtre{
+    display: flex;
+    align-items: center;   
+}
+
+#filtre > a {
+    margin-left: 5px;
+    color: rgb(255, 187, 0); /* inherit the color from the parent element */
+    text-decoration: none; /* remove the underline */
+}
+
+#filtre > a > span{
+    font-size: 50px;
 }

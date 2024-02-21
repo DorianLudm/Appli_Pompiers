@@ -95,3 +95,11 @@ CREATE TABLE LIAISON_REPERTOIRE_FICHIER(
     FOREIGN KEY (idRepParent) REFERENCES REPERTOIRE(idRep),
     FOREIGN KEY (idFicEnfant) REFERENCES DOCUMENT(idDoc)
 );
+
+CREATE TABLE FAVORIS(
+    idUtilisateur int NOT NULL,
+    idDoc int NOT NULL,
+    PRIMARY KEY(idUtilisateur, idDoc),
+    FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur),
+    FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc)
+);

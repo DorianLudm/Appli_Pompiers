@@ -76,6 +76,11 @@ class DocumentTag(db.Model):
     """classe représentant la relation entre les documents et leurs tags"""
     idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
     idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
+
+class UtilisateurFavoris(db.Model):
+    """classe représentant la relation entre les utilisateurs et leurs documents favoris"""
+    idUtilisateur = db.Column(db.Integer, db.ForeignKey('utilisateur.idUtilisateur'), primary_key = True)
+    idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
     
 def get_tags():
     """fonction d'obtention de tous les tags existants"""
@@ -105,7 +110,6 @@ def get_max_id_tag():
     if max_id is None:
         return 0
     return max_id
-
 
 def get_types():
     """fonction d'obtention des types des documents"""
@@ -155,6 +159,14 @@ def get_filtrer_document_nom(documents, nom):
     resultat = []
     for doc in documents:
         if doc.nomDoc.lower().find(nom.lower()) != -1:
+            resultat.append(doc)
+    return resultat
+
+def filtrer_document_favoris(documents, idUtilisateur):
+    """fonction de filtrage de documents à partir des favoris d'un utilisateur"""
+    resultat = []
+    for doc in documents:
+        if UtilisateurFavoris.query.filter(UtilisateurFavoris.idUtilisateur == idUtilisateur).filter(UtilisateurFavoris.idDoc == doc.idDoc).first():
             resultat.append(doc)
     return resultat
 
