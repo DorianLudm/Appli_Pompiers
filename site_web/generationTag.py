@@ -39,7 +39,9 @@ def transform(mot_cles):
 def transform_tag(mot_cles):
     liste_tag = []
     for mot in mot_cles:
-        if not Tag.query.filter(Tag.nomTag == mot).first():
+        mot = mot[0].upper() + mot[1:] # Mettre la première lettre en majuscule
+        tagExist = Tag.query.filter(Tag.nomTag == mot).first()
+        if not tagExist:
             a = hex(random.randrange(100,256))
             b = hex(random.randrange(100,256))
             c = hex(random.randrange(100,256))
@@ -49,6 +51,8 @@ def transform_tag(mot_cles):
                 couleurTag = a[2:]+b[2:]+c[2:]
             )
             liste_tag.append(tag)
+        else:
+            liste_tag.append(tagExist)
     return liste_tag
 
 

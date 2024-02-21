@@ -59,12 +59,15 @@
             </datalist> 
             <input type="submit" value="Ajouter">
         </div>
+        <div class="generer-tag">
+            <input type="submit" value="Générer des tags">
+        </div>
     </section>
 </div>
 
 <div class="boutons-bas">
     <input type="submit" value="Enregistrer" name="ajouter_document">
-    <a href="{{ url_for ('recherche_doc_admin')}}"><input type="button" value="Retour"></a>
+    <a href="{{ url_for ('recherche_doc_admin')}}">Retour</a>
 </div>
 </form>
 {% endblock %}

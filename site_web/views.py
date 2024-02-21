@@ -270,7 +270,19 @@ def ajoute_document():
                 tag = get_tag(request.form.get('tag-manuel'))
                 if tag:
                     tag_manuel.add(tag)
+        if request.form.get('generer-tag'):
+            if session.get('file'):
+                tags_auto = generationTag(session.get('file'))
+                for tag in tags_auto:
+                    tag_manuel.add(tag)
+            else:
+                print("Aucun fichier n'a été sélectionné")
+
         elif request.form.get('ajouter_document') =="Enregistrer":
+            for tag in tag_manuel:
+                if not get_tag_id(tag.idTag):
+                    db.session.add(tag)
+                    db.session.commit()
             file = request.files['file']
             if file.filename == "":
                 filepath = session.get('file').split("temporaire/")[-1]
@@ -281,18 +293,17 @@ def ajoute_document():
                 document = Document(
                     nomDoc = request.form.get('titre'),
                     idType = type,
-                    fichierDoc = request.form.get('repertoire')+"/"+filepath,
+                    fichierDoc = ""+"/"+filepath,
                     descriptionDoc = request.form.get('description')
                 )
                 db.session.add(document)
                 db.session.commit()
-            if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire')))):
-                os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'))))
+            if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], ""))):
+                os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], "")))
             if file.filename == "":
-                shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER']+ request.form.get('repertoire')+ filepath)))
+                shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER']+ "")))
             else:
-                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], request.form.get('repertoire'), filepath)))
-            les_tags = request.form.get('repertoire').split("/")
+                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], "", filepath)))
             for tag in les_tags:
                 if tag != "":
                     newtag = get_tag(tag, True)
