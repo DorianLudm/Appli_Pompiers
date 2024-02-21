@@ -241,7 +241,6 @@ def modifier_document(id):
         return redirect(url_for('home'))
     doc = get_document_id(id)
     if request.form.get('modifier_document') =="Enregistrer":
-        print(request.form.get('description'))
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
         doc.descriptionDoc = request.form.get('description')
@@ -382,7 +381,6 @@ def importer_repertoire():
                     file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
                     nom_document = filename.split("/")[-1]
                     protection = request.form.get('niveau_document')
-                    print(protection)
                     document = Document(
                         nomDoc = nom_document,
                         idType = request.form.get('type_document') or 1,
@@ -536,7 +534,7 @@ def supprimer_tag(id):
 
 def handle_filtrage(admin=False):
     global active_tags, filtre_texte, documents, selectType
-    tag = request.form['tags']
+    tag = request.form.get('tags')
     bool_fulldoc = False
     # Cas qui demande le chargement de tous les documents
     if not documents:
@@ -548,7 +546,7 @@ def handle_filtrage(admin=False):
             if not active_tags and not filtre_texte:
                 documents = get_documents()
                 bool_fulldoc = True
-    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche'):
+    if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
         documents = get_documents()
         bool_fulldoc = True
     if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
@@ -559,9 +557,8 @@ def handle_filtrage(admin=False):
     # Filtre par type
     elif admin:
         selectType = "Choisir un type"
-    if bool_fulldoc:
-        for tag in active_tags:
-            documents = get_filtrer_document_tag(documents, tag)
+    for tag in active_tags:
+        documents = get_filtrer_document_tag(documents, tag)
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
@@ -574,8 +571,6 @@ def handle_filtrage(admin=False):
             if tag:
                 active_tags.add(tag)
                 documents = get_filtrer_document_tag(documents, tag)
-    else:
-        filtre_texte = ""
     # Nouveau tag (existant en BD), alors on l'ajoute
     if tag != "Choisir un tag":
         tag = get_tag(request.form.get('tags'), True)

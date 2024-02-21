@@ -85,6 +85,8 @@ def get_tags():
 
 def get_tag(nomTag, exact = False):
     """fonction d'obtention d'un tag à partir de son nom"""
+    if nomTag is None:
+        return None
     if exact:
         return Tag.query.filter(Tag.nomTag.ilike(nomTag)).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
