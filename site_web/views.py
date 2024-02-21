@@ -220,6 +220,7 @@ def recherche_doc_admin():
     if not is_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
+    has_result = False
     result = []
     # document = get_documents()
     for i in get_types():
@@ -229,8 +230,10 @@ def recherche_doc_admin():
 
         for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
+            has_result = True
         result.append(resultat)
-    return render_template("recherche_doc_admin.html",title="Gestion des documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
+    print(result)
+    return render_template("recherche_doc_admin.html",title="Gestion des documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte, has_result = has_result)
 
 @app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
 def modifier_document(id):

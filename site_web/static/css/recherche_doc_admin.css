@@ -238,3 +238,13 @@ li.ImgDoc{
     margin: 20px;
     border-radius: 10px;
 }
+
+#no_result{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1%;
+    color: black;
+    font-size: x-large;
+}
