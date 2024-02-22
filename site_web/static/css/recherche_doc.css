@@ -170,8 +170,7 @@ iframe{
     align-items: center;   
 }
 
-#filtre > a {
-    margin-left: 5px;
+#filtre  #favoris_filtre {
     color: rgb(255, 187, 0);
     text-decoration: none;
 }
