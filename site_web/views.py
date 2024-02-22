@@ -270,71 +270,49 @@ def ajoute_document():
                 tag = get_tag(request.form.get('tag-manuel'))
                 if tag:
                     tag_manuel.add(tag)
-        if request.form.get('generer-tag'):
+        newfile = request.files['file']
+        if newfile.filename != "":
             if session.get('file'):
-                tags_auto = generationTag(session.get('file'))
+                os.remove(session.get('file'))
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
+            file.save(session['file'])
+        document = session.get('file').split("temporaire/")[-1]
+        if request.form.get('generer-tag'):
+            if session['file'] != "":
+                tags_auto = generationTag(session['file'])
                 for tag in tags_auto:
+                    print("Mes tags" + str(tag.idTag))
                     tag_manuel.add(tag)
             else:
                 print("Aucun fichier n'a été sélectionné")
-
-        elif request.form.get('ajouter_document') =="Enregistrer":
-            for tag in tag_manuel:
-                if not get_tag_id(tag.idTag):
-                    db.session.add(tag)
-                    db.session.commit()
+        if request.form.get('ajouter_document') =="Enregistrer":
             file = request.files['file']
             if file.filename == "":
                 filepath = session.get('file').split("temporaire/")[-1]
             else:
                 filepath = secure_filename(file.filename)
             if request.form.get('type_document') != "Type": 
-                type = get_id_type(request.form.get('type_document'))
+                type = request.form.get('type_document')
+                nom_document = filepath.split("/")[-1]
+                protection = request.form.get('niveau_document')
+                if protection == "Niveau de protection":
+                    protection = 1
                 document = Document(
                     nomDoc = request.form.get('titre'),
-                    idType = type,
-                    fichierDoc = ""+"/"+filepath,
+                    idType = type or 1,
+                    fichierDoc = filepath,
                     descriptionDoc = request.form.get('description')
                 )
                 db.session.add(document)
                 db.session.commit()
-            if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], ""))):
-                os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], "")))
             if file.filename == "":
-                shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER']+ "")))
+                shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER'] + filepath)))
             else:
-                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], "", filepath)))
-            for tag in les_tags:
-                if tag != "":
-                    newtag = get_tag(tag, True)
-                    for tag_actif in tag_manuel:
-                        if tag_actif.nomTag == newtag.nomTag:
-                            newtag = ""
-                    if newtag:
-                        document_tag = DocumentTag(
-                            idDoc = document.idDoc,
-                            idTag = newtag.idTag
-                        )
-                        db.session.add(document_tag)
-                        db.session.commit()
-                    if newtag is None:
-                        a = hex(random.randrange(100,256))
-                        b = hex(random.randrange(100,256))
-                        c = hex(random.randrange(100,256))
-                        tag = Tag(
-                            idTag = get_max_id_tag()+1,
-                            nomTag = tag,
-                            couleurTag = a[2:]+b[2:]+c[2:]
-                        )
-                        db.session.add(tag)
-                        db.session.commit()
-                        document_tag = DocumentTag(
-                            idDoc = document.idDoc,
-                            idTag = tag.idTag
-                        )
-                        db.session.add(document_tag)
-                        db.session.commit()
+                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
             for tag in tag_manuel:
+                print(tag.idTag)
                 document_tag = DocumentTag(
                     idDoc = document.idDoc,
                     idTag = tag.idTag
@@ -344,23 +322,10 @@ def ajoute_document():
             tag_manuel.clear()
             session['file'] = ""
             return redirect(url_for('recherche_doc_admin'))
-        newfile = request.files['file']
-        if newfile.filename != "":
-            if session.get('file'):
-                os.remove(session.get('file'))
-            file = request.files['file']
-            filename = secure_filename(file.filename)
-            session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
-            file.save(session['file'])
-            tags_auto = generationTag(session['file'])
-            for tag in tags_auto:
-                tag_manuel.add(tag)
-        document = session.get('file').split("temporaire/")[-1]
         return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
     else:
         session['file'] = ""
     return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
-
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
 def appliquer_filtres():

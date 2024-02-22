@@ -24,6 +24,7 @@ def generationTag(nom_file):
     frequence = Counter(mot_filtre) # Compte les fréquences de chaque mot
     mot_cles = frequence.most_common(10) # Obtient les 10 mots les plus fréquents
     mot_cles = transform_tag(transform(mot_cles))
+    print(mot_cles)
     return mot_cles
 
 def transform(mot_cles):
