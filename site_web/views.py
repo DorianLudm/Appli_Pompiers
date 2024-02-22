@@ -543,7 +543,7 @@ def handle_filtrage(admin=False):
                 documents = get_documents()
                 bool_fulldoc = True
         else:
-            if not active_tags and not filtre_texte:
+            if not filtre_texte:
                 documents = get_documents()
                 bool_fulldoc = True
     if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
@@ -557,20 +557,20 @@ def handle_filtrage(admin=False):
     # Filtre par type
     elif admin:
         selectType = "Choisir un type"
-    for tag in active_tags:
-        documents = get_filtrer_document_tag(documents, tag)
+    for tag_act in active_tags:
+        documents = get_filtrer_document_tag(documents, tag_act)
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
             filtre_texte = request.form.get('barre_recherche')
             documents = get_filtrer_document_nom(documents, filtre_texte)
         else:
-            tag = get_tag(request.form.get('barre_recherche')[1:], True)
-            if not tag or tag in active_tags:
-                tag = get_tag(request.form.get('barre_recherche')[1:])
-            if tag:
-                active_tags.add(tag)
-                documents = get_filtrer_document_tag(documents, tag)
+            tag_barre = get_tag(request.form.get('barre_recherche')[1:], True)
+            if not tag_barre or tag_barre in active_tags:
+                tag_barre = get_tag(request.form.get('barre_recherche')[1:])
+            if tag_barre:
+                active_tags.add(tag_barre)
+                documents = get_filtrer_document_tag(documents, tag_barre)
     # Nouveau tag (existant en BD), alors on l'ajoute
     if tag != "Choisir un tag":
         tag = get_tag(request.form.get('tags'), True)
@@ -598,15 +598,12 @@ def handle_filtrage(admin=False):
             documents = get_filtrer_document_tag(documents, tag)
 
     if request.form.get('reset'):
-        if admin:
-            selectType = "Choisir un type"
-            active_tags = set()
-            filtre_texte = ""
-            documents = []
-            return redirect(url_for('recherche_doc_admin'))
         active_tags = set()
         filtre_texte = ""
         documents = []
+        if admin:
+            selectType = "Choisir un type"
+            return redirect(url_for('recherche_doc_admin'))
         return redirect(url_for('home'))
 
     # Si il y a aucun critère de recherche, alors on load aucun document
