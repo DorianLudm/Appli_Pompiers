@@ -70,7 +70,7 @@ main p{
     text-align:center;
 }
 
-input[type="submit"], .bouton-importer{
+.bouton-importer{
     border-radius: 10px;
     font-size: 1.5em;
     margin-bottom: 1vw;
@@ -80,10 +80,15 @@ input[type="submit"], .bouton-importer{
     transition: 0.3s;
 }
 
-input[type="submit"]:hover, .bouton-importer:hover{
+.bouton-importer:hover{
     background-color: gray;
     color: white;
 }
+
+#niveau-select{
+    margin-top: 1em;
+}
+
 #file-label{
     white-space: nowrap;
     overflow: hidden;
@@ -100,6 +105,25 @@ input[type="submit"]:hover, .bouton-importer:hover{
     margin-right: 10vw;
 }
 
-.boutons-bas > input:last-child{
-    margin-right: 0;
+.boutons-bas > a{
+    padding: 0;
+    margin: 0;
+}
+
+#annuler{
+    font-size: xx-large;
+    color: white;
+    background-color: #954D4D;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+#valider{
+    font-size: xx-large;
+    color: white;
+    background-color: #84B546;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
 }

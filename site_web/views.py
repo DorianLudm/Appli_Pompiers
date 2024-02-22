@@ -354,10 +354,10 @@ def ajoute_document():
             session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
             file.save(session['file'])
         document = session.get('file').split("temporaire/")[-1]
-        return render_template('ajouter_document.html', tags=get_tags(), roles = get_roles(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
+        return render_template('ajouter_document.html', tags=get_tags(), roles = get_roles(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
     else:
         session['file'] = ""
-    return render_template('ajouter_document.html', types = get_types(), roles = get_roles(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
+    return render_template('ajouter_document.html', types = get_types(), roles = get_roles(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title="Ajout d'un document")
 
 @app.route('/administrateur/importerRepertoire', methods=['GET', 'POST'])
 @login_required
