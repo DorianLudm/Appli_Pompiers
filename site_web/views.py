@@ -27,10 +27,12 @@ def home():
     result = []
 
     doc = None
+    is_stared = False
     if request.args.get('id'):
         id = request.args['id']
         doc = get_document_id(id)
         doc.nomType = get_type(doc.idType).nomType
+        is_stared = user_has_favoris(current_user.idUtilisateur, id)
 
     if active_tags or filtre_texte or favoris:
         for i in get_types():
@@ -42,7 +44,7 @@ def home():
             if resultat["element"]:
                 result.append(resultat)
     info_doc = filtre_texte or "Rechercher un document !"
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc, favoris_on = favoris)
+    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc, favoris_on = favoris, is_stared = is_stared)
 
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
@@ -58,11 +60,12 @@ def ajouter_filtre():
         handle_filtrage()
     return redirect(url_for('home'))
 
-@app.route("/ajouter_favoris/<id>", methods =("GET",))
+@app.route("/ajouter_favoris/<id>", methods =("POST",))
 @login_required
 def ajouter_favoris(id):
     if user_has_favoris(current_user.idUtilisateur, id):
         remove_favoris(current_user.idUtilisateur, id)
+        handle_filtrage(False, True)
     else:
         add_favoris(current_user.idUtilisateur, id)
     return redirect(url_for('home', id=id))
@@ -495,14 +498,15 @@ def supprimer_tag(id):
     db.session.commit()
     return redirect(url_for('recherche_tags'))
 
-def handle_filtrage(admin=False):
+def handle_filtrage(admin=False, reload_fav = False):
     global active_tags, filtre_texte, documents, selectType, favoris
     favoris_clicked = False
 
     # Si on interagit avec les favoris
-    if request.form.get('favoris'):
+    if reload_fav or request.form.get('favoris'):
         favoris_clicked = True
-        favoris = not favoris
+        if not reload_fav:
+            favoris = not favoris
         documents = get_favoris_user(current_user.idUtilisateur)
         active_tags = set()
         filtre_texte = ""

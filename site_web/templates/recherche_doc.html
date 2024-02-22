@@ -12,15 +12,12 @@
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
         <div>
-            {% if favoris_on %}
-                <label for="favoris"><i id="favoris_filtre" class="material-icons">star</i>
-                    <input type="submit" id="favoris" name="favoris" class="icon-button" style="display: none;">
-                </label>
-            {% else %}
-                <label for="favoris"><i id="favoris_filtre" class="material-icons">star_outline</i>
-                    <input type="submit" id="favoris" name="favoris" class="icon-button" style="display: none;">
-                </label>
-            {% endif %}
+            <label for="favoris">
+                <i id="favoris_filtre" class="material-icons">
+                    {{ 'star' if favoris_on else 'star_outline' }}
+                </i>
+                <input type="submit" id="favoris" name="favoris" class="icon-button" style="display: none;">
+            </label>
         </div>
         <div class="research_bar">
           <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
@@ -74,7 +71,13 @@
     <h2>{{doc.nomDoc}}</h2>
     <div class="doc_info">
         <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
-        <a href="{{url_for ('ajouter_favoris', id = doc.idDoc)}}"><span id="favoris_aside" class="material-symbols-outlined">star</span></a>
+        <form action="{{ url_for ('ajouter_favoris', id = doc.idDoc) }}" method="post">
+            <button type="submit" class="star-button" id="favoris_filtre">
+                <i class="material-icons">
+                    {{ 'star' if is_stared else 'star_outline' }}
+                </i>
+            </button>
+        </form>
         <p><strong>Type :</strong> {{doc.nomType}}</p>
         <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
         <div class="doc_action">

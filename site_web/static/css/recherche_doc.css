@@ -170,21 +170,14 @@ iframe{
     align-items: center;   
 }
 
-#filtre  #favoris_filtre {
-    color: rgb(255, 187, 0);
-    text-decoration: none;
-}
-
-#favoris_filtre{
+#favoris_filtre {
     font-size: 50px;
-}
-
-aside a {
-    margin-left: 5px;
     color: rgb(255, 187, 0);
     text-decoration: none;
+    background: none;
+    border: none;
 }
 
-#favoris_aside{
-    font-size: 25px;
+#favoris_filtre .material-icons{
+    font-size: 50px;
 }
