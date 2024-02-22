@@ -59,6 +59,9 @@ class Document(db.Model):
     descriptionDoc = db.Column(db.String(500))
     niveauProtection = db.Column(db.Integer)
     idType = db.Column(db.Integer, db.ForeignKey('type_document.idType'))
+
+    def __repr__(self) -> str:
+        return f'Document {self.idDoc} : {self.nomDoc}'
     
 class Tag(db.Model):
     """tag permettant la répertorisation des documents"""
@@ -79,6 +82,11 @@ class DocumentTag(db.Model):
     idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
     idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
     index = db.Index('indexTag', idTag)
+
+class Favoris(db.Model):
+    """classe représentant la relation entre les utilisateurs et leurs documents favoris"""
+    idUtilisateur = db.Column(db.Integer, db.ForeignKey('utilisateur.idUtilisateur'), primary_key = True)
+    idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
     
 def get_tags():
     """fonction d'obtention de tous les tags existants"""
@@ -110,7 +118,6 @@ def get_max_id_tag():
     if max_id is None:
         return 0
     return max_id
-
 
 def get_types():
     """fonction d'obtention des types des documents"""
@@ -170,6 +177,26 @@ def get_filtrer_document_nom(documents, nom):
         if doc.nomDoc.lower().find(nom.lower()) != -1:
             resultat.append(doc)
     return resultat
+
+def get_favoris_user(idUtilisateur):
+    """fonction d'obtention des documents favoris d'un utilisateur"""
+    return Document.query.join(Favoris, Document.idDoc == Favoris.idDoc).filter(Favoris.idUtilisateur == idUtilisateur).all()
+
+def user_has_favoris(idUtilisateur, idDoc):
+    """fonction de vérification de l'existence d'un document dans les favoris d'un utilisateur"""
+    return Favoris.query.filter(Favoris.idUtilisateur == idUtilisateur).filter(Favoris.idDoc == idDoc).first()
+
+def add_favoris(idUtilisateur, idDoc):
+    """fonction d'ajout d'un document aux favoris d'un utilisateur"""
+    favoris = Favoris(idUtilisateur = idUtilisateur, idDoc = idDoc)
+    db.session.add(favoris)
+    db.session.commit()
+
+def remove_favoris(idUtilisateur, idDoc):
+    """fonction de suppression d'un document des favoris d'un utilisateur"""
+    favoris = Favoris.query.filter(Favoris.idUtilisateur == idUtilisateur).filter(Favoris.idDoc == idDoc).first()
+    db.session.delete(favoris)
+    db.session.commit()
 
 def get_document_id(idDoc):
     """fonction d'obtention d'un document à partir de son id"""

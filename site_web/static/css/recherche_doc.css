@@ -158,12 +158,28 @@ iframe{
 .doc_action{
     display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
 }
 
-.sans_parametre{           
+.sans_parametre{
     text-align: center;
 }
+
+#filtre{
+    display: flex;
+    align-items: center;   
+}
+
+#favoris_filtre {
+    font-size: 50px;
+    color: rgb(255, 187, 0);
+    text-decoration: none;
+    background: none;
+    border: none;
+}
+
+#favoris_filtre .material-icons{
+    font-size: 50px;
 
 #texte_informatif{
     display: none;
