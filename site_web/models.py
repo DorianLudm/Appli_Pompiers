@@ -78,6 +78,7 @@ class DocumentTag(db.Model):
     """classe représentant la relation entre les documents et leurs tags"""
     idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
     idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
+    index = db.Index('indexTag', idTag)
     
 def get_tags():
     """fonction d'obtention de tous les tags existants"""
@@ -144,10 +145,18 @@ def get_document_types(idTypeDoc, document = []):
 
 def get_filtrer_document_tag(documents, tag):
     """fonction de filtrage de documents à partir d'un tag donné"""
-    resultat = []
-    for doc in documents:
-        if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
-            resultat.append(doc)
+    # resultat = []
+    # for doc in documents:
+    #     if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
+    #         resultat.append(doc)
+
+    document_ids = [document.idDoc for document in documents]
+    
+    result = DocumentTag.query.filter(
+        DocumentTag.idTag == tag.idTag,
+        DocumentTag.idDoc.in_(document_ids)
+    ).all()
+    resultat = [Document.query.get(doc.idDoc) for doc in result]
     return resultat
 
 def get_liaison_document_tag(idTag):
