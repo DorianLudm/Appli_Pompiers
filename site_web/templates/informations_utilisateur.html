@@ -14,10 +14,8 @@
 </script>
 
 <section>
-    <p>{{ util.nom}}</p>
-    <p>{{ util.prenom}}</p>
-    <p>{{ util.grade}}</p>
-    <p>{{ util.role}}</p>
+    <p>{{ util.nom}} {{ util.prenom}}</p>
+    <p>{{ util.grade}} - {{ util.role}}</p>
     <a onclick="togglePopup({{ util.id }});" class="deconnexion"><button>Déconnexion</button></a>
 
     <div id="{{util.id}}" class="popup-overlay">

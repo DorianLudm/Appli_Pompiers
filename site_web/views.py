@@ -254,7 +254,6 @@ def modifier_document(id):
         return redirect(url_for('home'))
     doc = get_document_id(id)
     if request.form.get('modifier_document') =="Enregistrer":
-        print(request.form.get('description'))
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
         doc.descriptionDoc = request.form.get('description')
@@ -298,12 +297,17 @@ def ajoute_document():
             else:
                 filepath = secure_filename(file.filename)
             if request.form.get('type_document') != "Type": 
-                type = get_id_type(request.form.get('type_document'))
+                type = request.form.get('type_document')
+                nom_document = filepath.split("/")[-1]
+                protection = request.form.get('niveau_document')
+                if protection == "Niveau de protection":
+                    protection = 1
                 document = Document(
                     nomDoc = request.form.get('titre'),
-                    idType = type,
+                    idType = type or 1,
                     fichierDoc = request.form.get('repertoire')+"/"+filepath,
-                    descriptionDoc = request.form.get('description')
+                    descriptionDoc = request.form.get('description'),
+                    niveauProtection = protection
                 )
                 db.session.add(document)
                 db.session.commit()
@@ -363,10 +367,53 @@ def ajoute_document():
             session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
             file.save(session['file'])
         document = session.get('file').split("temporaire/")[-1]
-        return render_template('ajouter_document.html', tags=get_tags(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title='Ajouter un document')
+        return render_template('ajouter_document.html', tags=get_tags(), roles = get_roles(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajout d'un document")
     else:
         session['file'] = ""
-    return render_template('ajouter_document.html', types = get_types(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title='Ajouter un document')
+    return render_template('ajouter_document.html', types = get_types(), roles = get_roles(), type = "Type",titre ="", description = "", tags=get_tags(),new_tag=tag_manuel, util = informations_utlisateurs(), title="Ajout d'un document")
+
+@app.route('/administrateur/importerRepertoire', methods=['GET', 'POST'])
+@login_required
+def importer_repertoire():
+    """fonction d'importation de répertoire"""
+    if not is_admin():
+        return redirect(url_for('home'))
+    documents = []
+    if request.method == 'POST':
+        if request.form.get('ajouter_document') =="Enregistrer":
+            files = request.files.getlist('files')
+            for file in files:
+                if file.filename != "":
+                    filename = file.filename
+                    path = filename.split("/")
+                    pathfinal = ""
+                    for i in range(len(path)-1):
+                        pathfinal += path[i]+"/"
+                        if not os.path.exists(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], pathfinal))):
+                            os.makedirs(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], pathfinal)))
+                    file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                    nom_document = filename.split("/")[-1]
+                    protection = request.form.get('niveau_document')
+                    document = Document(
+                        nomDoc = nom_document,
+                        idType = request.form.get('type_document') or 1,
+                        fichierDoc = filename,
+                        descriptionDoc = "",
+                        niveauProtection = request.form.get('niveau_document')
+                    )
+                    db.session.add(document)
+                    db.session.commit()
+                    id_tag = request.form.get('tag_document')
+                    if id_tag != "Choisir un Tag":
+                        document_tag = DocumentTag(
+                            idDoc = document.idDoc,
+                            idTag = id_tag
+                        )
+                        db.session.add(document_tag)
+                        db.session.commit()
+                    documents.append(document)
+                    document.nomType = get_type(document.idType).nomType
+    return render_template('importer_repertoire.html', title='Importer un répertoire', util = informations_utlisateurs(), types = get_types(), tags=get_tags(), roles = get_roles(), documents = documents)
 
 @app.route('/administrateur/appliquer_filtres', methods=['GET', 'POST'])
 @login_required
@@ -498,8 +545,8 @@ def supprimer_tag(id):
     db.session.commit()
     return redirect(url_for('recherche_tags'))
 
-def handle_filtrage(admin=False, reload_fav = False):
-    global active_tags, filtre_texte, documents, selectType, favoris
+def handle_filtrage(admin=False):
+    global active_tags, filtre_texte, documents, selectType
     favoris_clicked = False
 
     # Si on interagit avec les favoris
@@ -515,94 +562,94 @@ def handle_filtrage(admin=False, reload_fav = False):
     # Sinon, ou si on retire favoris
     if not favoris_clicked or not favoris:
         favoris = False
-        tag = request.form['tags']
-        bool_fulldoc = False
+      tag = request.form.get('tags')
+      bool_fulldoc = False
+      # Cas qui demande le chargement de tous les documents
+      if not documents:
+          if admin:
+              if not active_tags and not filtre_texte and selectType == "Choisir un type":
+                  documents = get_documents()
+                  bool_fulldoc = True
+          else:
+              if not filtre_texte:
+                  documents = get_documents()
+                  bool_fulldoc = True
+      if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
+          documents = get_documents()
+          bool_fulldoc = True
+      if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
+              'types') != "Choisir un type":
+          selectType = request.form.get('types')
+          documents = get_documents()
+          bool_fulldoc = True
+      # Filtre par type
+      elif admin:
+          selectType = "Choisir un type"
+      # Recherche par mot ou ajout tag par point
+      if request.form.get('barre_recherche'):
+          if request.form.get('barre_recherche')[0] != ".":
+              filtre_texte = request.form.get('barre_recherche')
+              documents = get_filtrer_document_nom(documents, filtre_texte)
+          else:
+              tag_barre = get_tag(request.form.get('barre_recherche')[1:], True)
+              if not tag_barre or tag_barre in active_tags:
+                  tag_barre = get_tag(request.form.get('barre_recherche')[1:])
+              if tag_barre:
+                  active_tags.add(tag_barre)
+                  documents = get_filtrer_document_tag(documents, tag_barre)
+      # Nouveau tag (existant en BD), alors on l'ajoute
+      if tag != "Choisir un tag":
+          tag = get_tag(request.form.get('tags'), True)
+          if tag:
+              already_in = False
+              for t in active_tags:
+                  if t.nomTag == tag.nomTag:
+                      already_in = True
+              if not already_in:
+                  active_tags.add(tag)
+                  documents = get_filtrer_document_tag(documents, tag)
+      # Suppression d'un tag lorsqu'on appuie sur celui-ci
+      if request.form.get('retirer_filtre'):
+          tag_to_delete = []
+          for tag in active_tags:
+              if tag.nomTag == request.form.get('retirer_filtre'):
+                  tag_to_delete.append(tag)
+          for tag in tag_to_delete:
+              active_tags.remove(tag)
 
-        # Cas qui demande le chargement de tous les documents
-        if not documents:
-            if admin:
-                if not active_tags and not filtre_texte and selectType == "Choisir un type":
-                    documents = get_documents()
-                    bool_fulldoc = True
-            else:
-                if not active_tags and not filtre_texte:
-                    documents = get_documents()
-                    bool_fulldoc = True
-        if not bool_fulldoc and filtre_texte != request.form.get(
-                'barre_recherche'):
-            documents = get_documents()
-            bool_fulldoc = True
-        if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
-                'types') != "Choisir un type":
-            selectType = request.form.get('types')
-            documents = get_documents()
+          documents = get_documents()
+          if filtre_texte:
+              documents = get_filtrer_document_nom(documents, filtre_texte)
+          for tag in active_tags:
+              documents = get_filtrer_document_tag(documents, tag)
 
-        # Filtre par type
-        elif admin:
-            selectType = "Choisir un type"
+      if request.form.get('reset'):
+          active_tags = set()
+          filtre_texte = ""
+          documents = []
+          if admin:
+              selectType = "Choisir un type"
+              return redirect(url_for('recherche_doc_admin'))
+          return redirect(url_for('home'))
 
-        # Recherche par mot ou ajout tag par point
-        if request.form.get('barre_recherche'):
-            if request.form.get('barre_recherche')[0] != ".":
-                filtre_texte = request.form.get('barre_recherche')
-                documents = get_filtrer_document_nom(documents, filtre_texte)
-            else:
-                tag = get_tag(request.form.get('barre_recherche')[1:], True)
-                if not tag or tag in active_tags:
-                    tag = get_tag(request.form.get('barre_recherche')[1:])
-                if tag:
-                    active_tags.add(tag)
-                    documents = get_filtrer_document_tag(documents, tag)
-        else:
-            filtre_texte = ""
-
-        # Nouveau tag (existant en BD), alors on l'ajoute
-        if tag != "Choisir un tag":
-            tag = get_tag(request.form.get('tags'), True)
-            if tag:
-                already_in = False
-                for t in active_tags:
-                    if t.nomTag == tag.nomTag:
-                        already_in = True
-                if not already_in:
-                    active_tags.add(tag)
-                    documents = get_filtrer_document_tag(documents, tag)
-
-        # Suppression d'un tag lorsqu'on appuie sur celui-ci
-        if request.form.get('retirer_filtre'):
-            tag_to_delete = []
-            for tag in active_tags:
-                if tag.nomTag == request.form.get('retirer_filtre'):
-                    tag_to_delete.append(tag)
-            for tag in tag_to_delete:
-                active_tags.remove(tag)
-
-            documents = get_documents()
-            if filtre_texte:
-                documents = get_filtrer_document_nom(documents, filtre_texte)
-            for tag in active_tags:
-                documents = get_filtrer_document_tag(documents, tag)
-
-        if request.form.get('reset'):
-            if admin:
-                selectType = "Choisir un type"
-                active_tags = set()
-                filtre_texte = ""
-                documents = []
-                return redirect(url_for('recherche_doc_admin'))
-            active_tags = set()
-            filtre_texte = ""
-            documents = []
-            favoris = False
-            return redirect(url_for('home'))
-
-        # Si il y a aucun critère de recherche, alors on load aucun document
-        if admin:
-            if not active_tags and not filtre_texte and selectType == "Choisir un type":
-                documents = []
-        else:
-            if not active_tags and not filtre_texte and not favoris:
-                documents = []
+      # Si il y a aucun critère de recherche, alors on load aucun document
+      if admin:
+          if not active_tags and not filtre_texte and selectType == "Choisir un type":
+              documents = []
+      else:
+          if not active_tags and not filtre_texte:
+              documents = []
+      # document_final = []
+      # for doc in documents:
+      #     is_ok = True
+      #     for tag in active_tags:
+      #         if DocumentTag.query.filter_by(idDoc=doc.idDoc, idTag=tag.idTag).first() is None:
+      #             is_ok = False
+      #     if is_ok:
+      #         document_final.append(doc)
+      # documents = document_final
+      for tag_act in active_tags:
+          documents = get_filtrer_document_tag(documents, tag_act)
 
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required

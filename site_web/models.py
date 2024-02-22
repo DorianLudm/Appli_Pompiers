@@ -24,6 +24,7 @@ class Role(db.Model):
     """classe représentant le rôle d'un utilisateur de l'application"""
     idRole = db.Column(db.Integer, primary_key =True)
     nomRole = db.Column(db.String(100))
+    niveauProtection = db.Column(db.Integer)
 
     def get_id(self):
       return str(self.idRole)
@@ -56,6 +57,7 @@ class Document(db.Model):
     nomDoc = db.Column(db.String(100))
     fichierDoc = db.Column(db.String(100))
     descriptionDoc = db.Column(db.String(500))
+    niveauProtection = db.Column(db.Integer)
     idType = db.Column(db.Integer, db.ForeignKey('type_document.idType'))
 
     def __repr__(self) -> str:
@@ -79,6 +81,7 @@ class DocumentTag(db.Model):
     """classe représentant la relation entre les documents et leurs tags"""
     idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
     idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
+    index = db.Index('indexTag', idTag)
 
 class Favoris(db.Model):
     """classe représentant la relation entre les utilisateurs et leurs documents favoris"""
@@ -91,6 +94,8 @@ def get_tags():
 
 def get_tag(nomTag, exact = False):
     """fonction d'obtention d'un tag à partir de son nom"""
+    if nomTag is None:
+        return None
     if exact:
         return Tag.query.filter(Tag.nomTag.ilike(nomTag)).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
@@ -147,14 +152,19 @@ def get_document_types(idTypeDoc, document = []):
 
 def get_filtrer_document_tag(documents, tag):
     """fonction de filtrage de documents à partir d'un tag donné"""
-    if isinstance(documents, list):
-        resultat = []
-        for doc in documents:
-            if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
-                resultat.append(doc)
-        return resultat
-    else:
-        print(documents)
+    # resultat = []
+    # for doc in documents:
+    #     if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
+    #         resultat.append(doc)
+
+    document_ids = [document.idDoc for document in documents]
+    
+    result = DocumentTag.query.filter(
+        DocumentTag.idTag == tag.idTag,
+        DocumentTag.idDoc.in_(document_ids)
+    ).all()
+    resultat = [Document.query.get(doc.idDoc) for doc in result]
+    return resultat
 
 def get_liaison_document_tag(idTag):
     """fonction d'obtention des liaisons entre un document et un tag pour tout les documents associés au tag"""
@@ -207,6 +217,10 @@ def is_admin_identifiant(identifant):
 def get_grades():
     """fonction d'obtention de l'ensemble des grades"""
     return Grade.query.all()
+
+def get_roles():
+    """fonction d'obtention de l'ensemble des roles"""
+    return Role.query.all()
 
 def get_utilisateur(idUtilisateur):
     """fonction d'obtention d'un utilisateur à partir d'un id donné"""

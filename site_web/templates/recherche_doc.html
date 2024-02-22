@@ -8,6 +8,10 @@
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
+<head>
+    <script src="/static/js/recherche_doc.js"></script>
+    <meta charset="UTF-8">
+</head>
 <div class="bloc_recherche">
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
@@ -29,14 +33,17 @@
             <select name="tags" id="tags-select">
                 <option selected="selected" hidden="hidden">Choisir un tag</option>
                 {% for x in tags %} 
-                    <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
+                    <option value="{{x.nomTag}}" type ="submit" class="selectTagRechercheDoc">{{x.nomTag}}</option>
                 {% endfor %}
             </select>
-            <div class="active_tag">
-                {% for x in active_tags %}
-                    <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
-                {% endfor %}
-            </div>      
+            <div id="tagsActifs">
+                <div class="active_tag">
+                    {% for x in active_tags %}
+                        <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
+                    {% endfor %}
+                </div>     
+                <p id="texte_informatif">Appuyez sur la loupe pour prendre en compte la recherche</p>
+            </div>
         </div>
     <div class="bouton_reset">
         <input name="reset" type="Submit" value="Reset" /> 

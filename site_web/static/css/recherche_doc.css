@@ -180,4 +180,9 @@ iframe{
 
 #favoris_filtre .material-icons{
     font-size: 50px;
+
+#texte_informatif{
+    display: none;
+    color: white;
+    font-style: italic;
 }

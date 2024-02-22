@@ -4,6 +4,7 @@ CREATE TABLE DOCUMENT (
     fichierDoc VARCHAR(100) NOT NULL,
     idType int NOT NULL,
     descriptionDoc VARCHAR(500),
+    niveauProtection int NOT NULL,
     FOREIGN KEY (idType) REFERENCES TYPE_DOCUMENT(idType)
 );
 
@@ -49,7 +50,8 @@ CREATE TABLE GRADE (
 
 CREATE TABLE ROLE(
     idRole INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    nomRole VARCHAR(100) NOT NULL
+    nomRole VARCHAR(100) NOT NULL,
+    niveauProtection int NOT NULL
 );
 
 CREATE TABLE CASERNE(
