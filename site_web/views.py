@@ -545,8 +545,8 @@ def supprimer_tag(id):
     db.session.commit()
     return redirect(url_for('recherche_tags'))
 
-def handle_filtrage(admin=False):
-    global active_tags, filtre_texte, documents, selectType
+def handle_filtrage(admin=False, reload_fav=False):
+    global active_tags, filtre_texte, documents, selectType, favoris
     favoris_clicked = False
 
     # Si on interagit avec les favoris
@@ -562,94 +562,94 @@ def handle_filtrage(admin=False):
     # Sinon, ou si on retire favoris
     if not favoris_clicked or not favoris:
         favoris = False
-      tag = request.form.get('tags')
-      bool_fulldoc = False
-      # Cas qui demande le chargement de tous les documents
-      if not documents:
-          if admin:
-              if not active_tags and not filtre_texte and selectType == "Choisir un type":
-                  documents = get_documents()
-                  bool_fulldoc = True
-          else:
-              if not filtre_texte:
-                  documents = get_documents()
-                  bool_fulldoc = True
-      if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
-          documents = get_documents()
-          bool_fulldoc = True
-      if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
-              'types') != "Choisir un type":
-          selectType = request.form.get('types')
-          documents = get_documents()
-          bool_fulldoc = True
-      # Filtre par type
-      elif admin:
-          selectType = "Choisir un type"
-      # Recherche par mot ou ajout tag par point
-      if request.form.get('barre_recherche'):
-          if request.form.get('barre_recherche')[0] != ".":
-              filtre_texte = request.form.get('barre_recherche')
-              documents = get_filtrer_document_nom(documents, filtre_texte)
-          else:
-              tag_barre = get_tag(request.form.get('barre_recherche')[1:], True)
-              if not tag_barre or tag_barre in active_tags:
-                  tag_barre = get_tag(request.form.get('barre_recherche')[1:])
-              if tag_barre:
-                  active_tags.add(tag_barre)
-                  documents = get_filtrer_document_tag(documents, tag_barre)
-      # Nouveau tag (existant en BD), alors on l'ajoute
-      if tag != "Choisir un tag":
-          tag = get_tag(request.form.get('tags'), True)
-          if tag:
-              already_in = False
-              for t in active_tags:
-                  if t.nomTag == tag.nomTag:
-                      already_in = True
-              if not already_in:
-                  active_tags.add(tag)
-                  documents = get_filtrer_document_tag(documents, tag)
-      # Suppression d'un tag lorsqu'on appuie sur celui-ci
-      if request.form.get('retirer_filtre'):
-          tag_to_delete = []
-          for tag in active_tags:
-              if tag.nomTag == request.form.get('retirer_filtre'):
-                  tag_to_delete.append(tag)
-          for tag in tag_to_delete:
-              active_tags.remove(tag)
+        tag = request.form.get('tags')
+        bool_fulldoc = False
+        # Cas qui demande le chargement de tous les documents
+        if not documents:
+            if admin:
+                if not active_tags and not filtre_texte and selectType == "Choisir un type":
+                    documents = get_documents()
+                    bool_fulldoc = True
+            else:
+                if not filtre_texte:
+                    documents = get_documents()
+                    bool_fulldoc = True
+        if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
+            documents = get_documents()
+            bool_fulldoc = True
+        if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
+                'types') != "Choisir un type":
+            selectType = request.form.get('types')
+            documents = get_documents()
+            bool_fulldoc = True
+        # Filtre par type
+        elif admin:
+            selectType = "Choisir un type"
+        # Recherche par mot ou ajout tag par point
+        if request.form.get('barre_recherche'):
+            if request.form.get('barre_recherche')[0] != ".":
+                filtre_texte = request.form.get('barre_recherche')
+                documents = get_filtrer_document_nom(documents, filtre_texte)
+            else:
+                tag_barre = get_tag(request.form.get('barre_recherche')[1:], True)
+                if not tag_barre or tag_barre in active_tags:
+                    tag_barre = get_tag(request.form.get('barre_recherche')[1:])
+                if tag_barre:
+                    active_tags.add(tag_barre)
+                    documents = get_filtrer_document_tag(documents, tag_barre)
+        # Nouveau tag (existant en BD), alors on l'ajoute
+        if tag != "Choisir un tag":
+            tag = get_tag(request.form.get('tags'), True)
+            if tag:
+                already_in = False
+                for t in active_tags:
+                    if t.nomTag == tag.nomTag:
+                        already_in = True
+                if not already_in:
+                    active_tags.add(tag)
+                    documents = get_filtrer_document_tag(documents, tag)
+        # Suppression d'un tag lorsqu'on appuie sur celui-ci
+        if request.form.get('retirer_filtre'):
+            tag_to_delete = []
+            for tag in active_tags:
+                if tag.nomTag == request.form.get('retirer_filtre'):
+                    tag_to_delete.append(tag)
+            for tag in tag_to_delete:
+                active_tags.remove(tag)
 
-          documents = get_documents()
-          if filtre_texte:
-              documents = get_filtrer_document_nom(documents, filtre_texte)
-          for tag in active_tags:
-              documents = get_filtrer_document_tag(documents, tag)
+            documents = get_documents()
+            if filtre_texte:
+                documents = get_filtrer_document_nom(documents, filtre_texte)
+            for tag in active_tags:
+                documents = get_filtrer_document_tag(documents, tag)
 
-      if request.form.get('reset'):
-          active_tags = set()
-          filtre_texte = ""
-          documents = []
-          if admin:
-              selectType = "Choisir un type"
-              return redirect(url_for('recherche_doc_admin'))
-          return redirect(url_for('home'))
+        if request.form.get('reset'):
+            active_tags = set()
+            filtre_texte = ""
+            documents = []
+            if admin:
+                selectType = "Choisir un type"
+                return redirect(url_for('recherche_doc_admin'))
+            return redirect(url_for('home'))
 
-      # Si il y a aucun critère de recherche, alors on load aucun document
-      if admin:
-          if not active_tags and not filtre_texte and selectType == "Choisir un type":
-              documents = []
-      else:
-          if not active_tags and not filtre_texte:
-              documents = []
-      # document_final = []
-      # for doc in documents:
-      #     is_ok = True
-      #     for tag in active_tags:
-      #         if DocumentTag.query.filter_by(idDoc=doc.idDoc, idTag=tag.idTag).first() is None:
-      #             is_ok = False
-      #     if is_ok:
-      #         document_final.append(doc)
-      # documents = document_final
-      for tag_act in active_tags:
-          documents = get_filtrer_document_tag(documents, tag_act)
+        # Si il y a aucun critère de recherche, alors on load aucun document
+        if admin:
+            if not active_tags and not filtre_texte and selectType == "Choisir un type":
+                documents = []
+        else:
+            if not active_tags and not filtre_texte:
+                documents = []
+        # document_final = []
+        # for doc in documents:
+        #     is_ok = True
+        #     for tag in active_tags:
+        #         if DocumentTag.query.filter_by(idDoc=doc.idDoc, idTag=tag.idTag).first() is None:
+        #             is_ok = False
+        #     if is_ok:
+        #         document_final.append(doc)
+        # documents = document_final
+        for tag_act in active_tags:
+            documents = get_filtrer_document_tag(documents, tag_act)
 
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required
