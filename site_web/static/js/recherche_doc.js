@@ -1,6 +1,7 @@
 window.onload = function() {
     document.getElementById('tags-select').addEventListener('change', function() {
         var selectedTag = this.value;
+        var texteInformatif = document.getElementById('texte_informatif');
         fetch('/add_active_tag', {
             method: 'POST',
             headers: {
@@ -30,6 +31,7 @@ window.onload = function() {
             newInput.setAttribute("name", "retirer_filtre");
             newInput.setAttribute("value", tagObject.nomTag);
             newInput.style.backgroundColor = "#" + tagObject.couleurTag;
+            texteInformatif.style.display = "block";
         
             // Ajoutez le nouvel élément à la div active_tag
             activeTagDiv.appendChild(newInput);

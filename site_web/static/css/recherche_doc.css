@@ -164,3 +164,9 @@ iframe{
 .sans_parametre{           
     text-align: center;
 }
+
+#texte_informatif{
+    display: none;
+    color: white;
+    font-style: italic;
+}
