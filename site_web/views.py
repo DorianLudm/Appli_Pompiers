@@ -557,8 +557,6 @@ def handle_filtrage(admin=False):
     # Filtre par type
     elif admin:
         selectType = "Choisir un type"
-    for tag_act in active_tags:
-        documents = get_filtrer_document_tag(documents, tag_act)
     # Recherche par mot ou ajout tag par point
     if request.form.get('barre_recherche'):
         if request.form.get('barre_recherche')[0] != ".":
@@ -613,6 +611,17 @@ def handle_filtrage(admin=False):
     else:
         if not active_tags and not filtre_texte:
             documents = []
+    # document_final = []
+    # for doc in documents:
+    #     is_ok = True
+    #     for tag in active_tags:
+    #         if DocumentTag.query.filter_by(idDoc=doc.idDoc, idTag=tag.idTag).first() is None:
+    #             is_ok = False
+    #     if is_ok:
+    #         document_final.append(doc)
+    # documents = document_final
+    for tag_act in active_tags:
+        documents = get_filtrer_document_tag(documents, tag_act)
 
 @app.route("/administrateur/gerer_compte/erreur")
 @login_required
