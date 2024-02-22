@@ -288,6 +288,10 @@ def ajoute_document():
             else:
                 print("Aucun fichier n'a été sélectionné")
         if request.form.get('ajouter_document') =="Enregistrer":
+            for tag in tag_manuel:
+                if not get_tag_id(tag.idTag):
+                    db.session.add(tag)
+                    db.session.commit()
             file = request.files['file']
             if file.filename == "":
                 filepath = session.get('file').split("temporaire/")[-1]
@@ -312,7 +316,7 @@ def ajoute_document():
             else:
                 file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
             for tag in tag_manuel:
-                print(tag.idTag)
+                print("Mes tags" + str(tag.idTag))
                 document_tag = DocumentTag(
                     idDoc = document.idDoc,
                     idTag = tag.idTag
