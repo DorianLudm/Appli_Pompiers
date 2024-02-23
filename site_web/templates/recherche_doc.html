@@ -1,15 +1,28 @@
 {% extends "base.html" %}
 {% block page_specific_css %}
 <link href="/static/css/recherche_doc.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 {% block header %}
     <h1>Rechercher un document</h1>
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
+<head>
+    <script src="/static/js/recherche_doc.js"></script>
+    <meta charset="UTF-8">
+</head>
 <div class="bloc_recherche">
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
+        <div>
+            <label for="favoris">
+                <i id="favoris_filtre" class="material-icons">
+                    {{ 'star' if favoris_on else 'star_outline' }}
+                </i>
+                <input type="submit" id="favoris" name="favoris" class="icon-button" style="display: none;">
+            </label>
+        </div>
         <div class="research_bar">
           <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
         </div>
@@ -20,14 +33,17 @@
             <select name="tags" id="tags-select">
                 <option selected="selected" hidden="hidden">Choisir un tag</option>
                 {% for x in tags %} 
-                    <option value="{{x.nomTag}}" type ="submit">{{x.nomTag}}</option>
+                    <option value="{{x.nomTag}}" type ="submit" class="selectTagRechercheDoc">{{x.nomTag}}</option>
                 {% endfor %}
             </select>
-            <div class="active_tag">
-                {% for x in active_tags %}
-                    <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
-                {% endfor %}
-            </div>      
+            <div id="tagsActifs">
+                <div class="active_tag">
+                    {% for x in active_tags %}
+                        <input style="background-color:#{{x.couleurTag}}" name="retirer_filtre" type="Submit" value="{{x.nomTag}}"/>
+                    {% endfor %}
+                </div>     
+                <p id="texte_informatif">Appuyez sur la loupe pour prendre en compte la recherche</p>
+            </div>
         </div>
     <div class="bouton_reset">
         <input name="reset" type="Submit" value="Reset" /> 
@@ -59,21 +75,27 @@
 </div>
 {% if doc %}
 <aside>
-        <h2>{{doc.nomDoc}}</h2>
-        <div class="doc_info">
-            <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
-            <p><strong>Type :</strong> {{doc.nomType}}</p>
-            <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
-            <div class="doc_action">
-                <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
-                    <input type="Submit" value="Visualiser"/>
-                </form>
-            
-                <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
-                    <input type="Submit" value="Télécharger"/>
-                </form>
-            </div>
+    <h2>{{doc.nomDoc}}</h2>
+    <div class="doc_info">
+        <iframe src="./static/document/{{doc.fichierDoc}}"></iframe>
+        <form action="{{ url_for ('ajouter_favoris', id = doc.idDoc) }}" method="post">
+            <button type="submit" class="star-button" id="favoris_filtre">
+                <i class="material-icons">
+                    {{ 'star' if is_stared else 'star_outline' }}
+                </i>
+            </button>
+        </form>
+        <p><strong>Type :</strong> {{doc.nomType}}</p>
+        <p><strong>Description :</strong> {{doc.descriptionDoc}}</p>
+        <div class="doc_action">
+            <form method="POST" action ="{{ url_for ('visualiser', id = doc.idDoc) }}">
+                <input type="Submit" value="Visualiser"/>
+            </form>
+            <form method="POST" action ="{{ url_for ('telecharger', id = doc.idDoc) }}">
+                <input type="Submit" value="Télécharger"/>
+            </form>
         </div>
+    </div>
 </aside>
 {% endif %}
 {% endblock %}

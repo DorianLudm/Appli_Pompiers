@@ -24,6 +24,7 @@ class Role(db.Model):
     """classe représentant le rôle d'un utilisateur de l'application"""
     idRole = db.Column(db.Integer, primary_key =True)
     nomRole = db.Column(db.String(100))
+    niveauProtection = db.Column(db.Integer)
 
     def get_id(self):
       return str(self.idRole)
@@ -56,7 +57,11 @@ class Document(db.Model):
     nomDoc = db.Column(db.String(100))
     fichierDoc = db.Column(db.String(100))
     descriptionDoc = db.Column(db.String(500))
+    niveauProtection = db.Column(db.Integer)
     idType = db.Column(db.Integer, db.ForeignKey('type_document.idType'))
+
+    def __repr__(self) -> str:
+        return f'Document {self.idDoc} : {self.nomDoc}'
     
 class Tag(db.Model):
     """tag permettant la répertorisation des documents"""
@@ -76,6 +81,12 @@ class DocumentTag(db.Model):
     """classe représentant la relation entre les documents et leurs tags"""
     idTag = db.Column(db.Integer, db.ForeignKey('tag.idTag'), primary_key = True)
     idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
+    index = db.Index('indexTag', idTag)
+
+class Favoris(db.Model):
+    """classe représentant la relation entre les utilisateurs et leurs documents favoris"""
+    idUtilisateur = db.Column(db.Integer, db.ForeignKey('utilisateur.idUtilisateur'), primary_key = True)
+    idDoc = db.Column(db.Integer, db.ForeignKey('document.idDoc'), primary_key = True)
     
 def get_tags():
     """fonction d'obtention de tous les tags existants"""
@@ -83,6 +94,8 @@ def get_tags():
 
 def get_tag(nomTag, exact = False):
     """fonction d'obtention d'un tag à partir de son nom"""
+    if nomTag is None:
+        return None
     if exact:
         return Tag.query.filter(Tag.nomTag.ilike(nomTag)).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
@@ -105,7 +118,6 @@ def get_max_id_tag():
     if max_id is None:
         return 0
     return max_id
-
 
 def get_types():
     """fonction d'obtention des types des documents"""
@@ -140,10 +152,13 @@ def get_document_types(idTypeDoc, document = []):
 
 def get_filtrer_document_tag(documents, tag):
     """fonction de filtrage de documents à partir d'un tag donné"""
-    resultat = []
-    for doc in documents:
-        if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
-            resultat.append(doc)
+    document_ids = set(document.idDoc for document in documents)
+    
+    result = DocumentTag.query.filter(
+        DocumentTag.idTag == tag.idTag,
+        DocumentTag.idDoc.in_(document_ids)
+    ).all()
+    resultat = [Document.query.get(doc.idDoc) for doc in result]
     return resultat
 
 def get_liaison_document_tag(idTag):
@@ -157,6 +172,26 @@ def get_filtrer_document_nom(documents, nom):
         if doc.nomDoc.lower().find(nom.lower()) != -1:
             resultat.append(doc)
     return resultat
+
+def get_favoris_user(idUtilisateur):
+    """fonction d'obtention des documents favoris d'un utilisateur"""
+    return Document.query.join(Favoris, Document.idDoc == Favoris.idDoc).filter(Favoris.idUtilisateur == idUtilisateur).all()
+
+def user_has_favoris(idUtilisateur, idDoc):
+    """fonction de vérification de l'existence d'un document dans les favoris d'un utilisateur"""
+    return Favoris.query.filter(Favoris.idUtilisateur == idUtilisateur).filter(Favoris.idDoc == idDoc).first()
+
+def add_favoris(idUtilisateur, idDoc):
+    """fonction d'ajout d'un document aux favoris d'un utilisateur"""
+    favoris = Favoris(idUtilisateur = idUtilisateur, idDoc = idDoc)
+    db.session.add(favoris)
+    db.session.commit()
+
+def remove_favoris(idUtilisateur, idDoc):
+    """fonction de suppression d'un document des favoris d'un utilisateur"""
+    favoris = Favoris.query.filter(Favoris.idUtilisateur == idUtilisateur).filter(Favoris.idDoc == idDoc).first()
+    db.session.delete(favoris)
+    db.session.commit()
 
 def get_document_id(idDoc):
     """fonction d'obtention d'un document à partir de son id"""
@@ -177,6 +212,10 @@ def is_admin_identifiant(identifant):
 def get_grades():
     """fonction d'obtention de l'ensemble des grades"""
     return Grade.query.all()
+
+def get_roles():
+    """fonction d'obtention de l'ensemble des roles"""
+    return Role.query.all()
 
 def get_utilisateur(idUtilisateur):
     """fonction d'obtention d'un utilisateur à partir d'un id donné"""

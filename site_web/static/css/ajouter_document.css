@@ -15,11 +15,18 @@ body {
     font-size: 24px;
 }
 
-.central {
-    padding: 20px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.en-tete{
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 1vw;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.central .type {
+    margin-top: 20px;
 }
 
 .central section {
@@ -47,6 +54,57 @@ body {
     background-color: #b22222;
     color: white;
     cursor: pointer;
+}
+
+.boutons-bas{
+    text-align:center;
+}
+
+.bouton-importer{
+    border-radius: 10px;
+    font-size: 1.5em;
+    margin-bottom: 1vw;
+}
+.tags input[type="submit"] {
+    margin-right: 10px;
+    padding: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.tags-manuels {
+    margin-top: 20px;
+}
+
+.bouton-importer:hover{
+    background-color: gray;
+    color: white;
+}
+
+#niveau-select{
+    margin-top: 1em;
+}
+
+#file-label{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 30vw;
+}
+.tags{
+    width: 30vw;
+}
+#allTags {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.boutons-bas {
+    margin-top: 20px;
+    text-align: left;
 }
 
 #file-label {
@@ -88,4 +146,27 @@ body {
     color: white;
     text-decoration: none;
     cursor: pointer;
+}
+
+.boutons-bas > a{
+    padding: 0;
+    margin: 0;
+}
+
+#annuler{
+    font-size: xx-large;
+    color: white;
+    background-color: #954D4D;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+#valider{
+    font-size: xx-large;
+    color: white;
+    background-color: #84B546;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
 }

@@ -4,6 +4,7 @@ CREATE TABLE DOCUMENT (
     fichierDoc VARCHAR(100) NOT NULL,
     idType int NOT NULL,
     descriptionDoc VARCHAR(500),
+    niveauProtection int NOT NULL,
     FOREIGN KEY (idType) REFERENCES TYPE_DOCUMENT(idType)
 );
 
@@ -49,7 +50,8 @@ CREATE TABLE GRADE (
 
 CREATE TABLE ROLE(
     idRole INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    nomRole VARCHAR(100) NOT NULL
+    nomRole VARCHAR(100) NOT NULL,
+    niveauProtection int NOT NULL
 );
 
 CREATE TABLE CASERNE(
@@ -94,4 +96,12 @@ CREATE TABLE LIAISON_REPERTOIRE_FICHIER(
     PRIMARY KEY(idRepParent, idFicEnfant),
     FOREIGN KEY (idRepParent) REFERENCES REPERTOIRE(idRep),
     FOREIGN KEY (idFicEnfant) REFERENCES DOCUMENT(idDoc)
+);
+
+CREATE TABLE FAVORIS(
+    idUtilisateur int NOT NULL,
+    idDoc int NOT NULL,
+    PRIMARY KEY(idUtilisateur, idDoc),
+    FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur),
+    FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc)
 );
