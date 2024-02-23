@@ -201,6 +201,20 @@ def remove_favoris(idUtilisateur, idDoc):
     db.session.delete(favoris)
     db.session.commit()
 
+def supprimer_doctag_by_docid(id):
+    """Function to delete all DocumentTag instances based on the document's ID"""
+    document_tags = DocumentTag.query.filter_by(idDoc=id).all()
+    for document_tag in document_tags:
+        db.session.delete(document_tag)
+    db.session.commit()
+
+def supprimer_favoris_by_docid(id):
+    """fonction de suppression d'une instance de favoris selon l'id du document"""
+    favoris = Favoris.query.filter_by(idDoc=id).all()
+    for fav in favoris:
+        db.session.delete(fav)
+    db.session.commit()
+
 def get_document_id(idDoc):
     """fonction d'obtention d'un document à partir de son id"""
     return Document.query.get(idDoc)
