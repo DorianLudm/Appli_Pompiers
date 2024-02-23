@@ -547,6 +547,16 @@ def supprimer_tag(id):
 
 def handle_filtrage(admin=False, reload_fav=False):
     global active_tags, filtre_texte, documents, selectType, favoris
+
+    # Si on reset les filtres cela remet tout à vide
+    if request.form.get('reset'):
+        active_tags.clear()
+        filtre_texte = ""
+        documents = []
+        if admin:
+            selectType = "Choisir un type"
+            return redirect(url_for('recherche_doc_admin'))
+        return redirect(url_for('home'))
     favoris_clicked = False
 
     # Si on interagit avec les favoris
@@ -555,7 +565,7 @@ def handle_filtrage(admin=False, reload_fav=False):
         if not reload_fav:
             favoris = not favoris
         documents = get_favoris_user(current_user.idUtilisateur)
-        active_tags = set()
+        active_tags.clear()
         filtre_texte = ""
         return redirect(url_for('home'))
     
@@ -623,15 +633,6 @@ def handle_filtrage(admin=False, reload_fav=False):
             for tag in active_tags:
                 documents = get_filtrer_document_tag(documents, tag)
 
-        if request.form.get('reset'):
-            active_tags = set()
-            filtre_texte = ""
-            documents = []
-            if admin:
-                selectType = "Choisir un type"
-                return redirect(url_for('recherche_doc_admin'))
-            return redirect(url_for('home'))
-
         # Si il y a aucun critère de recherche, alors on load aucun document
         if admin:
             if not active_tags and not filtre_texte and selectType == "Choisir un type":
@@ -639,15 +640,7 @@ def handle_filtrage(admin=False, reload_fav=False):
         else:
             if not active_tags and not filtre_texte:
                 documents = []
-        # document_final = []
-        # for doc in documents:
-        #     is_ok = True
-        #     for tag in active_tags:
-        #         if DocumentTag.query.filter_by(idDoc=doc.idDoc, idTag=tag.idTag).first() is None:
-        #             is_ok = False
-        #     if is_ok:
-        #         document_final.append(doc)
-        # documents = document_final
+        # permet de trier des documents par des tags
         for tag_act in active_tags:
             documents = get_filtrer_document_tag(documents, tag_act)
 
