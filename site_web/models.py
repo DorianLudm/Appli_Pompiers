@@ -157,7 +157,7 @@ def get_filtrer_document_tag(documents, tag):
     #     if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
     #         resultat.append(doc)
 
-    document_ids = [document.idDoc for document in documents]
+    document_ids = set(document.idDoc for document in documents)
     
     result = DocumentTag.query.filter(
         DocumentTag.idTag == tag.idTag,
