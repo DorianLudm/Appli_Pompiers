@@ -1,6 +1,6 @@
 # Appli_Pompiers
 
-Application demandé par le SDIS 45
+Application demandée par le SDIS 45
 
 ## Membres
 - Ludmann Dorian
@@ -10,20 +10,20 @@ Application demandé par le SDIS 45
 - Demaret Sullivan
 
 ## Fonctionnalités
-Pompier:
+**Pompier :**
 - Recherche de document
 - Filtrer la recherche par plusieurs options (extension, nom, tags)
 - Favoriser un document
 - Visualiser un document
 - Télécharger un document
 
-Administrateur:
+**Administrateur :**
 - Gérer (ajouter, modifier et supprimer) les comptes
 - Gérer les documents
 - Gérer les tags
 - Rechercher les documents (mêmes options qu'utilisateur)
 
-Autres:
+**Autres :**
 - Système de niveau de protection
 
 ## Utilisation de l'application
