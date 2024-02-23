@@ -12,7 +12,7 @@ import os
 import random
 from werkzeug.utils import secure_filename
 import shutil
-from .generationTag import generationTag
+from .generationTag import generationTag, generationTagDossier
 
 active_tags = set()
 tag_manuel = set()
@@ -338,7 +338,6 @@ def ajoute_document():
                 db.session.commit()
             shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
             for tag in tag_manuel:
-                print("Mes tags" + str(tag.idTag))
                 document_tag = DocumentTag(
                     idDoc = document.idDoc,
                     idTag = tag.idTag
@@ -384,6 +383,16 @@ def importer_repertoire():
                     )
                     db.session.add(document)
                     db.session.commit()
+                    tags = generationTagDossier(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                    print(tags)
+                    for tag in tags:
+                        print(tag.idTag)
+                        document_tag = DocumentTag(
+                            idDoc = document.idDoc,
+                            idTag = tag.idTag
+                        )
+                        db.session.add(document_tag)
+                        db.session.commit()
                     id_tag = request.form.get('tag_document')
                     if id_tag != "Choisir un Tag":
                         document_tag = DocumentTag(
@@ -659,10 +668,8 @@ def erreur_compte():
     """fonction destinée à gérer les erreurs de connexion"""
     if not is_admin():
         return redirect(url_for('home'))
-    print("\nerreur\n")
 
 
 @app.route('/genererTag')
 def genererTag():
-    print("Coucou")
     return "Tag généré"

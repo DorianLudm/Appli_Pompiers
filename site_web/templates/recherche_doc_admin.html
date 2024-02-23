@@ -66,12 +66,12 @@
                                 <a onclick="togglePopup({{ doc.idDoc }});"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
                                 <div id="{{doc.idDoc}}" class="popup-overlay">
                                     <div class="popup-content">
-                                        <div>
+                                        <div class="contenu-popup">
                                             <h2>Confirmez-vous la suppression ?</h2>
                                         </div>
-                                        <div>
-                                            <a onclick="togglePopup({{ doc.idDoc }});"><input id="annuler-suppression" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
-                                            <a href="{{ url_for('supprimer_document', id= doc.idDoc) }}"><input id="valider-suppression" type="button" value="🗑 Confirmer" alt="ValiderSuppression"/></a>
+                                        <div class="contenu-popup">
+                                            <a onclick="togglePopup({{ doc.idDoc }});"><input id="annuler" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
+                                            <a href="{{ url_for('supprimer_document', id= doc.idDoc) }}"><input id="valider" type="button" value="🗑 Confirmer" alt="ValiderSuppression"/></a>
                                         </div>
                                     </div>
                                 </div>

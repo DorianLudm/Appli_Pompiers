@@ -19,7 +19,6 @@
         <div>
             <p>Description :</p>
             <textarea name= "description" rows="6" cols="60" placeholder="Entrez la description du document">{{ doc.descriptionDoc }}</textarea>
-            <!-- <input name= "description" rows="6" cols="60" placeholder="Entrez la description du document" value="{{ doc.descriptionDoc }}"> -->
         </div>
         <div class="type">
             <p>Type</p>
@@ -62,9 +61,8 @@
 </div>
 
 <div class="boutons-bas">
-    
-    <input type="submit" value="Annuler" name="annuler">
-    <input type="submit" value="Enregistrer" name="modifier_document">
+    <a href="{{ url_for('recherche_doc_admin') }}"><input type="button" value="Annuler" id="annuler" name="annuler"></a>
+    <input type="submit" value="Enregistrer" id="valider"name="modifier_document">
 </div>
 </form>
 {% endblock %}
