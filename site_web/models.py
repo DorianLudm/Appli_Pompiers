@@ -100,6 +100,10 @@ def get_tag(nomTag, exact = False):
         return Tag.query.filter(Tag.nomTag.ilike(nomTag)).first()
     return Tag.query.filter(Tag.nomTag.like('%' + nomTag + '%')).first()
 
+def get_tags_nom(nomTag):
+    """fonction d'obtention de tous les tags existants à partir d'un nom donné"""
+    return Tag.query.filter(Tag.nomTag.ilike('%' + nomTag + '%')).all()
+
 def get_tag_id(idTag):
     """fonction d'obtention d'un tag à partir de son id"""
     return Tag.query.get(idTag)

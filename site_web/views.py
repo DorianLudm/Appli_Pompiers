@@ -437,6 +437,19 @@ def ajouter_filtre_doc_admin():
         handle_filtrage(True)
     return redirect(url_for('recherche_doc_admin'))
 
+@app.route('/administrateur/appliquer_filtre_tags', methods=['GET', 'POST'])
+@login_required
+def ajouter_filtre_tag():
+    """fonction d'ajout de filtre pour la recherche de tags"""
+    if not is_admin():
+        return redirect(url_for('home'))
+    if request.form.get('reset'):
+        return redirect(url_for('recherche_tags'))
+    if request.method=='POST':
+        tags_search = request.form.get('barre_recherche')
+        tags = get_tags_nom(tags_search)
+    return render_template('recherche_tags.html', title='Gestion des tags', util = informations_utlisateurs(), tags = tags)
+
 @app.route('/administrateur/supprimerDoc/<id>')
 @login_required
 def supprimer_document(id):
