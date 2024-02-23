@@ -15,7 +15,7 @@ header section {
 @media screen and (min-width: 1251px) {
     header img, .buttonHome {
         height: 100%;
-        max-height: 8vw;
+        max-height: 10vh;
         width: auto;
     }
 }
@@ -23,7 +23,7 @@ header section {
 @media screen and (max-width: 1250px) {
     header img, .buttonHome {
         width: 100%;
-        max-width: 8vh;
+        max-width: 10vh;
         height: auto;
     }
 }
