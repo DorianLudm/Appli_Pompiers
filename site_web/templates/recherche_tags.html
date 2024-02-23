@@ -11,7 +11,7 @@
     <script src="../static/js/personnalisationTags.js" defer></script>
 </head>
 <div id="filtre">
-    <form action="{{ url_for ('ajouter_filtre_doc_admin') }}" method="POST" class="filtre_barre">
+    <form action="{{ url_for ('ajouter_filtre_tag') }}" method="POST" class="filtre_barre">
         <div class="research_bar">
           <input type="text" value="{{ search }}" name="barre_recherche" placeholder="Rechercher un tag !" id="barre_recherche"/>
         </div>
