@@ -39,6 +39,7 @@
                 </select>
                 <select name="extensions" id="extensions-select">
                     <option selected="selected" value="{{extension_actuelle}}" hidden="hidden">{{extension_actuelle}}</option>
+                    <option value="Choisir une extension" type ="submit">Tous</option>
                     {% for x in extensions %} 
                         <option value="{{x}}" type ="submit">{{x}}</option>
                     {% endfor %}
