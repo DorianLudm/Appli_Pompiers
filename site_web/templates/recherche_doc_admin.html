@@ -3,7 +3,7 @@
 <link href="/static/css/recherche_doc_admin.css" rel="stylesheet">
 {% endblock %}
 {% block header %}
-    <h1>Recherche de documents</h1>
+    <h1>Gestion des documents</h1>
     {% include "informations_utilisateur.html" %}
 {% endblock %}
 {% block main %}
@@ -42,29 +42,45 @@
         <div class="bouton_reset">
             <input name="reset" type="Submit" value="Réinitialiser les filtres"/> 
             <a href="{{ url_for ('ajoute_document')}}"><input type="button" value="Ajouter un document"/></a>
+            <a href="{{ url_for ('importer_repertoire')}}"><input type="button" value="Importer un répertoire"/></a>
         </div>
     </form>
 </div>
 <div>
     <a href="{{ url_for ('home_admin') }}"><input class="retourHome" type="button" value="< Retour à l'accueil"/></a>
 </div>
-<div> 
-    <ul class="resultat">
-        <li class="doc">
-            {% for elem in result %}
-                {% if elem.nomType == selectType or selectType == "Choisir un type"%}
-                    {% for doc in elem.element %}
-                        <ul class="in_ligne">
-                            <a href={{ url_for('modifier_document', id= doc.idDoc) }}><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
-                            <li class="nomDoc"><a href={{ url_for('modifier_document', id= doc.idDoc) }}>{{ doc.nomDoc }}</a></li>
-                            <li class="typeDoc">{{ elem.nomType }}</li>
-                            <a href={{ url_for('modifier_document', id= doc.idDoc) }}><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
-                            <a href="{{ url_for('supprimer_document', id=doc.idDoc ) }}"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
-                        </ul>
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </li>
-    </ul>
+<div id="content">
+    {% if not has_result %}
+        <p id="no_result">Veuillez entrer des paramètres</p>
+    {% else %}
+        <ul class="resultat">
+            <li class="doc">
+                {% for elem in result %}
+                    {% if elem.nomType == selectType or selectType == "Choisir un type"%}
+                        {% for doc in elem.element %}
+                            <ul class="in_ligne">
+                                <a href="{{ url_for('modifier_document', id= doc.idDoc) }}"><input type="image" class="ImgDoc" src="/static/img/documentIco.png"></a>
+                                <li class="nomDoc"><a href="{{ url_for('modifier_document', id= doc.idDoc) }}">{{ doc.nomDoc }}</a></li>
+                                <li class="typeDoc">{{ elem.nomType }}</li>
+                                <a href="{{ url_for('modifier_document', id= doc.idDoc) }}"><input class="buttonCompte" type="image" src="/static/img/modificationIco.png" alt="ModifierCompte"/></a>
+                                <a onclick="togglePopup({{ doc.idDoc }});"><input class="buttonCompte" type="image" src="/static/img/poubelleIco.png" alt="SupprimerCompte"/></a>
+                                <div id="{{doc.idDoc}}" class="popup-overlay">
+                                    <div class="popup-content">
+                                        <div class="contenu-popup">
+                                            <h2>Confirmez-vous la suppression ?</h2>
+                                        </div>
+                                        <div class="contenu-popup">
+                                            <a onclick="togglePopup({{ doc.idDoc }});"><input id="annuler" type="button" value="❌ Annuler" alt="AnnulerSuppression"/></a>
+                                            <a href="{{ url_for('supprimer_document', id= doc.idDoc) }}"><input id="valider" type="button" value="🗑 Confirmer" alt="ValiderSuppression"/></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </li>
+        </ul>
+    {% endif %}
 </div>
 {% endblock %}

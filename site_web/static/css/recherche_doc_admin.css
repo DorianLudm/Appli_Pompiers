@@ -174,3 +174,13 @@ li.ImgDoc{
     margin-top: 1%;
     color: black;
 }
+
+#no_result{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1%;
+    color: black;
+    font-size: x-large;
+}

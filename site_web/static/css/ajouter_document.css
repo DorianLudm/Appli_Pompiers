@@ -1,18 +1,18 @@
-body{
-    background-color: #F24343;
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
 }
 
-main h2{
+.en-tete {
+    background-color: #b22222;
+    padding: 20px;
+    margin-bottom: 20px;
     color: white;
-    font-size: 3rem;
-    font-weight: bold;
-    flex-basis: 100%;
-    text-align: center;
 }
 
-main p{
-    color: white;
-    font-size: 2rem;
+.en-tete h2 {
+    font-size: 24px;
 }
 
 .en-tete{
@@ -24,64 +24,123 @@ main p{
     flex-wrap: wrap;
     align-content: center;
 }
-.en-tete > input{
-    font-size: 2rem;
-    flex-basis: 60%;
+
+.central .type {
+    margin-top: 20px;
 }
 
-.central{
-    display: flex;
-    justify-content: center;
-
-    flex-wrap: wrap;
-    align-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 2vw;
+.central section {
+    margin-bottom: 20px;
 }
 
-.central > section{
-    padding: 2vw;
+.central .type {
+    margin-top: 20px;
 }
 
-.type *, .tags-manuels *{
-    align-items: center;
-    margin-top: 1vh;
-    margin-right: 5em;
-}
-
-.type{
-    display: flex;
-    flex-wrap: nowrap;
-}
-
-.type select{
-    margin-top: 1vw;
-    height: 100%;
+.central .type select {
     width: 100%;
-    margin-right: 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-.tags-manuels select{
-    width: 30%;
+#importer {
+    display: none;
+}
+
+.bouton-importer {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #b22222;
+    color: white;
+    cursor: pointer;
 }
 
 .boutons-bas{
     text-align:center;
 }
 
-input[type="submit"]{
+.bouton-importer{
     border-radius: 10px;
     font-size: 1.5em;
     margin-bottom: 1vw;
 }
-
-.boutons-bas > input{
-    width: auto;
-    padding: 0.6vw 3vw;
-    margin-right: 10vw;
+.tags input[type="submit"] {
+    margin-right: 10px;
+    padding: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
-.boutons-bas > input:last-child{
-    margin-right: 0;
+.tags-manuels {
+    margin-top: 20px;
+}
+
+.bouton-importer:hover{
+    background-color: gray;
+    color: white;
+}
+
+#niveau-select{
+    margin-top: 1em;
+}
+
+#file-label{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 30vw;
+}
+.tags{
+    width: 30vw;
+}
+#allTags {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.boutons-bas {
+    margin-top: 20px;
+    text-align: left;
+}
+
+#file-label {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.tags {
+    margin-top: 20px;
+}
+
+.tags input[type="submit"] {
+    margin-right: 10px;
+    padding: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.tags-manuels {
+    margin-top: 20px;
+}
+
+#allTags {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.boutons-bas {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.boutons-bas > a{
+    padding: 0;
+    margin: 0;
 }

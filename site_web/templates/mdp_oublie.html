@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block page_specific_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+{% block header %}
+  <section>
+    <h1>FireFile</h1>
+    <h2>Se documenter en toute simplicité</h2>
+  </section>
+  <img src="../static/img/login-picture.png">
+{% endblock %}
+{% block main %}
+<section class="gradient-custom">
+    <div class="container py-5">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+            <form method="POST" role="form" action="{{ url_for('valider_mdp_oublie') }}">
+              {{ form.hidden_tag() }}
+              <h2 class="fw-bold mb-2 text-uppercase">Mot De Passe Oublié ?</h2>
+              <p class="text-white-50 mb-5">Remplissez les champs ci-dessous pour réinitialiser votre mot de passe</p>
+  
+              <div class="form-outline form-white mb-4">
+                <label class="form-label" for="typeEmailX">Identifiant</label>
+                <div>
+                  {{ form.identifiant(size =50, class_="form-control", placeholder="Votre identifiant actuel") }}
+                </div>
+              </div>
+  
+              <div class="form-outline form-white mb-4">
+                <label class="form-label" for="typePasswordX">Nouveau mot de passe</label>
+                <div>
+                  {{ form.mdp(size =50, class_="form-control", placeholder="Votre nouveau mot de passe") }}
+                </div>
+              </div>
+
+              <div class="form-outline form-white mb-4">
+                <label class="form-label" for="typePasswordX">Confirmation du mot de passe</label>
+                <div>
+                  {{ form.mdpConfirm(size =50, class_="form-control", placeholder="Saisissez votre mot de passe à nouveau") }}
+                </div>
+              </div>
+              
+              <a class="btn btn-outline-light btn-lg px-5" href="{{ url_for('login') }}">Retour</a>
+              <button class="btn btn-outline-light btn-lg px-5" type="submit" style="margin-left: 1vw;">Réinitialiser</button>
+            </form>
+            {% if erreur %}
+              <p class="error"><strong>Erreur :</strong> {{ erreur }}</p>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -7,8 +7,8 @@ INSERT INTO CASERNE VALUES
     (3, 'Caserne 3', '3 allée des tulipes'),
     (4, 'Caserne 4', '4 rue Victor Hugo');
 
-INSERT INTO ROLE VALUES  
-    (-1, 'Administrateur'),(1 ,'Sapeur-pompier');
+INSERT INTO ROLE VALUES
+    (-1, 'Administrateur', 10),(1 ,'Sapeur-pompier', 1);
 
 INSERT INTO UTILISATEUR VALUES
     (1, 'DUPONT', 'Jean', 'test', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1, -1, 1),
@@ -55,20 +55,20 @@ INSERT INTO TYPE_DOCUMENT VALUES
     (4, 'Mémento');
 
 INSERT INTO DOCUMENT VALUES
-    (1, "Acetylene Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Acétylène/Acetylene_Vapor_Pressure.gif", 4, ""),
-    (2, "FDS acétylène", "10 - Encyclos gaz 07 air liquide/Acétylène/fds acétylène.pdf", 3, "Fiche de données de sécurité sur l'acétylène"),
-    (3, "FDS air comprimé", "10 - Encyclos gaz 07 air liquide/Air/FDS air comprimé.pdf", 3, "Fiche de données de sécurité sur l'air comprimé"),
-    (4, "FDS air liquide réfrigéré", "10 - Encyclos gaz 07 air liquide/Air/FDS air liquide réfrigéré.pdf", 3, "Fiche de données de sécurité sur l'air liquide réfrigéré"),
-    (5, "Ammonia Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Ammoniac/Ammonia_Vapor_Pressure.gif", 4, ""),
-    (6, "FDS ammoniac", "10 - Encyclos gaz 07 air liquide/Ammoniac/FDS ammoniac.pdf", 3, "Fiche de données de sécurité traitant de l'ammoniac"),
-    (7, "Argon Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Argon/Argon_Vapor_Pressure.gif", 4, ""),
-    (8, "FDS argon", "10 - Encyclos gaz 07 air liquide/Argon/FDS argon.pdf", 3, "Fiche de données de sécurité sur l'argon"),
-    (9, "FDS argon réfrigéré", "10 - Encyclos gaz 07 air liquide/Argon/FDS argon réfrigéré.pdf", 3, "Fiche de données de sécurité sur l'argon réfrigéré"),
-    (10, "Arsine Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Arsine/Arsine_Vapor_Pressure.gif", 4, ""),
-    (11, "FDS arsine", "10 - Encyclos gaz 07 air liquide/Arsine/FDS arsine.pdf", 3, "Fiche de données de sécurité sur l'arsine"),
-    (12, "FDS azote", "10 - Encyclos gaz 07 air liquide/Azote/FDS azote.pdf", 3, "Fiche de données de sécurité concernant l'azote"),
-    (13, "FDS azote réfrigéré", "10 - Encyclos gaz 07 air liquide/Azote/FDS azote réfrigéré.pdf", 3, "Fiche de données de sécurité sur l'azote réfrigéré"),
-    (14, "nitrogen vapor pressure", "10 - Encyclos gaz 07 air liquide/Azote/nitrogen_vapor_pressure.gif", 4, "");
+    (1, "Acetylene Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Acétylène/Acetylene_Vapor_Pressure.gif", 4, "", 1),
+    (2, "FDS acétylène", "10 - Encyclos gaz 07 air liquide/Acétylène/fds acétylène.pdf", 3, "Fiche de données de sécurité sur l'acétylène", 1),
+    (3, "FDS air comprimé", "10 - Encyclos gaz 07 air liquide/Air/FDS air comprimé.pdf", 3, "Fiche de données de sécurité sur l'air comprimé", 1),
+    (4, "FDS air liquide réfrigéré", "10 - Encyclos gaz 07 air liquide/Air/FDS air liquide réfrigéré.pdf", 3, "Fiche de données de sécurité sur l'air liquide réfrigéré", 1),
+    (5, "Ammonia Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Ammoniac/Ammonia_Vapor_Pressure.gif", 4, "", 1),
+    (6, "FDS ammoniac", "10 - Encyclos gaz 07 air liquide/Ammoniac/FDS ammoniac.pdf", 3, "Fiche de données de sécurité traitant de l'ammoniac", 1),
+    (7, "Argon Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Argon/Argon_Vapor_Pressure.gif", 4, "", 1),
+    (8, "FDS argon", "10 - Encyclos gaz 07 air liquide/Argon/FDS argon.pdf", 3, "Fiche de données de sécurité sur l'argon", 1),
+    (9, "FDS argon réfrigéré", "10 - Encyclos gaz 07 air liquide/Argon/FDS argon réfrigéré.pdf", 3, "Fiche de données de sécurité sur l'argon réfrigéré", 1),
+    (10, "Arsine Vapor Pressure", "10 - Encyclos gaz 07 air liquide/Arsine/Arsine_Vapor_Pressure.gif", 4, "", 1),
+    (11, "FDS arsine", "10 - Encyclos gaz 07 air liquide/Arsine/FDS arsine.pdf", 3, "Fiche de données de sécurité sur l'arsine", 1),
+    (12, "FDS azote", "10 - Encyclos gaz 07 air liquide/Azote/FDS azote.pdf", 3, "Fiche de données de sécurité concernant l'azote", 1),
+    (13, "FDS azote réfrigéré", "10 - Encyclos gaz 07 air liquide/Azote/FDS azote réfrigéré.pdf", 3, "Fiche de données de sécurité sur l'azote réfrigéré", 1),
+    (14, "nitrogen vapor pressure", "10 - Encyclos gaz 07 air liquide/Azote/nitrogen_vapor_pressure.gif", 4, "", 1);
     
 
 
@@ -150,43 +150,3 @@ INSERT INTO DOCUMENT_TAG VALUES
     (12, 32),
     (13, 32),
     (14, 32);
-
-INSERT INTO DIRIGER_CASERNE VALUES
-    (6, 1),
-    (5, 2),
-    (3, 3),
-    (2, 2);
-
-INSERT INTO REPERTOIRE VALUES
-    (1, "10 - Encyclos gaz 07 air liquide", 32),
-    (2, "Acétylène", 26),
-    (3, "Air", 27),
-    (4, "Ammoniac", 28),
-    (5, "Argon", 29),
-    (6, "Arsine", 30),
-    (7, "Azote", 31);
-
-INSERT INTO RELATION_REPERTOIRE VALUES
-    (1, 2),
-    (1, 3),
-    (1, 4),
-    (1, 5),
-    (1, 6),
-    (1, 7);
-
-
-INSERT INTO LIAISON_REPERTOIRE_FICHIER VALUES
-    (2, 1),
-    (2, 2),
-    (3, 3),
-    (3, 4),
-    (4, 5),
-    (4, 6),
-    (5, 7),
-    (5, 8),
-    (5, 9),
-    (6, 10),
-    (6, 11),
-    (7, 12),
-    (7, 13),
-    (7, 14);

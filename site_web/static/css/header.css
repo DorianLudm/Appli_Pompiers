@@ -15,7 +15,7 @@ header section {
 @media screen and (min-width: 1251px) {
     header img, .buttonHome {
         height: 100%;
-        max-height: 10vw;
+        max-height: 10vh;
         width: auto;
     }
 }
@@ -60,7 +60,6 @@ section{
     margin: 15px;
 }
 
-
 .popup-overlay{
     position: fixed;
     top:0;
@@ -91,21 +90,21 @@ section{
     transform:translate(-50%, -50%);
     display: flex;
     flex-wrap: wrap;
+    position: relative;
 }
 
 .contenu-popup{
     flex-basis: 100%;
     flex-grow: 1;
+    text-align: center;
 }
 
 .popup-content h2{
     margin:20px 0;
     color: red;
-    
-
 }
 
-#annuler-deconnexion{
+#annuler{
     font-size: xx-large;
     color: white;
     background-color: #954D4D;
@@ -114,7 +113,7 @@ section{
     border-radius: 10px;
 }
 
-#valider-deconnexion{
+#valider{
     font-size: xx-large;
     color: white;
     background-color: #84B546;
