@@ -547,6 +547,15 @@ def supprimer_tag(id):
 
 def handle_filtrage(admin=False, reload_fav=False):
     global active_tags, filtre_texte, documents, selectType, favoris
+
+    if request.form.get('reset'):
+        active_tags = set()
+        filtre_texte = ""
+        documents = []
+        if admin:
+            selectType = "Choisir un type"
+            return redirect(url_for('recherche_doc_admin'))
+        return redirect(url_for('home'))
     favoris_clicked = False
 
     # Si on interagit avec les favoris
@@ -622,15 +631,6 @@ def handle_filtrage(admin=False, reload_fav=False):
                 documents = get_filtrer_document_nom(documents, filtre_texte)
             for tag in active_tags:
                 documents = get_filtrer_document_tag(documents, tag)
-
-        if request.form.get('reset'):
-            active_tags = set()
-            filtre_texte = ""
-            documents = []
-            if admin:
-                selectType = "Choisir un type"
-                return redirect(url_for('recherche_doc_admin'))
-            return redirect(url_for('home'))
 
         # Si il y a aucun critère de recherche, alors on load aucun document
         if admin:
