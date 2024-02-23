@@ -225,9 +225,10 @@ def modifier_compte(id):
             user.mdp = sha256(request.form.get('password').encode()).hexdigest()
         user.idGrade = request.form.get('grades')
         user.idCas = request.form.get('casernes')
+        user.idRole = request.form.get('roles')
         db.session.commit() 
         return redirect(url_for('recherche_comptes')) 
-    return render_template('modifierCompte.html', title="Modification d'un compte", user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
+    return render_template('modifierCompte.html', title="Modification d'un compte", roles=get_roles(), user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
 
 @app.route('/administrateur/rechercheDocAdmin')
 @login_required
@@ -471,7 +472,7 @@ class AjouteCompteForm(FlaskForm):
     mdp = PasswordField('Mot de passe', validators = [DataRequired()])
     id_grade = SelectField('Grade', choices = [])
     id_caserne = SelectField('Caserne', choices = [])
-    id_role = BooleanField('Administrateur ?')
+    id_role = SelectField('Role', choices = [])
 
 @app.route('/administrateur/ajouteCompte')
 @login_required
@@ -482,6 +483,7 @@ def ajoute_compte():
     f = AjouteCompteForm()
     f.id_grade.choices = [(g.idGrade, g.nomGrade) for g in get_grades()]
     f.id_caserne.choices = [(c.idCas, c.nomCaserne) for c in get_casernes()]
+    f.id_role.choices = [(r.idRole, r.nomRole) for r in get_roles()]
     return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title="Ajout d'un compte", form=f)
 
 @app.route('/administrateur/supprimerCompte/<int:id>')
@@ -505,11 +507,9 @@ def save_compte():
     form = AjouteCompteForm()
     form.id_grade.choices = [(g.idGrade, g.nomGrade) for g in get_grades()]
     form.id_caserne.choices = [(c.idCas, c.nomCaserne) for c in get_casernes()]
+    form.id_role.choices = [(r.idRole, r.nomRole) for r in get_roles()]
 
     if form.validate_on_submit():
-        if form.id_role.data:
-            role = -1
-        role = 1
         if is_identifant(form.pseudo.data):
             return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form, erreur = "L'identifiant existe déjà")
         else:
@@ -520,7 +520,7 @@ def save_compte():
                 identifiant= form.pseudo.data,
                 mdp= sha256(form.mdp.data.encode()).hexdigest(),
                 idGrade= form.id_grade.data,
-                idRole= role,
+                idRole= form.id_role.data,
                 idCas= form.id_caserne.data
             )
             db.session.add(util)
