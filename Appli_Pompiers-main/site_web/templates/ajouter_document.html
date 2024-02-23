@@ -25,23 +25,14 @@
             <select name="type_document" id="types-select">
                 <option selected="selected" hidden="hidden">{{type}}</option>
                 {% for x in types %} 
-                    <option name="type_document" value="{{x.idType}}">{{x.nomType}}</option>
+                    <option name="type_document" value="{{x.nomType}}">{{x.nomType}}</option>
                 {% endfor %}
             </select>
         </div>
     </section>
-    
+
     <section>
-        <input type="file" value="{{document}}" name="file" id="importer"style="display: none;">
-        <label for="importer" class="bouton-importer">Importer</label>
-        <p id="file-label">{{document}}</p>
-        <script>
-            document.getElementById('importer').addEventListener('change', function(e) {
-                var fileName = e.target.files[0].name;
-                document.getElementById('file-label').innerText = fileName;
-                console.log(fileName);
-            });
-            </script>
+        <input type="file" value="{{document}}" name="file" id="importer">
         <div>
             <p>Tags :</p>
             <div class="tags">
@@ -59,15 +50,6 @@
             </datalist> 
             <input type="submit" value="Ajouter">
         </div>
-        <div class="generer-tag">
-            <input name="generer-tag" type="submit" value="Générer des tags">
-        </div>
-        <select name="niveau_document" id="niveau-select">
-            <option selected="selected" hidden="hidden" value="1">Choisir un Niveau de Protection</option>
-            {% for x in roles %} 
-                <option name="niveau_document" value="{{x.niveauProtection}}">{{x.niveauProtection}}</option>
-            {% endfor %}
-        </select>
     </section>
     <section>
         <p>Répertoire du fichier</p>
@@ -79,7 +61,7 @@
 
 <div class="boutons-bas">
     <input type="submit" value="Enregistrer" name="ajouter_document">
-    <a href="{{ url_for ('recherche_doc_admin')}}">Retour</a>
+    <a href="{{ url_for ('recherche_doc_admin')}}"><input type="button" value="Retour"></a>
 </div>
 </form>
 {% endblock %}
