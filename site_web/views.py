@@ -107,8 +107,16 @@ class MdpOublieForm( FlaskForm ):
         if util is None:
             return None
         return util
+    
+@app.route('/')
+def index():
+    if current_user.is_authenticated:
+        if current_user.idRole == -1:
+            return redirect(url_for('home_admin'))
+        return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     """fonction de connexion pour un utilisateur"""
     f = LoginForm()
@@ -213,6 +221,7 @@ def recherche_doc_admin():
     if not is_admin():
         return redirect(url_for('home'))
     global active_tags, selectType
+    has_result = False
     result = []
     # document = get_documents()
     for i in get_types():
@@ -222,8 +231,9 @@ def recherche_doc_admin():
 
         for document in get_document_types(i.idType, documents):
             resultat["element"].append(document)
+            has_result = True
         result.append(resultat)
-    return render_template("recherche_doc_admin.html",title="Gestion des documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte)
+    return render_template("recherche_doc_admin.html",title="Gestion des documents", tags = get_tags(), active_tags = active_tags, result = result, types= get_types(), util = informations_utlisateurs(), selectType=selectType, search=filtre_texte, has_result = has_result)
 
 @app.route('/administrateur/modifierDocument/<id>', methods=['GET', 'POST'])
 def modifier_document(id):
@@ -453,6 +463,9 @@ def supprimer_tag(id):
     for liaison in liaisons_tag_docs:
         db.session.delete(liaison)
     tag = get_tag_id(id)
+    global active_tags
+    if tag in active_tags:
+        active_tags.remove(tag)
     db.session.delete(tag)
     db.session.commit()
     return redirect(url_for('recherche_tags'))
