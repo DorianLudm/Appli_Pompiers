@@ -15,6 +15,12 @@
 <div class="bloc_recherche">
 <div id="filtre">
     <form action="{{ url_for ('ajouter_filtre') }}" method="POST" class="filtre_barre">
+        <div class="research_bar">
+          <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
+        </div>
+        <div class="loop_research">
+            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
+        </div>
         <div>
             <label for="favoris">
                 <i id="favoris_filtre" class="material-icons">
@@ -22,12 +28,6 @@
                 </i>
                 <input type="submit" id="favoris" name="favoris" class="icon-button" style="display: none;">
             </label>
-        </div>
-        <div class="research_bar">
-          <input type="text" name="barre_recherche" placeholder="{{barre_recherche}}" id="barre_recherche"/>
-        </div>
-        <div class="loop_research">
-            <input type="image" src="/static/img/loupe.png" alt="Submit"/>
         </div>
         <div class="tags">
             <div class="search_select">
