@@ -443,6 +443,8 @@ def supprimer_document(id):
     """fonction de suppression d'un document"""
     if not is_admin():
         return redirect(url_for('home'))
+    supprimer_doctag_by_docid(id)
+    supprimer_favoris_by_docid(id)
     document = get_document_id(id)
     db.session.delete(document)
     db.session.commit()
