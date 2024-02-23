@@ -152,11 +152,6 @@ def get_document_types(idTypeDoc, document = []):
 
 def get_filtrer_document_tag(documents, tag):
     """fonction de filtrage de documents à partir d'un tag donné"""
-    # resultat = []
-    # for doc in documents:
-    #     if DocumentTag.query.filter(DocumentTag.idTag == tag.idTag).filter(doc.idDoc == DocumentTag.idDoc).first():
-    #         resultat.append(doc)
-
     document_ids = set(document.idDoc for document in documents)
     
     result = DocumentTag.query.filter(
