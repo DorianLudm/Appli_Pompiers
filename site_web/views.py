@@ -450,6 +450,8 @@ def ajouter_filtre_tag():
     """fonction d'ajout de filtre pour la recherche de tags"""
     if not is_admin():
         return redirect(url_for('home'))
+    if request.form.get('reset'):
+        return redirect(url_for('recherche_tags'))
     if request.method=='POST':
         tags_search = request.form.get('barre_recherche')
         tags = get_tags_nom(tags_search)
