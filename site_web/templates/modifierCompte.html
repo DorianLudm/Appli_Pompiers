@@ -72,8 +72,8 @@
     </div>
     {% endif %}
     <div class="line button-container">
-        <a onclick="togglePopup(0);"> <input type="button" value="Retour" id="retour" class="bouton"></a>
-        <input type="submit" value="Sauvegarder le compte" name="save_compte" class="bouton">
+        <a onclick="togglePopup(0);"> <input type="button" value="Retour" id="annuler" class="bouton"></a>
+        <input type="submit" value="Sauvegarder le compte" id="valider" name="save_compte" class="bouton">
     </div>
 
     <div id="0" class="popup-overlay">
@@ -82,8 +82,8 @@
                 <h2>Abandonner les modifications ?</h2>
             </div>
             <div class="contenu-popup">
-                <a onclick="togglePopup(0);"><input id="annuler-deconnexion" type="button" value="❌ Non" alt="Rester"/></a>
-                <a href="{{ url_for('recherche_comptes') }}"><input id="valider-deconnexion" type="button" value="✅ Oui" alt="Retour"/></a>
+                <a onclick="togglePopup(0);"><input id="annuler" type="button" value="❌ Non" alt="Rester"/></a>
+                <a href="{{ url_for('recherche_comptes') }}"><input id="valider" type="button" value="✅ Oui" alt="Retour"/></a>
             </div>
         </div>
     </div>
