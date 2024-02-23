@@ -37,3 +37,12 @@ Ensuite, lancez l'application avec
 ```py
 flask run
 ```
+
+## Login
+Les logins administrateurs sont suivant
+```bash
+Identifiant: test
+Mot de passe: test
+```
+
+Pour ce qui est des logins utilisateur, vous pouvez en créer un nouveau depuis le module administrateur
