@@ -117,6 +117,7 @@ def get_max_id_tag():
     max_id = db.session.query(db.func.max(Tag.idTag)).scalar()
     if max_id is None:
         return 0
+    print(str(max_id) + "Bonjour")
     return max_id
 
 def get_types():
