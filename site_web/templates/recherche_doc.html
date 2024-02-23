@@ -30,12 +30,20 @@
             <input type="image" src="/static/img/loupe.png" alt="Submit"/>
         </div>
         <div class="tags">
-            <select name="tags" id="tags-select">
-                <option selected="selected" hidden="hidden">Choisir un tag</option>
-                {% for x in tags %} 
-                    <option value="{{x.nomTag}}" type ="submit" class="selectTagRechercheDoc">{{x.nomTag}}</option>
-                {% endfor %}
-            </select>
+            <div class="search_select">
+                <select name="tags" id="tags-select">
+                    <option selected="selected" hidden="hidden">Choisir un tag</option>
+                    {% for x in tags %} 
+                        <option value="{{x.nomTag}}" type ="submit" class="selectTagRechercheDoc">{{x.nomTag}}</option>
+                    {% endfor %}
+                </select>
+                <select name="extensions" id="extensions-select">
+                    <option selected="selected" value="{{extension_actuelle}}" hidden="hidden">{{extension_actuelle}}</option>
+                    {% for x in extensions %} 
+                        <option value="{{x}}" type ="submit">{{x}}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div id="tagsActifs">
                 <div class="active_tag">
                     {% for x in active_tags %}
