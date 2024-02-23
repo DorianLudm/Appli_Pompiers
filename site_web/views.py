@@ -19,14 +19,15 @@ tag_manuel = set()
 filtre_texte = ""
 selectType = "Choisir un type"
 favoris = False
+extension = ""
 
 @app.route('/pompier')
 @login_required
 def home():
     """fonction d'affichage de la page d'accueil des pompiers"""
-    global active_tags, documents, favoris
+    global active_tags, documents, favoris, extension
     result = []
-
+    extensions = ["pdf", "doc", "docx", "odf", "txt", "jpg", "jpeg", "png", "gif"]
     doc = None
     is_stared = False
     if request.args.get('id'):
@@ -45,7 +46,8 @@ def home():
             if resultat["element"]:
                 result.append(resultat)
     info_doc = filtre_texte or "Rechercher un document !"
-    return render_template("recherche_doc.html",tags = get_tags(), active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc, favoris_on = favoris, is_stared = is_stared)
+    extension = extension or "Choisir une extension"
+    return render_template("recherche_doc.html",tags = get_tags(), extensions = extensions, extension_actuelle = extension, active_tags = active_tags, result = result, barre_recherche = info_doc, util = informations_utlisateurs(), title='Accueil',doc = doc, favoris_on = favoris, is_stared = is_stared)
 
 @app.route('/ajouter_filtre/', methods =("POST",))
 @login_required
@@ -537,7 +539,7 @@ def supprimer_tag(id):
     return redirect(url_for('recherche_tags'))
 
 def handle_filtrage(admin=False, reload_fav=False):
-    global active_tags, filtre_texte, documents, selectType, favoris
+    global active_tags, filtre_texte, documents, selectType, favoris, extension
 
     # Si on reset les filtres cela remet tout à vide
     if request.form.get('reset'):
@@ -547,6 +549,7 @@ def handle_filtrage(admin=False, reload_fav=False):
         if admin:
             selectType = "Choisir un type"
             return redirect(url_for('recherche_doc_admin'))
+        extension = ""
         return redirect(url_for('home'))
     favoris_clicked = False
 
@@ -558,6 +561,7 @@ def handle_filtrage(admin=False, reload_fav=False):
         documents = get_favoris_user(current_user.idUtilisateur)
         active_tags.clear()
         filtre_texte = ""
+        extension = ""
         return redirect(url_for('home'))
     
     # Sinon, ou si on retire favoris
@@ -575,7 +579,12 @@ def handle_filtrage(admin=False, reload_fav=False):
                 if not filtre_texte:
                     documents = get_documents()
                     bool_fulldoc = True
-        if not bool_fulldoc and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
+        if extension != request.form.get('extensions') and request.form.get('extensions') != "Choisir une extension":
+            documents = get_documents()
+            bool_fulldoc = True
+            if filtre_texte != "":
+                documents = get_filtrer_document_nom(documents, filtre_texte)
+        if not bool_fulldoc and filtre_texte == "" and filtre_texte != request.form.get('barre_recherche') and active_tags == set():
             documents = get_documents()
             bool_fulldoc = True
         if admin and not bool_fulldoc and selectType == "Choisir un type" and request.form.get(
@@ -598,6 +607,9 @@ def handle_filtrage(admin=False, reload_fav=False):
                 if tag_barre:
                     active_tags.add(tag_barre)
                     documents = get_filtrer_document_tag(documents, tag_barre)
+        if request.form.get('extensions') != "Choisir une extension":
+            extension = request.form.get('extensions')
+            documents = get_filtrer_document_extension(documents, extension)
         # Nouveau tag (existant en BD), alors on l'ajoute
         if tag != "Choisir un tag":
             tag = get_tag(request.form.get('tags'), True)
