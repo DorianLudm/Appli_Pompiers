@@ -161,6 +161,14 @@ def get_filtrer_document_tag(documents, tag):
     resultat = [Document.query.get(doc.idDoc) for doc in result]
     return resultat
 
+def get_filtrer_document_extension(documents, extension):
+    """fonction de filtrage de documents à partir d'une extension donnée"""
+    resultat = []
+    for doc in documents:
+        if doc.fichierDoc.lower().endswith(extension.lower()):
+            resultat.append(doc)
+    return resultat
+
 def get_liaison_document_tag(idTag):
     """fonction d'obtention des liaisons entre un document et un tag pour tout les documents associés au tag"""
     return DocumentTag.query.filter(DocumentTag.idTag == idTag).all()
