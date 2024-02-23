@@ -225,6 +225,7 @@ def modifier_compte(id):
             user.mdp = sha256(request.form.get('password').encode()).hexdigest()
         user.idGrade = request.form.get('grades')
         user.idCas = request.form.get('casernes')
+        user.idRole = request.form.get('roles')
         db.session.commit() 
         return redirect(url_for('recherche_comptes')) 
     return render_template('modifierCompte.html', title="Modification d'un compte", roles=get_roles(), user=user, grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs())
@@ -508,9 +509,6 @@ def save_compte():
     form.id_role.choices = [(r.idRole, r.nomRole) for r in get_roles()]
 
     if form.validate_on_submit():
-        print(form.pseudo.data)
-        print(is_identifant(form.pseudo.data))
-        print(form.id_role.data)
         if is_identifant(form.pseudo.data):
             return render_template('ajoute_compte.html', grades = get_grades(), casernes = get_casernes(), util = informations_utlisateurs(), title='Ajouter un compte', form=form, erreur = "L'identifiant existe déjà")
         else:
