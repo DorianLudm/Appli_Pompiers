@@ -480,6 +480,7 @@ def supprimer_compte(id):
     """fonction de suppression de compte"""
     if not is_admin():
         return redirect(url_for('home'))
+    supprimer_favoris_by_userid(id)
     util = get_utilisateur(id)
     db.session.delete(util)
     db.session.commit()
@@ -529,6 +530,7 @@ def recherche_tags():
 def supprimer_tag(id):
     if not is_admin():
         return redirect(url_for('home'))
+    supprimer_doctag_by_doctag(id)
     liaisons_tag_docs = get_liaison_document_tag(id)
     for liaison in liaisons_tag_docs:
         db.session.delete(liaison)
