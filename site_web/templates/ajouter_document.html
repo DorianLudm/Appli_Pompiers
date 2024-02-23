@@ -78,8 +78,8 @@
 </div>
 
 <div class="boutons-bas">
-    <input type="submit" value="Enregistrer" name="ajouter_document">
-    <a href="{{ url_for ('recherche_doc_admin')}}">Retour</a>
+    <a href="{{ url_for ('recherche_doc_admin')}}" id="annuler">Retour</a>
+    <input type="submit" id="valider" value="Enregistrer" name="ajouter_document">
 </div>
 </form>
 {% endblock %}

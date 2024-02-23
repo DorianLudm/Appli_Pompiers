@@ -140,33 +140,7 @@ body {
     text-align: left;
 }
 
-.boutons-bas input[type="submit"], .boutons-bas a {
-    padding: 10px 20px;
-    background-color: #b22222;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 .boutons-bas > a{
     padding: 0;
     margin: 0;
-}
-
-#annuler{
-    font-size: xx-large;
-    color: white;
-    background-color: #954D4D;
-    padding: 10px 20px;
-    margin: 20px;
-    border-radius: 10px;
-}
-
-#valider{
-    font-size: xx-large;
-    color: white;
-    background-color: #84B546;
-    padding: 10px 20px;
-    margin: 20px;
-    border-radius: 10px;
 }
