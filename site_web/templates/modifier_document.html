@@ -36,11 +36,8 @@
 
     <section>
         <input type="submit" value="Importer document" id="importer">
-        <div>
-            <p>Tags associés : </p>
-        </div>
         <div class="tags-manuels">
-            <p>Tags manuels :</p>
+            <p>Tags associés :</p>
             <select name="tags" id="tags-select">
                 <option selected="selected" hidden="hidden">Tags</option>
                 {% for x in tags %} 
@@ -48,6 +45,18 @@
                 {% endfor %}
             </select>
             <input type="text" name="tag-manuel">
+        </div>
+
+        <div class="niv-prot">
+            <p>Niveau de protection</p>
+            <select name="protection" id="types-select">
+                {% for x in niv_prot %} 
+                    {% if x == doc.niveauProtection %}
+                        <option value="{{x}}" selected="selected" hidden="hidden">{{x}}</option>
+                    {% endif %}
+                    <option value="{{x}}">{{x}}</option>
+                {% endfor %}
+            </select>
         </div>
     </section>
 </div>

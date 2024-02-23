@@ -260,6 +260,7 @@ def modifier_document(id):
         doc.nomDoc = request.form.get('titre')
         doc.idType = request.form.get('types')
         doc.descriptionDoc = request.form.get('description')
+        doc.niveauProtection = request.form.get('protection')
         db.session.commit()
         global documents
         documents = []
@@ -267,7 +268,7 @@ def modifier_document(id):
         return redirect(url_for('recherche_doc_admin'))
     if request.form.get('annuler') =="Annuler":
         return redirect(url_for('recherche_doc_admin'))
-    return render_template('modifier_document.html', title="Modification d'un document", doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs())
+    return render_template('modifier_document.html', title="Modification d'un document", doc=doc, types = get_types(), tags=get_tags(), util = informations_utlisateurs(), niv_prot = get_niveau_protection())
 
 
 @app.route('/administrateur/ajouteDocument', methods=['GET', 'POST'])

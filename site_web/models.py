@@ -1,7 +1,6 @@
 from .app import db, login_manager
 from flask_login import UserMixin, current_user
-from sqlalchemy import func
-
+from sqlalchemy import func, distinct
 
 class Caserne(db.Model):
     """caserne de pompiers"""
@@ -288,6 +287,9 @@ def max_id_utilisateur():
 
 def get_identifiant_utilisateur(user):
     return Utilisateur.query.filter_by(identifiant=user).first()
+
+def get_niveau_protection():
+    return [row[0] for row in Role.query.with_entities(distinct(Role.niveauProtection)).all()]
 
 def informations_utlisateurs():
     util = dict()
