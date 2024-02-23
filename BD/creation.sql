@@ -13,15 +13,6 @@ CREATE TABLE TYPE_DOCUMENT(
     nomType VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE ARCHIVE(
-    idArchive int,
-    dateRemplacement DATE NOT NULL,
-    ancienPath VARCHAR NOT NULL,
-    idDoc int NOT NULL,
-    PRIMARY KEY(idArchive),
-    FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc)
-);
-
 CREATE TABLE TAG (
 	idTag int NOT NULL PRIMARY KEY,
 	nomTag	VARCHAR(100) NOT NULL,
@@ -34,13 +25,6 @@ CREATE TABLE DOCUMENT_TAG(
     PRIMARY KEY(idDoc, idTag),
     FOREIGN KEY (idDoc) REFERENCES DOCUMENT(idDoc),
     FOREIGN KEY (idTag) REFERENCES TAG(idTag)
-);
-
-CREATE TABLE REPERTOIRE (
-    idRep INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    nomRepertoire VARCHAR(100) NOT NULL,
-    tagAssocie int NOT NULL,
-    FOREIGN KEY (tagAssocie) REFERENCES TAG(idTag)
 );
 
 CREATE TABLE GRADE (
@@ -60,14 +44,6 @@ CREATE TABLE CASERNE(
     adresseCaserne VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE DIRIGER_CASERNE(
-    idUtilisateur int NOT NULL,
-    idCas int NOT NULL,
-    PRIMARY KEY(idUtilisateur, idCas),
-    FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur),
-    FOREIGN KEY (idCas) REFERENCES CASERNE(idCas)
-);
-
 CREATE TABLE UTILISATEUR(
     idUtilisateur int PRIMARY KEY NOT NULL,
     nomUtilisateur VARCHAR(100) NOT NULL,
@@ -80,22 +56,6 @@ CREATE TABLE UTILISATEUR(
     FOREIGN KEY (idGrade) REFERENCES GRADE(idGrade),
     FOREIGN KEY (idRole) REFERENCES ROLE(idRole),
     FOREIGN KEY (idCas) REFERENCES CASERNE(idCas)
-);
-
-CREATE TABLE RELATION_REPERTOIRE(
-    idRepParent int NOT NULL,
-    idRepEfant int NOT NULL,
-    PRIMARY KEY(idRepParent, idRepEfant),
-    FOREIGN KEY (idRepParent) REFERENCES REPERTOIRE(idRep),
-    FOREIGN KEY (idRepEfant) REFERENCES REPERTOIRE(idRep)
-);
-
-CREATE TABLE LIAISON_REPERTOIRE_FICHIER(
-    idRepParent int NOT NULL,
-    idFicEnfant int UNIQUE NOT NULL,
-    PRIMARY KEY(idRepParent, idFicEnfant),
-    FOREIGN KEY (idRepParent) REFERENCES REPERTOIRE(idRep),
-    FOREIGN KEY (idFicEnfant) REFERENCES DOCUMENT(idDoc)
 );
 
 CREATE TABLE FAVORIS(

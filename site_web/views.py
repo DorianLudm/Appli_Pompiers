@@ -296,7 +296,7 @@ def ajoute_document():
                     tag_manuel.add(tag)
         newfile = request.files['file']
         if newfile.filename != "":
-            if session.get('file'):
+            if session.get('file') and session.get('file') != mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename)):
                 os.remove(session.get('file'))
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -307,7 +307,6 @@ def ajoute_document():
             if session['file'] != "":
                 tags_auto = generationTag(session['file'])
                 for tag in tags_auto:
-                    print("Mes tags" + str(tag.idTag))
                     tag_manuel.add(tag)
             else:
                 print("Aucun fichier n'a été sélectionné")
@@ -330,16 +329,13 @@ def ajoute_document():
                 document = Document(
                     nomDoc = request.form.get('titre'),
                     idType = type or 1,
-                    fichierDoc = request.form.get('repertoire')+"/"+filepath,
+                    fichierDoc = filepath,
                     descriptionDoc = request.form.get('description'),
                     niveauProtection = protection
                 )
                 db.session.add(document)
                 db.session.commit()
-            if file.filename == "":
-                shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER'] + filepath)))
-            else:
-                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
+            shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
             for tag in tag_manuel:
                 print("Mes tags" + str(tag.idTag))
                 document_tag = DocumentTag(
@@ -351,15 +347,6 @@ def ajoute_document():
             tag_manuel.clear()
             session['file'] = ""
             return redirect(url_for('recherche_doc_admin'))
-        newfile = request.files['file']
-        if newfile.filename != "":
-            if session.get('file'):
-                os.remove(session.get('file'))
-            file = request.files['file']
-            filename = secure_filename(file.filename)
-            session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
-            file.save(session['file'])
-        document = session.get('file').split("temporaire/")[-1]
         return render_template('ajouter_document.html', tags=get_tags(), roles = get_roles(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajouter un document")
     else:
         session['file'] = ""
@@ -436,6 +423,19 @@ def ajouter_filtre_doc_admin():
     if request.method=='POST':
         handle_filtrage(True)
     return redirect(url_for('recherche_doc_admin'))
+
+@app.route('/administrateur/appliquer_filtre_tags', methods=['GET', 'POST'])
+@login_required
+def ajouter_filtre_tag():
+    """fonction d'ajout de filtre pour la recherche de tags"""
+    if not is_admin():
+        return redirect(url_for('home'))
+    if request.form.get('reset'):
+        return redirect(url_for('recherche_tags'))
+    if request.method=='POST':
+        tags_search = request.form.get('barre_recherche')
+        tags = get_tags_nom(tags_search)
+    return render_template('recherche_tags.html', title='Gestion des tags', util = informations_utlisateurs(), tags = tags)
 
 @app.route('/administrateur/supprimerDoc/<id>')
 @login_required
@@ -609,7 +609,7 @@ def handle_filtrage(admin=False, reload_fav=False):
                 if tag_barre:
                     active_tags.add(tag_barre)
                     documents = get_filtrer_document_tag(documents, tag_barre)
-        if request.form.get('extensions') != "Choisir une extension":
+        if request.form.get('extensions') != "Choisir une extension" and request.form.get('extensions') is not None:
             extension = request.form.get('extensions')
             documents = get_filtrer_document_extension(documents, extension)
         # Nouveau tag (existant en BD), alors on l'ajoute
