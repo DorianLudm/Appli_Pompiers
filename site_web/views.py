@@ -607,7 +607,7 @@ def handle_filtrage(admin=False, reload_fav=False):
                 if tag_barre:
                     active_tags.add(tag_barre)
                     documents = get_filtrer_document_tag(documents, tag_barre)
-        if request.form.get('extensions') != "Choisir une extension":
+        if request.form.get('extensions') != "Choisir une extension" and request.form.get('extensions') is not None:
             extension = request.form.get('extensions')
             documents = get_filtrer_document_extension(documents, extension)
         # Nouveau tag (existant en BD), alors on l'ajoute
