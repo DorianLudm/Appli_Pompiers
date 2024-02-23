@@ -294,7 +294,7 @@ def ajoute_document():
                     tag_manuel.add(tag)
         newfile = request.files['file']
         if newfile.filename != "":
-            if session.get('file'):
+            if session.get('file') and session.get('file') != mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename)):
                 os.remove(session.get('file'))
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -305,7 +305,6 @@ def ajoute_document():
             if session['file'] != "":
                 tags_auto = generationTag(session['file'])
                 for tag in tags_auto:
-                    print("Mes tags" + str(tag.idTag))
                     tag_manuel.add(tag)
             else:
                 print("Aucun fichier n'a été sélectionné")
@@ -328,16 +327,13 @@ def ajoute_document():
                 document = Document(
                     nomDoc = request.form.get('titre'),
                     idType = type or 1,
-                    fichierDoc = request.form.get('repertoire')+"/"+filepath,
+                    fichierDoc = filepath,
                     descriptionDoc = request.form.get('description'),
                     niveauProtection = protection
                 )
                 db.session.add(document)
                 db.session.commit()
-            if file.filename == "":
-                shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER'] + filepath)))
-            else:
-                file.save(mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
+            shutil.move(session.get('file'), mkpath(os.path.join(app.config['UPLOAD_FOLDER'], filepath)))
             for tag in tag_manuel:
                 print("Mes tags" + str(tag.idTag))
                 document_tag = DocumentTag(
@@ -349,15 +345,6 @@ def ajoute_document():
             tag_manuel.clear()
             session['file'] = ""
             return redirect(url_for('recherche_doc_admin'))
-        newfile = request.files['file']
-        if newfile.filename != "":
-            if session.get('file'):
-                os.remove(session.get('file'))
-            file = request.files['file']
-            filename = secure_filename(file.filename)
-            session['file'] = mkpath(os.path.join(app.config['UPLOAD_FOLDER'],"temporaire", filename))
-            file.save(session['file'])
-        document = session.get('file').split("temporaire/")[-1]
         return render_template('ajouter_document.html', tags=get_tags(), roles = get_roles(),document = document, type =request.form.get('type_document'), util = informations_utlisateurs(),new_tag=tag_manuel,titre =request.form.get('titre'), description = request.form.get('description'), active_type = request.form.get('type_document'), repertoire = request.form.get('repertoire'),types = get_types(), title="Ajouter un document")
     else:
         session['file'] = ""
